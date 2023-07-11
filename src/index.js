@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const path = require('path');
 
 const router = require('./router/router');
 const mongodb = require("./utils/util-database");
@@ -9,9 +10,11 @@ const app = express();
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
 
 app.use(router);
-
 
 mongodb.connect(() => {
     app.listen(process.env.PORT || 8080, (error) => {
