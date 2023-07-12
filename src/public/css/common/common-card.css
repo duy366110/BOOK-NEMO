@@ -2,15 +2,32 @@
     background-color: #f2f2f2;
     border: unset;
     box-shadow: 0px 0px 2px 0px #000000;
+    display: flex;
+    flex-direction: column;
     padding: 10px;
+}
+
+.card-infor {
+    margin-bottom:10px;
 }
 
 .card-thumbnail {
     margin-bottom: 15px;
 }
 
+.card-infor_title {
+    font-size: 1.7rem;
+}
+
 .card-infor_price {
      font-size: 1.5rem;
      font-weight: 600;
      margin-bottom: 0px;
+}
+
+.card-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
 }

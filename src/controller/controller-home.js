@@ -9,7 +9,7 @@ class ControllerHome {
 
             res.render('pages/shop/page-home', {
                 title: 'Trang chủ',
-                path: 'trang-chu',
+                path: 'Trang-chu',
                 products
             });
 
