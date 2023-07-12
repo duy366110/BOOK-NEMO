@@ -1,6 +1,7 @@
 <%- include("../../components/head-component.ejs") %>
 <link rel="stylesheet" href="/css/components/page-home.css" />
 </head>
+
 <body>
     <main>
         <%- include("../../components/header-component.ejs") %>
@@ -9,7 +10,7 @@
                 <div class="row">
                     <% if(products.length) { %>
                         <% products.forEach((product) => { %>
-                            <div class="col-3 d-flex align-items-stretch">
+                            <div class="col-12 col-sm-6 col-lg-4  col-xl-3 d-flex align-items-stretch">
                                 <div class="card">
                                     <img class="image-fluid card-thumbnail" src="<%= product.image %>" alt="product thumbnail" />
                                     <div class="card-infor">

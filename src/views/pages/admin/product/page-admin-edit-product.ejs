@@ -7,26 +7,28 @@
 
         <div class="component-wrapper">
             <div class="container">
-                <form class="form-container" action="/admin/product/new" method="post">
+                <form class="form-container" action="/admin/product/edit" method="post">
                     <div class="form-group">
                         <label class="form-label" for="title">Tên sản phẩm</label>
-                        <input type="text" class="form-control" name="title" id="title">
+                        <input type="text" class="form-control" name="title" id="title" value="<%= product? product.title : '' %>">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="image">Ảnh sản phẩm</label>
-                        <input type="text" class="form-control" name="image" id="image">
+                        <input type="text" class="form-control" name="image" id="image" value="<%= product? product.image : '' %>">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="price">Giá sản phẩm</label>
-                        <input type="number" class="form-control" name="price" id="price" step="0.01">
+                        <input type="number" class="form-control" name="price" id="price" step="0.01" value="<%= product? product.price : '' %>">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="description">Mô tả</label>
-                        <textarea class="form-control" name="description" id="description" rows="5"></textarea>
+                        <textarea class="form-control" name="description" id="description" rows="5"><%= product? product.description : '' %></textarea>
                     </div>
+
+                    <input type="hidden" name="product" value="<%= product? product._id : '' %>">
 
                     <button type="submit" class="btn">Lưu thay đổi</button>
                 </form>

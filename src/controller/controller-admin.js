@@ -20,9 +20,19 @@ class ControllerAdmin {
     }
 
     renderPageEditProduct = (req, res, next) => {
-        res.render('pages/admin/product/page-admin-edit-product', {
-            title: 'Chỉnh sửa thông tin sản phẩm',
-            path: 'Quan-tri'
+        let { product } = req.query;
+
+        ModelProduct.findById(product)
+        .then((product) => {
+            res.render('pages/admin/product/page-admin-edit-product', {
+                title: 'Chỉnh sửa thông tin sản phẩm',
+                path: 'Quan-tri',
+                product: product? product : null
+            })
+        })
+        .catch((error) => {
+            throw error;
+
         })
     }
 
@@ -48,7 +58,31 @@ class ControllerAdmin {
             throw error;
 
         })
+    }
 
+    editProduct = (req, res, next) => {
+        let {product, title, image, price, description} = req.body;
+
+        ModelProduct.findById(product)
+        .then((product) => {
+            product.title = title;
+            product.image = image;
+            product.price = price;
+            product.description = description;
+            return product.save();
+
+        })
+        .then((product) => {
+            if(product) {
+                res.redirect('/admin');
+
+            }
+
+        })
+        .catch((error) => {
+            throw error;
+
+        })
     }
 }
 
