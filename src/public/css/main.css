@@ -1,0 +1,18 @@
+@import url("./root.css");
+
+.component-wrapper {
+    padding-top: 4.5rem;
+}
+
+
+/* DEFINE BUTTON */
+.btn {
+    color: #ffffff;
+    font-size: 1.7rem;
+    background-color: var(--first-color);
+}
+
+.btn:hover {
+    color: #ffffff;
+    background-color: var(--two-color);
+}

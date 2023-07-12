@@ -2,8 +2,7 @@ const router = require("express").Router();
 const ControllerProduct = require("../controller/controller-product");
 
 
-router.get('/', (req, res, next) => {
-    res.status(200).json({status: true, message: 'Router product'});
-})
+router.get('/new-product', ControllerProduct.renderPageNewProduct);
+router.post('/new-product', ControllerProduct.saveProduct);
 
 module.exports = router;
