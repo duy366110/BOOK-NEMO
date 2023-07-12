@@ -7,9 +7,10 @@
 
 /* DEFINE BUTTON */
 .btn {
+    background-color: var(--first-color);
     color: #ffffff;
     font-size: 1.7rem;
-    background-color: var(--first-color);
+    padding: 5px 15px;
 }
 
 .btn:hover {

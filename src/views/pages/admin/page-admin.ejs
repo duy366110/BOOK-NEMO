@@ -1,11 +1,16 @@
 <%- include("../../components/head-component.ejs") %>
-<link rel="stylesheet" href="/css/components/page-home.css" />
+<link rel="stylesheet" href="/css/components/page-admin.css" />
 </head>
 <body>
     <main>
         <%- include("../../components/header-component.ejs") %>
+
         <div class="component-wrapper">
             <div class="container">
+                <div class="admin-tab">
+                    <a class="btn" href="/admin/product/new">Thêm mới sản phẩm</a>
+                </div>
+                
                 <div class="row">
                     <% if(products.length) { %>
                         <% products.forEach((product) => { %>
@@ -15,6 +20,11 @@
                                     <div class="card-infor">
                                         <h2 class="card-infor_title"><%= product.title %></h2>
                                         <p class="card-infor_price">Giá: <%= product.price %> đ</p>
+                                    </div>
+
+                                    <div class="card-action">
+                                        <a class="btn" href="/admin/product/edit">Sửa thông tin</a>
+                                        <button type="submit" class="btn">Xoá</button>
                                     </div>
                                 </div>
                             </div>

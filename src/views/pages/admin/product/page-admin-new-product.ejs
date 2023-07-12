@@ -1,0 +1,37 @@
+<%- include("../../../components/head-component.ejs") %>
+<link rel="stylesheet" href="/css/components/page-admin-new-product.css">
+</head>
+<body>
+    <main>
+        <%- include("../../../components/header-component.ejs") %>
+
+        <div class="component-wrapper">
+            <div class="container">
+                <form class="form-container" action="/admin/product/new" method="post">
+                    <div class="form-group">
+                        <label class="form-label" for="title">Tên sản phẩm</label>
+                        <input type="text" class="form-control" name="title" id="title">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="image">Ảnh sản phẩm</label>
+                        <input type="text" class="form-control" name="image" id="image">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="price">Giá sản phẩm</label>
+                        <input type="number" class="form-control" name="price" id="price" step="0.01">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="description">Mô tả</label>
+                        <textarea class="form-control" name="description" id="description" rows="5"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn">Tạo mới</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+<%- include("../../../components/footer-component.ejs") %>
