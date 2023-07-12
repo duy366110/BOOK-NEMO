@@ -1,0 +1,12 @@
+:root {
+    --first-color: #57707A;
+    --two-color: #898DAA;
+    --text-color: #222222;
+}
+
+html, body {
+    box-sizing: border-box;
+    font-size: 10px;
+    margin: 0px;
+    padding: 0px;
+}

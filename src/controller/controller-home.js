@@ -1,9 +1,23 @@
+const ModelProduct = require("../model/model-product");
 class ControllerHome {
 
     constructor() { }
 
     renderPageHome = (req, res, next) => {
-        res.render('pages/page-home', {});
+        ModelProduct.find({})
+        .then((products) => {
+
+            res.render('pages/shop/page-home', {
+                title: 'Trang chủ',
+                path: 'trang-chu',
+                products
+            });
+
+        })
+        .catch((error) => {
+            throw error;
+
+        })
     }
 }
 

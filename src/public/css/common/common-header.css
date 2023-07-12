@@ -1,0 +1,34 @@
+header {
+    background-color: var(--first-color);
+    color: #ffffff;
+    padding: 15px 0px;
+}
+/* LOGO */
+.header-logo {
+    color: #ffffff;
+    font-size: 2.5rem;
+    margin-bottom: 0px;
+    text-transform: capitalize;
+}
+
+/* LIST */
+header ul {
+    display: flex;
+    align-items: center;
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+header ul li a {
+    color: #ffffff;
+    display: block;
+    padding: 0px 10px;
+    font-size: 1.6rem;
+    text-transform: capitalize;
+}
+
+header ul li a.active, header ul li a:hover {
+    color: #f5e10b;
+    text-decoration: none;
+}

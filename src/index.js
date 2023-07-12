@@ -6,6 +6,8 @@ const router = require('./router/router');
 const mongodb = require("./utils/util-database");
 const app = express();
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
