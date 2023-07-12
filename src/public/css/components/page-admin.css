@@ -1,6 +1,10 @@
 @import url("../common/common-header.css");
 @import url("../common/common-card.css");
 
+.admin-tab-maneger {
+    margin-bottom: 15px;
+}
+
 .admin-tab {
     margin-bottom: 15px;
 }

@@ -8,7 +8,7 @@ class ControllerAdmin {
         ModelProduct.find({})
         .then((products) => {
             res.render('pages/admin/page-admin', {
-                title: 'Quản trị',
+                title: 'Quản trị sản phẩm',
                 path: 'Quan-tri',
                 products
             });
@@ -17,6 +17,20 @@ class ControllerAdmin {
             throw error;
 
         })
+    }
+
+    renderPageAdminUser = (req, res, next) => {
+        res.render('pages/admin/page-admin-user', {
+            title: 'Quản trị người dùng',
+            path: 'Quan-tri',
+        });
+    }
+
+    renderPageAdminRole = (req, res, next) => {
+        res.render('pages/admin/page-admin-role', {
+            title: 'Quản trị quyển qaunr trị',
+            path: 'Quan-tri',
+        });
     }
 
     renderPageEditProduct = (req, res, next) => {
