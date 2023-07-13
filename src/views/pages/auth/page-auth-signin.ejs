@@ -11,12 +11,28 @@
                     <h2 class="form-title">Đăng nhập</h2>
                     <div class="form-group">
                         <label class="form-label" for="email">E-mail</label>
-                        <input type="email" class="form-control" name="email" id="email">
+                        <input
+                            class="<%= validators.find((elm)=> elm.path === 'email')? 'form-control is-invalid' : 'form-control' %>"
+                            type="email"
+                            name="email"
+                            id="email"
+                            value="<%= formField.email %>">
+                        <% if(validators.some((elm)=> elm.path === 'email')) { %>
+                            <small class="input-message"><%= validators.find((elm) => elm.path === 'email')?.msg %></small>
+                        <% } %>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="password">Mật khẩu</label>
-                        <input type="password" class="form-control" name="password" id="password">
+                        <input
+                            class="<%= validators.find((elm)=> elm.path === 'password')? 'form-control is-invalid' : 'form-control' %>"
+                            type="password"
+                            name="password"
+                            id="password"
+                            value="<%= formField.password %>">
+                        <% if(validators.some((elm)=> elm.path === 'password')) { %>
+                            <small class="input-message"><%= validators.find((elm) => elm.path === 'password')?.msg %></small>
+                        <% } %>
                     </div>
 
                     <input type="hidden" name="_csrf" value="<%= csurfToken %>">
