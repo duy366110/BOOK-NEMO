@@ -5,6 +5,12 @@
     width: 450px;
 }
 
+.form-title {
+    font-size: 25px;
+    text-align: center;
+    text-transform: capitalize;
+}
+
 .form-label {
     font-size: 1.7rem;
 }
