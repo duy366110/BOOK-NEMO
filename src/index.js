@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyparser = require('body-parser');
 const cookieparser = require("cookie-parser");
+const csurf = require('csurf');
 const path = require('path');
 
 const router = require('./router/router');
 const mongodb = require("./utils/util-database");
+const csurfProtection = csurf({cookie: true});
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -17,7 +19,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 app.use(cookieparser());
-
+app.use(csurfProtection);
 
 app.use(router);
 

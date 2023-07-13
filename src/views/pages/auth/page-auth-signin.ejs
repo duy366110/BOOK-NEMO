@@ -7,7 +7,7 @@
 
         <div class="component-wrapper">
             <div class="container">
-                <form class="form-container" action="/user/signin" method="post">
+                <form class="form-container" action="/user/signin" method="post" novalidate>
                     <h2 class="form-title">Đăng nhập</h2>
                     <div class="form-group">
                         <label class="form-label" for="email">E-mail</label>
@@ -18,6 +18,8 @@
                         <label class="form-label" for="password">Mật khẩu</label>
                         <input type="password" class="form-control" name="password" id="password">
                     </div>
+
+                    <input type="hidden" name="_csrf" value="<%= csurfToken %>">
 
                     <button type="submit" class="btn w-100">Đăng nhập</button>
                 </form>

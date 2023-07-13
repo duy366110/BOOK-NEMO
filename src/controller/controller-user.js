@@ -1,5 +1,6 @@
 const ModelUser = require("../model/model-user");
 const utilbcrypt = require("../utils/util-bcrypt");
+const { validationResult } = require('express-validator');
 class ControllerUser {
 
     constructor() { }
@@ -8,7 +9,8 @@ class ControllerUser {
         res.render("pages/auth/page-auth-signin", {
             title: 'Đăng ký',
             path: "Dang-nhap",
-            isUser: req.cookies.user? true : false
+            isUser: req.cookies.user? true : false,
+            csurfToken: req.csrfToken()
         })
     }
 
@@ -16,7 +18,8 @@ class ControllerUser {
         res.render("pages/auth/page-auth-signup", {
             title: 'Đăng nhập',
             path: "Dang-ky",
-            isUser: req.cookies.user? true : false
+            isUser: req.cookies.user? true : false,
+            csurfToken: req.csrfToken()
         })
     }
 
