@@ -11,7 +11,7 @@ class ControllerUser {
             path: "Dang-nhap",
             isUser: req.cookies.user? true : false,
             csurfToken: req.csrfToken(),
-            validators: [],
+            inputsErrors: [],
             formField: {
                 email: '',
                 password: ''
@@ -24,7 +24,8 @@ class ControllerUser {
             title: 'Đăng nhập',
             path: "Dang-ky",
             isUser: req.cookies.user? true : false,
-            csurfToken: req.csrfToken()
+            csurfToken: req.csrfToken(),
+            formError: req.flash('form-error'),
         })
     }
 
@@ -43,7 +44,7 @@ class ControllerUser {
                 path: "Dang-nhap",
                 isUser: req.cookies.user? true : false,
                 csurfToken: req.csrfToken(),
-                validators: errors,
+                inputsErrors: errors,
                 formField: { email, password }
             })
 
@@ -59,6 +60,7 @@ class ControllerUser {
                     })
 
                 } else {
+                    req.flash('form-error', "Accoutn unregistered");
                     res.redirect("/user/signup");
                 }
             })
@@ -70,21 +72,25 @@ class ControllerUser {
     }
 
     userSignup = (req, res, next) => {
-        let { username, email, password} = req.body;
-        utilbcrypt.hash(password, (infor) => {
-            ModelUser.create({name: username, email, password: infor.hash})
-            .then((user) => {
-                if(user) {
-                    res.cookie('user', {username: user.name, email: user.email});
-                    res.redirect("/");
-                }
+        let { user_name, email, password, password_confirm} = req.body;
+        let {errors} = validationResult(req);
 
-            })
-            .catch((error) => {
-                res.status(400).json({status: false, error});
+        console.log(errors);
 
-            })
-        })
+        // utilbcrypt.hash(password, (infor) => {
+        //     ModelUser.create({name: username, email, password: infor.hash})
+        //     .then((user) => {
+        //         if(user) {
+        //             res.cookie('user', {username: user.name, email: user.email});
+        //             res.redirect("/");
+        //         }
+
+        //     })
+        //     .catch((error) => {
+        //         res.status(400).json({status: false, error});
+
+        //     })
+        // })
     }
 
     fetchUserById = (req, res, next) => { }

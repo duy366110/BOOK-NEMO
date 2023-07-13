@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyparser = require('body-parser');
 const cookieparser = require("cookie-parser");
+const session = require('express-session');
+const flash = require('connect-flash');
 const csurf = require('csurf');
 const path = require('path');
 
@@ -18,8 +20,15 @@ app.use(bodyparser.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.use(session({
+    secret: 'secret_application_book_nemo_366110',
+    resave: false,
+    saveUninitialized: true,
+}))
+
 app.use(cookieparser());
 app.use(csurfProtection);
+app.use(flash());
 
 app.use(router);
 
