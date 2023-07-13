@@ -19,6 +19,17 @@
     padding: 2rem;
 }
 
+.form-message {
+    background-color: #dc35456b;
+    color: #dc3545;
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: .2px;
+    margin: 10px 0px;
+    padding: 5px;
+    text-align: center;
+}
+
 .input-message {
     color: #dc3545;
     font-size: 1.5rem;
