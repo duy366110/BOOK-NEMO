@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyparser = require('body-parser');
+const cookieparser = require("cookie-parser");
 const path = require('path');
 
 const router = require('./router/router');
@@ -14,6 +15,8 @@ app.use(bodyparser.json());
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(cookieparser());
 
 
 app.use(router);

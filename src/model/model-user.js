@@ -12,22 +12,21 @@ const ModelUser = new Schema({
     },
     password: {
         type: String,
-        default: ''
+        default: 'P@ssword123'
     },
     role: {
         type: Schema.Types.ObjectId,
-        required: true,
-        default: ''
+        ref: 'roles'
     },
     cart: [
         {
             product: {
                 type: Schema.Types.ObjectId,
-                required: true
+                required: true,
+                ref: 'products'
             },
             quantity: {
                 type: Number,
-                required: true,
                 default: 0
             }
         }

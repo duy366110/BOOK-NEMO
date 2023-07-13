@@ -10,7 +10,8 @@ class ControllerAdmin {
             res.render('pages/admin/page-admin', {
                 title: 'Quản trị sản phẩm',
                 path: 'Quan-tri',
-                products
+                products,
+                isUser: req.cookies.user? true : false
             });
         })
         .catch((error) => {
@@ -23,6 +24,7 @@ class ControllerAdmin {
         res.render('pages/admin/page-admin-user', {
             title: 'Quản trị người dùng',
             path: 'Quan-tri',
+            isUser: req.cookies.user? true : false
         });
     }
 
@@ -30,6 +32,7 @@ class ControllerAdmin {
         res.render('pages/admin/page-admin-role', {
             title: 'Quản trị quyển qaunr trị',
             path: 'Quan-tri',
+            isUser: req.cookies.user? true : false
         });
     }
 
@@ -41,7 +44,8 @@ class ControllerAdmin {
             res.render('pages/admin/product/page-admin-edit-product', {
                 title: 'Chỉnh sửa thông tin sản phẩm',
                 path: 'Quan-tri',
-                product: product? product : null
+                product: product? product : null,
+                isUser: req.cookies.user? true : false
             })
         })
         .catch((error) => {
@@ -53,7 +57,8 @@ class ControllerAdmin {
     renderPageNewProduct = (req, res, next) => {
         res.render("pages/admin/product/page-admin-new-product", {
             title: 'Thêm mới sản phẩm',
-            path: 'Quan-tri'
+            path: 'Quan-tri',
+            isUser: req.cookies.user? true : false
         })
     }
 

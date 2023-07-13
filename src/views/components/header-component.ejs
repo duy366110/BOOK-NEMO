@@ -12,10 +12,13 @@
                 <li><a href="/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
             </ul>
 
-            <ul class="col-lg-3 d-none d-lg-flex">
-                <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
-                <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
-                <li><a href="#">Đăng xuất</a></li>
+            <ul class="col-lg-3 d-none d-lg-flex justify-content-end">
+                <% if(!isUser) { %>
+                    <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
+                    <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
+                <% } else { %>
+                    <li><a href="/user/signout">Đăng xuất</a></li>
+                <% } %>
             </ul>
         </div>
     </div>

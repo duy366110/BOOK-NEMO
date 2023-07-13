@@ -4,13 +4,15 @@ class ControllerHome {
     constructor() { }
 
     renderPageHome = (req, res, next) => {
+
         ModelProduct.find({})
         .then((products) => {
 
             res.render('pages/shop/page-home', {
                 title: 'Trang chủ',
                 path: 'Trang-chu',
-                products
+                products,
+                isUser: req.cookies.user? true : false
             });
 
         })
