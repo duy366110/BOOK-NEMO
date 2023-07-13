@@ -45,7 +45,8 @@ class ControllerAdmin {
                 title: 'Chỉnh sửa thông tin sản phẩm',
                 path: 'Quan-tri',
                 product: product? product : null,
-                isUser: req.cookies.user? true : false
+                isUser: req.cookies.user? true : false,
+                csurfToken: req.csrfToken()
             })
         })
         .catch((error) => {
@@ -58,7 +59,8 @@ class ControllerAdmin {
         res.render("pages/admin/product/page-admin-new-product", {
             title: 'Thêm mới sản phẩm',
             path: 'Quan-tri',
-            isUser: req.cookies.user? true : false
+            isUser: req.cookies.user? true : false,
+            csurfToken: req.csrfToken()
         })
     }
 

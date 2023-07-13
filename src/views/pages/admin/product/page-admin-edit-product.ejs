@@ -29,6 +29,7 @@
                     </div>
 
                     <input type="hidden" name="product" value="<%= product? product._id : '' %>">
+                    <input type="hidden" name="_csrf" value="<%= csurfToken %>">
 
                     <button type="submit" class="btn">Lưu thay đổi</button>
                 </form>
