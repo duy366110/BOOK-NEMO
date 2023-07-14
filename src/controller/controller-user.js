@@ -41,7 +41,7 @@ class ControllerUser {
         res.redirect('/');
     }
 
-    userSignin = (req, res, next) => {
+    userSignin = async (req, res, next) => {
         let { email , password} = req.body;
         let { errors } = validationResult(req);
 
@@ -56,8 +56,9 @@ class ControllerUser {
             })
 
         } else {
-            ModelUser.findOne({email: {$eq: email}})
-            .then((user) => {
+            try {
+                let user = await ModelUser.findOne({email: {$eq: email}});
+
                 if(user) {
                     utilbcrypt.compare(password, user.password, (status) => {
                         if(status) {
@@ -67,18 +68,19 @@ class ControllerUser {
                     })
 
                 } else {
-                    req.flash('form-error', "Accoutn unregistered");
+                    req.flash('form-error', "Tài khoản chưa đăng ký");
                     res.redirect("/user/signup");
                 }
-            })
-            .catch((error) => {
-                res.status(400).json({status: false, error});
-
-            })
+                
+            } catch (err) {
+                let error = new Error(err.message);
+                error.httpStatusCode = 500;
+                return next(error);
+            }
         }
     }
 
-    userSignup = (req, res, next) => {
+    userSignup = async (req, res, next) => {
         let { user_name, email, password, password_confirm} = req.body;
         let {errors} = validationResult(req);
 
@@ -94,30 +96,23 @@ class ControllerUser {
             })
 
         } else {
-            utilbcrypt.hash(password, (infor) => {
-                ModelUser.create({name: user_name, email, password: infor.hash})
-                .then((user) => {
+            try {
+                utilbcrypt.hash(password, async (infor) => {
+                    let user = await ModelUser.create({name: user_name, email, password: infor.hash});
                     if(user) {
                         res.cookie('user', {username: user.name, email: user.email});
                         res.redirect("/");
                     }
-
                 })
-                .catch((error) => {
-                    res.status(400).json({status: false, error});
 
-                })
-            })
+            } catch (err) {
+                let error = new Error(err.message);
+                error.httpStatusCode = 500;
+                return next(error);
+
+            }
         }
     }
-
-    fetchUserById = (req, res, next) => { }
-
-    saveUser = (req, res, next) => { }
-
-    updateUser = (req, res, next) => { }
-
-    deleteUser = (req, res, next) => { }
 }
 
 module.exports = new ControllerUser();

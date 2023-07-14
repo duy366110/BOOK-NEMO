@@ -3,10 +3,9 @@ class ControllerHome {
 
     constructor() { }
 
-    renderPageHome = (req, res, next) => {
-
-        ModelProduct.find({})
-        .then((products) => {
+    renderPageHome = async (req, res, next) => {
+        try {
+            let products = await ModelProduct.find({});
 
             res.render('pages/shop/page-home', {
                 title: 'Trang chủ',
@@ -15,11 +14,12 @@ class ControllerHome {
                 isUser: req.cookies.user? true : false
             });
 
-        })
-        .catch((error) => {
-            throw error;
-
-        })
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+            
+        }
     }
 }
 
