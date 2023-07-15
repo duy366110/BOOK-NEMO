@@ -1,5 +1,6 @@
 const { validationResult } = require('express-validator');
 const ModelProduct = require("../model/model-product");
+const ModelRole = require("../model/model-roles");
 
 class ControllerAdmin {
 
@@ -33,14 +34,62 @@ class ControllerAdmin {
         });
     }
 
+    // PHÂN QUYỀN
     renderPageAdminRole = (req, res, next) => {
         res.render('pages/admin/page-admin-role', {
-            title: 'Quản trị quyển qaunr trị',
+            title: 'Quản trị quyển quản trị',
             path: 'Quan-tri',
             isUser: req.cookies.user? true : false
         });
     }
 
+    renderPageNewRole = (req, res, next) => {
+        res.render('pages/admin/role/page-admin-new-role', {
+            title: 'Quản trị phân quyền',
+            path: 'Quan-tri',
+            isUser: req.cookies.user? true : false,
+            csurfToken: req.csrfToken(),
+            inputsErrors: [],
+            formField: {
+                role: ''
+            }
+        })
+    }
+
+    saveRole = async (req, res, next) => {
+        let { role } = req.body;
+        let { errors } = validationResult(req);
+
+        if(errors.length) {
+            res.render('pages/admin/role/page-admin-new-role', {
+                title: 'Quản trị phân quyền',
+                path: 'Quan-tri',
+                isUser: req.cookies.user? true : false,
+                csurfToken: req.csrfToken(),
+                inputsErrors: errors,
+                formField: {
+                    role
+                }
+            })
+
+        } else {
+            try {
+                let roleNew = await ModelRole.create({name: role, users: []});
+                if(roleNew) {
+                    res.redirect("/admin/role");
+                }
+            
+            } catch (err) {
+                let error = Error(err.message);
+                error.httpStatusCode = 500;
+                return next(error);
+            }
+            
+            
+        }
+    }
+
+    // SẢN PHẨM
     renderPageEditProduct = async (req, res, next) => {
         let { product } = req.query;
 

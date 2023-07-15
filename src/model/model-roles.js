@@ -9,7 +9,6 @@ const ModelRole = new Schema({
     users: [
         {
             type: Schema.Types.ObjectId,
-            required: true,
             ref: 'users'
         }
     ]
