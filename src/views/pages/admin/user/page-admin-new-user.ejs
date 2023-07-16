@@ -1,0 +1,84 @@
+<%- include("../../../components/head-component.ejs") %>
+<link rel="stylesheet" href="/css/components/page-admin-new-user.css">
+</head>
+<body>
+    <main>
+        <%- include("../../../components/header-component.ejs") %>
+
+        <div class="component-wrapper">
+            <div class="container">
+                <form class="form-container" action="/user/new" method="post" novalidate>
+                    <h2 class="form-title">Thêm mới tài khoản</h2>
+
+                    <div class="form-group">
+                        <label class="form-label" for="user_name">Họ và tên người dùng</label>
+                        <input
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'user_name')? 'form-control is-invalid' : 'form-control' %>"
+                            type="text" name="user_name" id="user_name"/>
+
+                            <% if(inputsErrors.some((elm)=> elm.path === 'user_name')) { %>
+                                <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'user_name')?.msg %></small>
+                            <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">E-mail</label>
+                        <input
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'email')? 'form-control is-invalid' : 'form-control' %>"
+                            type="email" name="email" id="email"/>
+
+                            <% if(inputsErrors.some((elm)=> elm.path === 'email')) { %>
+                                <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'email')?.msg %></small>
+                            <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Mật khẩu</label>
+                        <input
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'password')? 'form-control is-invalid' : 'form-control' %>"
+                            type="password" name="password" id="password"/>
+
+                            <% if(inputsErrors.some((elm)=> elm.path === 'password')) { %>
+                                <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'password')?.msg %></small>
+                            <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password_confirm">Nhập lại mật khẩu</label>
+                        <input
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'password_confirm')? 'form-control is-invalid' : 'form-control' %>"
+                            type="password" name="password_confirm" id="password_confirm"/>
+
+                            <% if(inputsErrors.some((elm)=> elm.path === 'password_confirm')) { %>
+                                <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'password_confirm')?.msg %></small>
+                            <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="user_name">Quyèn tài khoản</label>
+                        <select
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'role')? 'form-control-custom is-invalid' : 'form-control-custom' %>"
+                            name="role" id="role">
+                            <option value="default">Please choose role user</option>
+                            <% if(roles.length) { %>
+                                <% roles.forEach((elm, index) => { %>
+                                    <option value="<%= elm._id %>"><%= elm.name %></option>
+                                <% }) %>
+
+                            <% } %>
+                        </select>
+
+                        <% if(inputsErrors.some((elm)=> elm.path === 'role')) { %>
+                            <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'role')?.msg %></small>
+                        <% } %>
+                    </div>
+
+                    <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+
+                    <button type="submit" class="btn w-100 mt-3">Tạo mới</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+<%- include("../../../components/footer-component.ejs") %>

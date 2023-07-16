@@ -37,8 +37,10 @@
                                 <td><%= role.name %></td>
                                 <td><%= role.users.length %></td>
                                 <td>
-                                    <button class="btn mb-0">Sữa</button>
-                                    <% if(role.name != 'Admin') { %><button class="btn mb-0">Xoá</button> <% } %>
+                                    <% if(role.name != 'Admin') { %>
+                                        <button class="btn mb-0">Sữa</button>
+                                        <button class="btn mb-0">Xoá</button>
+                                    <% } %>
                                 </td>
                             </tr>
                             <% }) %>
