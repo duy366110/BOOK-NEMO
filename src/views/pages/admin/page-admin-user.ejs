@@ -15,10 +15,51 @@
                 </div>
 
                 <div class="admin-tab">
-                    <a class="btn" href="#">Thêm phân người dùng</a>
+                    <a class="btn" href="/user/new">Thêm phân người dùng</a>
                 </div>
 
-                <div class="row"></div>
+                <div class="table-container">
+                    <% if(users.length) { %>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Tên tài khoản</th>
+                                <th scope="col">E-mail tài khoản</th>
+                                <th scope="col">Quyềnl tài khoản</th>
+                                <th scope="col">Đặt lại mật khẩu</th>
+                                <th scope="col">Hành động</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <% users.forEach((user, index) => { %>
+                            <tr>
+                                <td scope="row"><%= index %></td>
+                                <td><%= user.name %></td>
+                                <td><%= user.email %></td>
+                                <td>
+                                    <% if(user?.role) { %>
+                                        <%= user.role.name %>
+                                    <% } else { %>
+                                        <p>Không xác định</p>
+                                    <% } %>
+                                </td>
+                                <td><button class="btn mb-0">Đặt lại mật khẩu</button></td>
+                                <td>
+                                    <a href="#" class="btn mb-0">Sữa</a>
+                                    <button class="btn mb-0">Xoá</button>
+                                </td>
+                            </tr>
+                            <% }) %>
+
+                        </tbody>
+                    </table>
+
+                    <% } else {%>
+                        <h2 class="balnk-value">Không có nội dung phù hợp</h2>
+                    <% } %>
+                </div>
             </div>
         </div>
     </main>

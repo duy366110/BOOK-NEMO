@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const ModelProduct = require("../model/model-product");
 const ModelRole = require("../model/model-roles");
+const ModelUser = require('../model/model-user');
 
 class ControllerAdmin {
 
@@ -26,12 +27,26 @@ class ControllerAdmin {
 
     }
 
-    renderPageAdminUser = (req, res, next) => {
-        res.render('pages/admin/page-admin-user', {
-            title: 'Quản trị người dùng',
-            path: 'Quan-tri',
-            isUser: req.cookies.user? true : false
-        });
+
+    // NGƯỜI DÙNG
+
+    renderPageAdminUser = async (req, res, next) => {
+        try {
+            let users = await ModelUser.find({}).select(['name', 'email', 'role']).populate('role');
+
+            res.render('pages/admin/page-admin-user', {
+                title: 'Quản trị người dùng',
+                path: 'Quan-tri',
+                isUser: req.cookies.user? true : false,
+                users
+            });
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+
+        }
     }
 
     // PHÂN QUYỀN
