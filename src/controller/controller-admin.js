@@ -35,12 +35,24 @@ class ControllerAdmin {
     }
 
     // PHÂN QUYỀN
-    renderPageAdminRole = (req, res, next) => {
-        res.render('pages/admin/page-admin-role', {
-            title: 'Quản trị quyển quản trị',
-            path: 'Quan-tri',
-            isUser: req.cookies.user? true : false
-        });
+    renderPageAdminRole = async (req, res, next) => {
+        
+        try {
+            let roles = await ModelRole.find({});
+
+            res.render('pages/admin/page-admin-role', {
+                title: 'Quản trị quyển quản trị',
+                path: 'Quan-tri',
+                isUser: req.cookies.user? true : false,
+                roles
+            });
+
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
     }
 
     renderPageNewRole = (req, res, next) => {

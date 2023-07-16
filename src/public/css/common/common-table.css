@@ -1,0 +1,25 @@
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
+
+.table {
+    font-size: 1.5rem;
+}
+
+.table thead tr th, .table tbody tr td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+@media screen and (min-width: 320px) {
+    .table {
+        width: calc(100% + 250px);
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .table {
+        width: 100%;
+    }
+}
