@@ -32,3 +32,57 @@ header ul li a.active, header ul li a:hover {
     color: #f5e10b;
     text-decoration: none;
 }
+
+/* HAMBURGER BTN */
+.header-hamburger {
+    background-color: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    outline: unset;
+    padding: 0px;
+    position: relative;
+    width: 50px;
+}
+
+.header-hamburger::before, .header-hamburger::after {
+    background-color: #ffffff;
+    content: '';
+    height: 5px;
+    position: absolute;
+    transition: all .3s ease;
+    width: 50px;
+}
+
+.header-hamburger::before {
+    left: 0px;
+    top: 0px;
+}
+
+.header-hamburger::after {
+    bottom: 0px;
+    left: 0px;
+}
+
+.hamburger-content {
+    background-color: #ffffff;
+    height: 5px;
+    transition: all .3s ease;
+    width: 50px;
+}
+
+.header-hamburger.active .hamburger-content {
+    opacity: 0;
+}
+
+.header-hamburger.active::before {
+    top: 55%;
+    transform: translateY(-55%) rotate(45deg);
+}
+
+.header-hamburger.active::after {
+    bottom: 45%;
+    transform: rotate(-45deg);
+}
