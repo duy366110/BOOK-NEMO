@@ -8,6 +8,7 @@ router.get('/signup', ControllerUser.renderUserSignup);
 router.get('/signout', ControllerUser.userSignout);
 
 router.get('/new', ControllerUser.renderNewAccount);
+router.get('/edit', ControllerUser.renderEditAccount);
 
 router.post("/signin",
     [
@@ -92,5 +93,21 @@ router.post("/new",
         return true;
     })
 ], ControllerUser.newAccount);
+
+router.post('/edit', [
+    body('user_name').notEmpty().withMessage('User name not be empty'),
+    body('email').custom(async (value, {req}) => {
+        if(!value) throw new Error('E-mail cannot be empty');
+        if(!/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i.test(value)) {
+            throw Error('Please enter e-mail');
+        }
+        
+        return true;
+    }),
+    body('role').custom((value, {req}) => {
+        if(value === 'default') throw Error('Quyền tài khoản không được trống');
+        return true;
+    })
+], ControllerUser.editAccount);
 
 module.exports = router;
