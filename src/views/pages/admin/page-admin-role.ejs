@@ -18,7 +18,39 @@
                     <a class="btn" href="/admin/role/new">Thêm phân quyền</a>
                 </div>
 
-                <div class="row"></div>
+                <div class="table-container">
+                    <% if(roles.length) { %>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Loại quyền</th>
+                                <th scope="col">Tài khoản hiện có</th>
+                                <th scope="col">Hành động</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <% roles.forEach((role, index) => { %>
+                            <tr>
+                                <td scope="row"><%= index %></td>
+                                <td><%= role.name %></td>
+                                <td><%= role.users.length %></td>
+                                <td>
+                                    <button class="btn mb-0">Sữa</button>
+                                    <% if(role.name != 'Admin') { %><button class="btn mb-0">Xoá</button> <% } %>
+                                </td>
+                            </tr>
+                            <% }) %>
+
+                        </tbody>
+                    </table>
+
+                    <% } else {%>
+                        <h2 class="balnk-value">Không có nội dung phù hợp</h2>
+                    <% } %>
+                </div>
+
             </div>
         </div>
     </main>
