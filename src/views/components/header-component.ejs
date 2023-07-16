@@ -7,13 +7,19 @@
 
             <ul class="col-lg-7 d-none d-lg-flex">
                 <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
-                <li><a href="#">Giỏ hàng</a></li>
-                <li><a href="#">Đặt hành</a></li>
-                <li><a href="/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
+                
+                <% if(isLogin) { %>
+                    <li><a href="#">Giỏ hàng</a></li>
+                    <li><a href="#">Đặt hành</a></li>
+                <% } %>
+
+                <% if (isRole === 'Admin') { %>
+                    <li><a href="/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
+                <% } %>
             </ul>
 
             <ul class="col-lg-3 d-none d-lg-flex justify-content-end">
-                <% if(!isUser) { %>
+                <% if(!isLogin) { %>
                     <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
                     <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
                 <% } else { %>

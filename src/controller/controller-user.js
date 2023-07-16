@@ -8,10 +8,13 @@ class ControllerUser {
 
     // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
     renderUserSignin = (req, res, next) => {
+        let isRole  = req.session.role;
+
         res.render("pages/auth/page-auth-signin", {
             title: 'Đăng ký',
             path: "Dang-nhap",
-            isUser: req.cookies.user? true : false,
+            isLogin: req.cookies.user? true : false,
+            isRole:  isRole? isRole : 'Client',
             csurfToken: req.csrfToken(),
             inputsErrors: [],
             formField: {
@@ -23,10 +26,13 @@ class ControllerUser {
 
     // RENDER TRANG ĐỂ NGƯỜI DÙNG TỰ ĐĂNG KÝ
     renderUserSignup = (req, res, next) => {
+        let isRole  = req.session.role;
+
         res.render("pages/auth/page-auth-signup", {
             title: 'Đăng nhập',
             path: "Dang-ky",
-            isUser: req.cookies.user? true : false,
+            isLogin: req.cookies.user? true : false,
+            isRole:  isRole? isRole : 'Client',
             csurfToken: req.csrfToken(),
             formError: req.flash('form-error'),
             inputsErrors: [],
@@ -43,11 +49,13 @@ class ControllerUser {
     renderNewAccount = async (req, res, next) => {
         try {
             let roles = await ModelRole.find({}).select('name');
+            let isRole  = req.session.role;
 
             res.render("pages/admin/user/page-admin-new-user", {
                 title: 'Tạo tài khoản',
                 path: "Quan-tri",
-                isUser: req.cookies.user? true : false,
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client',
                 csurfToken: req.csrfToken(),
                 inputsErrors: [],
                 roles,
@@ -71,6 +79,7 @@ class ControllerUser {
     // RENDER TRANG ĐỂ ADMIN CHỈNH SỬA THÔNG TIN TÀI KHOẢN
     renderEditAccount = async (req, res, next) => {
         let { user } = req.query;
+        let isRole  = req.session.role;
 
         try {
             let roles = await ModelRole.find({}).select('name');
@@ -79,7 +88,8 @@ class ControllerUser {
             res.render("pages/admin/user/page-admin-edit-user", {
                 title: 'Chỉnh sửa thông tin tài khoản',
                 path: "Quan-tri",
-                isUser: req.cookies.user? true : false,
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client',
                 csurfToken: req.csrfToken(),
                 inputsErrors: [],
                 roles,
@@ -101,20 +111,32 @@ class ControllerUser {
 
     // NGƯỜI DÙNG ĐĂNG XUẤT
     userSignout = (req, res, next) => {
-        res.cookie('user', null, {expires: new Date(0)});
-        res.redirect('/');
+        req.session.destroy((err) => {
+            if(err) {
+                let error = Error('Logout failed');
+                error.httpStatusCode = 500;
+                return next(error);
+
+            } else {
+                res.cookie('user', null, {expires: new Date(0)});
+                res.redirect('/');
+
+            }
+        })
     }
 
     // NGƯỜI DÙNG ĐĂNG NHẬP
     userSignin = async (req, res, next) => {
         let { email , password} = req.body;
+        let isRole  = req.session.role;
         let { errors } = validationResult(req);
 
         if(errors.length) {
             res.render("pages/auth/page-auth-signin", {
                 title: 'Đăng ký',
                 path: "Dang-nhap",
-                isUser: req.cookies.user? true : false,
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client',
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
                 formField: { email, password }
@@ -122,12 +144,14 @@ class ControllerUser {
 
         } else {
             try {
-                let user = await ModelUser.findOne({email: {$eq: email}});
+                let user = await ModelUser.findOne({email: {$eq: email}}).populate('role');
 
                 if(user) {
                     utilbcrypt.compare(password, user.password, (status) => {
+
                         if(status) {
                             res.cookie('user', {username: user.name, email: user.email});
+                            req.session.role = user.role.name;
                             res.redirect("/");
                         }
                     })
@@ -148,13 +172,15 @@ class ControllerUser {
     // NGƯỜI DÙNG ĐĂNG KÝ
     userSignup = async (req, res, next) => {
         let { user_name, email, password, password_confirm} = req.body;
+        let isRole  = req.session.role;
         let {errors} = validationResult(req);
 
         if(errors.length) {
             res.render("pages/auth/page-auth-signup", {
                 title: 'Đăng nhập',
                 path: "Dang-ky",
-                isUser: req.cookies.user? true : false,
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client',
                 csurfToken: req.csrfToken(),
                 formError: req.flash('form-error'),
                 inputsErrors: errors,
@@ -162,12 +188,27 @@ class ControllerUser {
             })
 
         } else {
+            let clientRole = await ModelRole.findOne({name: 'Client'});
+
             try {
                 utilbcrypt.hash(password, async (infor) => {
-                    let user = await ModelUser.create({name: user_name, email, password: infor.hash});
-                    if(user) {
-                        res.cookie('user', {username: user.name, email: user.email});
-                        res.redirect("/");
+                    try {
+                        let user = await ModelUser.create({name: user_name, email, password: infor.hash, role: clientRole});
+
+                        if(user) {
+                            clientRole.users.push(user);
+                            await clientRole.save();
+
+                            res.cookie('user', {username: user.name, email: user.email});
+                            req.session.role = clientRole.name;
+                            res.redirect("/");
+                        }
+
+                    } catch (err) {
+                        let error = new Error(err.message);
+                        error.httpStatusCode = 500;
+                        return next(error);
+
                     }
                 })
 
@@ -183,6 +224,7 @@ class ControllerUser {
     // ADMIN TẠO TÀI KHOẢN NGƯỜI DÙNG
     newAccount = async (req, res, next) => {
         let roles = await ModelRole.find({});
+        let isRole  = req.session.role;
         let { user_name, email, password, password_confirm, role } = req.body;
         let { errors } = validationResult(req);
 
@@ -190,7 +232,8 @@ class ControllerUser {
             res.render("pages/admin/user/page-admin-new-user", {
                 title: 'Tạo tài khoản',
                 path: "Quan-tri",
-                isUser: req.cookies.user? true : false,
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client',
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
                 roles,
@@ -222,6 +265,7 @@ class ControllerUser {
     // ADMIN SỬA THÔNG TIN TÀI KHOẢN
     editAccount = async (req, res, next) => {
         let roles = await ModelRole.find({}).populate('users');
+        let isRole  = req.session.role;
         let { id, user_name, email,  role} = req.body;
         let { errors } = validationResult(req);
 
@@ -229,7 +273,8 @@ class ControllerUser {
             res.render("pages/admin/user/page-admin-edit-user", {
                 title: 'Chỉnh sửa thông tin tài khoản',
                 path: "Quan-tri",
-                isUser: req.cookies.user? true : false,
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client',
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
                 roles,

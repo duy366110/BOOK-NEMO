@@ -4,14 +4,17 @@ class ControllerHome {
     constructor() { }
 
     renderPageHome = async (req, res, next) => {
+        
         try {
+            let isRole  = req.session.role;
             let products = await ModelProduct.find({});
 
             res.render('pages/shop/page-home', {
                 title: 'Trang chủ',
                 path: 'Trang-chu',
                 products,
-                isUser: req.cookies.user? true : false
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client'
             });
 
         } catch (err) {
