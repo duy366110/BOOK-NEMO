@@ -2,6 +2,7 @@ const express = require('express');
 const bodyparser = require('body-parser');
 const cookieparser = require("cookie-parser");
 const session = require('express-session');
+const sessionstore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
 const csurf = require('csurf');
 const path = require('path');
@@ -9,6 +10,10 @@ const path = require('path');
 const router = require('./router/router');
 const mongodb = require("./utils/util-database");
 const csurfProtection = csurf({cookie: true});
+const store = new sessionstore({
+    uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/book_nemo',
+    collection: 'session'
+})
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -23,7 +28,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(session({
     secret: 'secret_application_book_nemo_366110',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: store,
+    cookie: {
+        maxAge: 60 * 60 * 24
+    }
 }))
 
 app.use(cookieparser());
