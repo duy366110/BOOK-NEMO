@@ -52,6 +52,7 @@ header ul li a.active, header ul li a:hover {
     content: '';
     height: 5px;
     position: absolute;
+    transition: all .3s ease;
     width: 50px;
 }
 
@@ -77,11 +78,11 @@ header ul li a.active, header ul li a:hover {
 }
 
 .header-hamburger.active::before {
-    top: 50%;
-    transform: translateY(-50%) rotate(45deg);
+    top: 55%;
+    transform: translateY(-55%) rotate(45deg);
 }
 
 .header-hamburger.active::after {
-    bottom: 50%;
-    transform: translateY(-50%) rotate(-45deg);
+    bottom: 45%;
+    transform: rotate(-45deg);
 }
