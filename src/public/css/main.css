@@ -4,6 +4,14 @@
     padding-top: 4.5rem;
 }
 
+/* BLANK MESSAGE */
+.blank {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: .3px;
+    text-align: center;
+    text-transform: capitalize;
+}
 
 /* DEFINE BUTTON */
 .btn {

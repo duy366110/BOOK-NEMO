@@ -19,6 +19,10 @@
     padding: 2rem;
 }
 
+.form-control-file {
+    padding: 2px;
+}
+
 .form-message {
     background-color: #dc35456b;
     color: #dc3545;

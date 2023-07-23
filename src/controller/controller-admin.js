@@ -180,8 +180,10 @@ class ControllerAdmin {
         })
     }
 
+    // ADMIN THÊM SẢN PHẨM
     saveProduct = async (req, res, next) => {
         let { title, image, price, description} = req.body;
+        let { file } = req;
         let isRole  = req.session.role;
         const { errors } = validationResult(req);
 
@@ -199,7 +201,12 @@ class ControllerAdmin {
 
         } else {
             try {
-                let product = await ModelProduct.create({title, image, price, description});
+                let pathImage = '';
+                if(file) {
+                    pathImage = file.path;
+                }
+
+                let product = await ModelProduct.create({title, image: pathImage, price, description});
                 if(product) res.redirect("/");
 
             } catch (err) {

@@ -17,6 +17,10 @@ const ModelProduct = new Schema({
     description: {
         type: String,
         default: ''
+    },
+    status: {
+        type: Boolean,
+        default: false
     }
 }, {
     collection: 'products'
