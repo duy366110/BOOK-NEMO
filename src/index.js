@@ -5,6 +5,9 @@ const session = require('express-session');
 const sessionstore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
 const csurf = require('csurf');
+const multer = require('multer');
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
 const path = require('path');
 
 const router = require('./router/router');
@@ -14,7 +17,25 @@ const store = new sessionstore({
     uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/book_nemo',
     collection: 'session'
 })
+
 const app = express();
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
+})
+
+const storage = new CloudinaryStorage({
+    cloudinary,
+    allowedFormats: ['jpg', 'png'],
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); 
+    },
+    params: {
+        folder: 'book_nemo',
+    }
+})
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -29,15 +50,14 @@ app.use(session({
     secret: 'secret_application_book_nemo_366110',
     resave: false,
     saveUninitialized: false,
-    store: store,
-    cookie: {
-        maxAge: 60 * 60 * 24
-    }
+    store: store
 }))
 
 app.use(cookieparser());
 app.use(csurfProtection);
 app.use(flash());
+
+app.use(multer({storage: storage}).single("image"));
 
 app.use(router);
 

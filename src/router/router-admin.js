@@ -30,11 +30,6 @@ router.post('/product/new', [
         return true;
     }),
 
-    body('image').custom((value, {req}) => {
-        if(!value) throw Error('Ảnh sản phẩm không được trống');
-        return true;
-    }),
-
     body('price').custom((value, {req}) => {
         if(!value) throw Error("Giá sản phẩm không được trongó");
         return true;
