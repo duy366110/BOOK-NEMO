@@ -6,36 +6,19 @@ const sessionstore = require('connect-mongodb-session')(session);
 const flash = require('connect-flash');
 const csurf = require('csurf');
 const multer = require('multer');
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const cloudinary = require("cloudinary").v2;
+const cloudinary = require("./utils/util-cloudinary");
 const path = require('path');
 
 const router = require('./router/router');
 const mongodb = require("./utils/util-database");
 const csurfProtection = csurf({cookie: true});
+
 const store = new sessionstore({
     uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/book_nemo',
     collection: 'session'
 })
 
 const app = express();
-
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME || 'doxnf7bp0',
-    api_key: process.env.CLOUDINARY_KEY || '118274391485986',
-    api_secret: process.env.CLOUDINARY_SECRET || 'duLeYaATcZGYz4gQfNk3BCF7zBw',
-})
-
-const storage = new CloudinaryStorage({
-    cloudinary,
-    allowedFormats: ['jpg', 'png'],
-    filename: function (req, file, cb) {
-        cb(null, file.originalname); 
-    },
-    params: {
-        folder: 'book_nemo',
-    }
-})
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -57,7 +40,7 @@ app.use(cookieparser());
 app.use(csurfProtection);
 app.use(flash());
 
-app.use(multer({storage: storage}).single("image"));
+app.use(multer({storage: cloudinary.storage}).single("image"));
 
 app.use(router);
 

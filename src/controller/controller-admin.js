@@ -204,6 +204,7 @@ class ControllerAdmin {
                 let pathImage = '';
                 if(file) {
                     pathImage = file.path;
+                    pathImage = pathImage.replace('src\\public', '');
                 }
 
                 let product = await ModelProduct.create({title, image: pathImage, price, description});
