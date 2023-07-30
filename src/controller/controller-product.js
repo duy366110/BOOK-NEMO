@@ -10,6 +10,43 @@ class ControllerProduct {
 
     fetchProductById = (req, res, next) => { }
 
+    // ADMIN CREATE SẢN PHẨM
+    createProduct = async (req, res, next) => {
+        let { title, image, price, description} = req.body;
+        let { file } = req;
+        let isRole  = req.session.role;
+        const { errors } = validationResult(req);
+
+        if(errors.length) {
+            res.render("pages/admin/product/page-admin-new-product", {
+                title: 'Thêm mới sản phẩm',
+                path: 'Quan-tri',
+                isLogin: req.cookies.user? true : false,
+                isRole:  isRole? isRole : 'Client',
+                csurfToken: req.csrfToken(),
+                formError: req.flash('error'),
+                inputsErrors: errors,
+                formField: { title, image, price, description }
+            })
+
+        } else {
+            try {
+                let pathImage = '';
+                if(file) {
+                    pathImage = file.path? file.path : '';
+                }
+
+                let product = await ModelProduct.create({title, image: pathImage, price, description});
+                if(product) res.redirect("/");
+
+            } catch (err) {
+                let error = new Error('');
+                error.httpStatusCode = 500;
+                return next(error);
+            }
+        }
+    }
+
     updateProduct = (req, res, next) => { }
 
     // ADMIN XOÁ SẢN PHẨM
