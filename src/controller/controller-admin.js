@@ -49,7 +49,8 @@ class ControllerAdmin {
                 path: 'Quan-tri',
                 isLogin: req.cookies.user? true : false,
                 isRole:  isRole? isRole : 'Client',
-                users
+                users,
+                csurfToken: req.csrfToken()
             });
 
         } catch (err) {

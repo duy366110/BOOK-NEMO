@@ -47,8 +47,13 @@
                                 </td>
                                 <td><button class="btn mb-0">Đặt lại mật khẩu</button></td>
                                 <td>
-                                    <a href="/user/edit?user=<%= user._id %>" class="btn mb-0">Sửa thông tin</a>
-                                    <button class="btn mb-0">Xoá</button>
+                                    <a href="/user/edit?user=<%= user._id %>" class="btn mb-0">Sửa</a>
+
+                                    <form action="/user/delete" method="post">
+                                        <input type="hidden" name="user" value="<%= user._id %>" />
+                                        <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+                                        <button type="submit" class="btn mb-0">Xoá</button>
+                                    </form>
                                 </td>
                             </tr>
                             <% }) %>
