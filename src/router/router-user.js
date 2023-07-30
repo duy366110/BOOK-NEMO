@@ -59,6 +59,8 @@ router.post('/signup',
         })
     ], ControllerUser.userSignup);
 
+
+// ADMIN TẠO MỚI THÔNG TIN ACCOUNT
 router.post("/new",
 [
     body('user_name').notEmpty().withMessage('User name not be empty'),
@@ -92,6 +94,7 @@ router.post("/new",
         if(value === 'default') throw Error('Quyền tài khoản không được trống');
         return true;
     })
+
 ], ControllerUser.newAccount);
 
 router.post('/edit', [
@@ -109,5 +112,11 @@ router.post('/edit', [
         return true;
     })
 ], ControllerUser.editAccount);
+
+
+// ADMIN XOÁ THÔNG TIN ACCOUNT
+router.post('/delete', [
+    body('user').notEmpty().withMessage('User ID not empty'),
+], ControllerUser.deleteAccount);
 
 module.exports = router;

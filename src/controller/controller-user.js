@@ -243,11 +243,21 @@ class ControllerUser {
         } else {
             try {
                 utilbcrypt.hash(password, async (infor) => {
-                    let typeRole = roles.find((elm) => elm.id.toString() == role);
-                    let user = await ModelUser.create({name: user_name, email, password: infor.hash, role: typeRole});
+                    let roleInfor = roles.filter((elm) => elm._id.toString() === role);
+                    roleInfor = roleInfor.length? roleInfor[0] : null;
+
+                    // TẠO MỚI ACCOUNT
+                    let user = await ModelUser.create({
+                        name: user_name,
+                        email,
+                        password: infor.hash,
+                        role: roleInfor
+                    });
+
                     if(user) {
-                        typeRole.users.push(user);
-                        await typeRole.save();
+                        // THÊM ACCOUNT VỪA TẠO VÀO ROLE
+                        roleInfor.users.push(user);
+                        await roleInfor.save();
                         res.redirect("/admin/user");
                     }
                 })
@@ -337,6 +347,28 @@ class ControllerUser {
             }
         }
 
+    }
+
+    // ADMIN XOÁ TÀI KHOẢN
+    deleteAccount = async (req, res, next) => {
+        try {
+            let { user } = req.body;
+            let userInfor = await ModelUser.findById(user).populate('role');
+            let roleInfor = userInfor.role;
+
+            // TÌM XOÁ LIÊN KẾT TRONG ROLE TRƯỚC KHI XOÁ USER ACCOUNT
+            roleInfor.users = roleInfor.users.filter((elm) => elm._id.toString() !== user);
+            await roleInfor.save();
+            await userInfor.deleteOne();
+            
+            res.redirect("/admin/user");
+
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
     }
 }
 
