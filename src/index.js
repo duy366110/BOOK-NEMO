@@ -21,9 +21,9 @@ const store = new sessionstore({
 const app = express();
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET
+    cloud_name: process.env.CLOUDINARY_NAME || 'doxnf7bp0',
+    api_key: process.env.CLOUDINARY_KEY || '118274391485986',
+    api_secret: process.env.CLOUDINARY_SECRET || 'duLeYaATcZGYz4gQfNk3BCF7zBw',
 })
 
 const storage = new CloudinaryStorage({
