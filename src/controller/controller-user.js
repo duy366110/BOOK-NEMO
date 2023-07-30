@@ -242,6 +242,7 @@ class ControllerUser {
 
         } else {
             try {
+                // MÃ HOÁ MẬT KHẨU
                 utilbcrypt.hash(password, async (infor) => {
                     let roleInfor = roles.filter((elm) => elm._id.toString() === role);
                     roleInfor = roleInfor.length? roleInfor[0] : null;
@@ -288,56 +289,34 @@ class ControllerUser {
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
                 roles,
-                formField: {
-                    id,
-                    user_name,
-                    email,
-                    role,
-                }
+                formField: { id, user_name, email, role }
             })
 
         } else {
             try {
+                // LẤY THÔNG TIN USẺ VÀ CẬP NHẬT
                 let user = await ModelUser.findOne({_id: {$eq: id}}).populate('role');
-
                 user.name = user_name;
                 user.email = email;
 
-                if(!user.hasOwnProperty('role')) {
-                    // TRƯỜNG HỢP ACCOUNT KHÔNG CÓ ROLE THÊM MỚI
-                    let newRole = roles.find((elm) => elm._id.toString() === role);
-
-                    user.role = newRole;
-                    await user.save();
-
-                    newRole.users.push(user);
-                    await newRole.save();
-
-
-                } else if(user.role._id.toString() !== role) {
+                if(user.role._id.toString() !== role) {
                     // TRƯỜNG HỢP ACCOUNT ĐÃ CÓ ROLE VÀ MUỐN CHUYỂN SANG ROLE KHÁC
+                    user.role.users = user.role.users.filter((elm) => elm._id.toString() !== user._id.toString());
 
-                    let oldRoleUser = roles.find((elm) => elm._id.toString() === user.role._id.toString());
+                    await user.role.save();
 
-                    if(oldRoleUser.users.length) {
-                        let index = oldRoleUser.users.findIndex((elm) => elm._id.toString() === user._id.toString());
-                        oldRoleUser.users.splice(index, 1);
-                        await oldRoleUser.save();
+                    let roleInfor = roles.find((elm) => elm._id.toString() === role);
+                    if(!roleInfor) {
+                        roleInfor = roles.find((elm) => elm.name === 'Client');
                     }
 
-                    let newRoleUser = roles.find((elm) => elm._id.toString() === role);
-                    user.role = newRoleUser;
-                    await user.save();
+                    roleInfor.users.push(user);
+                    await roleInfor.save();
 
-                    newRoleUser.users.push(user);
-                    await newRoleUser.save();
-
-                } else {
-                    // TRƯỜNG HỢP ACCOUNT ĐÃ CÓ ROLE VÀ KHÔNG SỬA ROLE
-                    await user.save();
-
+                    user.role = roleInfor;
                 }
 
+                await user.save();
                 res.redirect("/admin/user");
 
             } catch (err) {
