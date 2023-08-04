@@ -8,8 +8,8 @@
         <%- include("../../components/header-component.ejs") %>
         <div class="component-wrapper">
             <div class="container">
-                <div class="table-container">
-                    <% if(bill.order.length ) { %>
+                <% if(bill && bill.order.length ) { %>
+                    <div class="table-container">
                         <table>
                             <thead>
                                 <tr>
@@ -54,11 +54,10 @@
                                 </tr>
                             </tbody>
                         </table>
-
-                        <% } else { %>
-                            <p class="blank col-12">Bạn chưa có sản phẩm trong giỏ hàng</p>
-                        <% } %>
-                </div>
+                    </div>
+                <% } else { %>
+                    <p class="blank col-12">Hoá đơn trống</p>
+                <% } %>
             </div>
         </div>
     </main>
