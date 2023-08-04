@@ -26,7 +26,7 @@
      margin-bottom: 0px;
 }
 
-.card-action {
+.card-actions {
     display: flex;
     align-items: center;
     justify-content: space-between;

@@ -1,5 +1,6 @@
 const ModelUser = require("../model/model-user");
 const ModelRole = require("../model/model-roles");
+const ModelProduct = require("../model/model-product");
 const utilbcrypt = require("../utils/util-bcrypt");
 const { validationResult } = require('express-validator');
 class ControllerUser {
@@ -150,7 +151,7 @@ class ControllerUser {
                     utilbcrypt.compare(password, user.password, (status) => {
 
                         if(status) {
-                            res.cookie('user', {username: user.name, email: user.email});
+                            res.cookie('user', { username: user.name, email: user.email });
                             req.session.role = user.role.name;
                             res.redirect("/");
                         }
@@ -342,6 +343,47 @@ class ControllerUser {
             
             res.redirect("/admin/user");
 
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+    }
+
+    // NGƯỜI DÙNG THÊM SẢN PHẨM VÀO GIỞ HÀNG
+    userAddProductToCart = async (req, res, next) => {
+        try {
+            let { product } = req.body;
+            let { errors } = validationResult(req);            
+            let { user } = req.cookies;
+
+            if(errors.length) {
+
+            } else {
+                let userInfor = await ModelUser.findOne({email: {$eq: user.email}});
+
+                if(userInfor) {
+                    let productInfor = await ModelProduct.findById(product);
+
+                    console.log(userInfor);
+                    console.log(productInfor);
+
+                    if(userInfor.cart.length) {
+
+                    } else {
+                        userInfor.cart.push({
+                            product: productInfor,
+                            quantity: 1
+                        })
+                    }
+
+                    await userInfor.save();
+
+                } else {
+                    res.redirect('/cart');
+                }
+            }
 
         } catch (err) {
             let error = Error(err.message);
