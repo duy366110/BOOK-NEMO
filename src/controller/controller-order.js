@@ -36,6 +36,18 @@ class ControllerOrder {
                             bill: orderInfor,
                             total: total,
                         })
+
+                    } else {
+                        res.render("pages/shop/page-order", {
+                            title: 'Đơn hàng',
+                            path: 'Don-hang',
+                            isLogin: req.cookies.user? true : false,
+                            isRole:  isRole? isRole : '',
+                            csurfToken: req.csrfToken(),
+                            formError: req.flash('error'),
+                            bill: null,
+                            total: 0,
+                        })
                     }
 
                 } catch (err) {

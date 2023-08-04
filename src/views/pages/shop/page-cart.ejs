@@ -8,65 +8,65 @@
         <%- include("../../components/header-component.ejs") %>
         <div class="component-wrapper">
             <div class="container">
-                <div class="table-container">
-                    <% if(user.cart.length ) { %>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th scope="col">STT</th>
-                                <th scope="col">Tên sản phẩm</th>
-                                <th scope="col">Ảnh sản phẩm</th>
-                                <th scope="col">Giá sản phẩm</th>
-                                <th scope="col">Số lượng</th>
-                                <th scope="col">Chức nắng</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            <% user.cart.forEach((item, index) => { %>
+                <% if(user && user.cart.length ) { %>
+                    <div class="table-container">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <td><%= index %></td>
-                                    <td><%= item.product.title %></td>
-                                    <td>
-                                        <img class="table-product-thumbnail" src="<%= item.product.image %>" alt="Thumbnail" />
-                                    </td>
-                                    <td><%= item.product.price %></td>
-                                    <td><%= item.quantity %></td>
-                                    <td class="table-product-action">
-                                        <form action="/cart/del/product" method="post">
-                                            <input type="hidden" name="product" value="<%= item.product._id %>">
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Ảnh sản phẩm</th>
+                                    <th scope="col">Giá sản phẩm</th>
+                                    <th scope="col">Số lượng</th>
+                                    <th scope="col">Chức nắng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                <% user.cart.forEach((item, index) => { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= item.product.title %></td>
+                                        <td>
+                                            <img class="table-product-thumbnail" src="<%= item.product.image %>" alt="Thumbnail" />
+                                        </td>
+                                        <td><%= item.product.price %></td>
+                                        <td><%= item.quantity %></td>
+                                        <td class="table-product-action">
+                                            <form action="/cart/del/product" method="post">
+                                                <input type="hidden" name="product" value="<%= item.product._id %>">
+                                                <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+                                                <button type="submit" class="btn mb-0">Xoá</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <% }) %>
+
+                                <tr>
+                                    <td>Tên khách hàng</td>
+                                    <td colspan="4"><%= user.name %></td>
+                                    <td rowspan="3">
+                                        <form action="/order/add" method="post">
+                                            <input type="hidden" name="user" value="<%= user._id %>"/>
                                             <input type="hidden" name="_csrf" value="<%= csurfToken %>">
-                                            <button type="submit" class="btn mb-0">Xoá</button>
+                                            <button type="submit" class="btn">Thanh toán</button>
                                         </form>
                                     </td>
                                 </tr>
-                            <% }) %>
-
-                            <tr>
-                                <td>Tên khách hàng</td>
-                                <td colspan="4"><%= user.name %></td>
-                                <td rowspan="3">
-                                    <form action="/order/add" method="post">
-                                        <input type="hidden" name="user" value="<%= user._id %>"/>
-                                        <input type="hidden" name="_csrf" value="<%= csurfToken %>">
-                                        <button type="submit" class="btn">Thanh toán</button>
-                                    </form>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Địa chỉ E-mail</td>
-                                <td colspan="4"><%= user.email %></td>
-                            </tr>
-                            <tr>
-                                <td>Tổng hoá đơn</td>
-                                <td colspan="4"><%= total %></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <% } else { %>
-                        <p class="blank col-12">Bạn chưa có sản phẩm trong giỏ hàng</p>
-                    <% } %>
-                </div>
+                                <tr>
+                                    <td>Địa chỉ E-mail</td>
+                                    <td colspan="4"><%= user.email %></td>
+                                </tr>
+                                <tr>
+                                    <td>Tổng hoá đơn</td>
+                                    <td colspan="4"><%= total %></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <p class="blank col-12">Bạn chưa thêm sản phẩm vào giỏ hàng</p>
+                <% } %>
             </div>
         </div>
     </main>
