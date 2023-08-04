@@ -7,7 +7,7 @@
 
         <div class="component-wrapper">
             <div class="container">
-                <form class="form-container" action="/admin/product/edit" method="post" novalidate>
+                <form class="form-container" action="/product/edit?_csrf=<%= csurfToken %>" method="post" novalidate enctype="multipart/form-data">
                     <div class="form-group">
                         <label class="form-label" for="title">Tên sản phẩm</label>
                         <input
@@ -23,9 +23,9 @@
                     <div class="form-group">
                         <label class="form-label" for="image">Ảnh sản phẩm</label>
                         <input
-                            class="<%= inputsErrors.find((elm)=> elm.path === 'image')? 'form-control is-invalid' : 'form-control' %>"
-                            type="text" name="image"
-                            id="image" value="<%= product? product.image : '' %>">
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'image')? 'form-control form-control-file is-invalid' : 'form-control form-control-file' %>"
+                            type="file" name="image"
+                            id="image">
 
                             <% if(inputsErrors.some((elm)=> elm.path === 'image')) { %>
                                 <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'image')?.msg %></small>
@@ -56,8 +56,6 @@
                     </div>
 
                     <input type="hidden" name="product" value="<%= product? product._id : '' %>">
-                    <input type="hidden" name="_csrf" value="<%= csurfToken %>">
-
                     <button type="submit" class="btn">Lưu thay đổi</button>
                 </form>
             </div>
