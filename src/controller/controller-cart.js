@@ -50,6 +50,7 @@ class ControllerCart {
             let { errors } = validationResult(req);
 
             if(errors.length) {
+                throw Error('Product token empty');
 
             } else {
                 let userInfor = await ModelUser.findOne({email: {$eq: user.email}});
@@ -83,6 +84,30 @@ class ControllerCart {
                 } else {
                     res.redirect('/cart');
                 }
+            }
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+    }
+
+    // KHÁCH HÀNG XOÁ SẢN PHẨM TRONG CART
+    deleteProductInCart = async (req, res, next) => {
+        try {
+            let { product } = req.body;
+            let { user } = req.cookies;
+            let { errors } = validationResult(req);
+
+            if(errors.length) {
+                throw Error('Product token empty');
+
+            } else {
+                let userInfor = await ModelUser.findOne({email: {$eq: user.email}});
+                userInfor.cart = userInfor.cart.filter((cart) => cart.product.toString() !== product);
+                await userInfor.save();
+                res.redirect("/cart");
             }
 
         } catch (err) {
