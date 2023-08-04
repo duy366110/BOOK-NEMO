@@ -27,3 +27,16 @@
     color: #ffffff;
     background-color: var(--two-color);
 }
+
+/* CAROUSEL */
+@media screen and (min-width: 320px) {
+    .carousel-item img {
+        height: 260px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .carousel-item img {
+        height: 350px;
+    }
+}
