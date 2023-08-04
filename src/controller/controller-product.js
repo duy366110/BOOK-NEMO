@@ -72,29 +72,31 @@ class ControllerProduct {
 
             } else {
 
-                if(file) {
-                    await cloudinary.exists(productInfor.image, (infor) => {
-                        if(infor.status) {
-                            
-                            let imagePath = productInfor.image.split("/");
-                            let image = imagePath[(imagePath.length - 1)].split(".")[0];
-                            cloudinary.destroy(`book_nemo/${image}`, async (infor) => {
-                                // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
-                                if(infor.status) {
-                                    productInfor.image = file.path;
-                                }
-                
-                            })
-    
-                        } else {
-                            productInfor.image = file.path;
-                        }
-                    })
-                }
-    
                 productInfor.title = title;
                 productInfor.price = price;
                 productInfor.description = description;
+
+                if(file) {
+                    let imagePath = productInfor.image.split("/");
+                    let image = imagePath[(imagePath.length - 1)].split(".")[0];
+
+                    // THUC HIEN KIEM TRA XEM FILE CO TON TAI TREN CLOUD
+                    let infor = await cloudinary.exists(`book_nemo/${image}`);
+
+                    if(infor.status) {
+                        // XOA FILE CU CAP NHAT FILE MOI
+                        let infor = await cloudinary.destroy(`book_nemo/${image}`);
+
+                        if(infor.status) {
+                            productInfor.image = file.path;
+                        }
+
+                    } else {
+                        // FILE KHONG TON TAI TIEN HANH CAP NHAT
+                        productInfor.image = file.path;
+                    }
+                }
+                
                 await productInfor.save();
                 res.redirect("/admin");
             }
@@ -119,14 +121,13 @@ class ControllerProduct {
             let image = imagePath[(imagePath.length - 1)].split(".")[0];
 
             // XOÁ ẢNH SẢN PHẨM TRƯỚC KHI XOÁ SẢN PHẨM
-            cloudinary.destroy(`book_nemo/${image}`, async (infor) => {
-                // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
-                if(infor.status) {
-                    await productInfor.deleteOne();
-                    res.redirect("/admin");
-                }
+            let infor = await cloudinary.destroy(`book_nemo/${image}`);
 
-            })
+            // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
+            if(infor.status) {
+                await productInfor.deleteOne();
+                res.redirect("/admin");
+            }
 
 
         } catch (err) {
