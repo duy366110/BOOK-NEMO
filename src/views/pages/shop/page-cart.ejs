@@ -33,8 +33,10 @@
                                     <td><%= item.product.price %></td>
                                     <td><%= item.quantity %></td>
                                     <td class="table-product-action">
-                                        <form>
-                                            <button class="btn mb-0">Xoá</button>
+                                        <form action="/cart/del/product" method="post">
+                                            <input type="hidden" name="product" value="<%= item.product._id %>">
+                                            <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+                                            <button type="submit" class="btn mb-0">Xoá</button>
                                         </form>
                                     </td>
                                 </tr>

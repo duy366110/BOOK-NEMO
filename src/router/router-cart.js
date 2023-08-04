@@ -11,4 +11,9 @@ router.post('/add', [
 
 ], ControllerCart.addCart);
 
+// KHÁCH HÀNG XOÁ SẢN PHẨM TRONG CART
+router.post('/del/product', [
+    body('product').notEmpty().withMessage('Product token not empty')
+], ControllerCart.deleteProductInCart);
+
 module.exports = router;
