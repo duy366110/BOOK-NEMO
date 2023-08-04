@@ -2,6 +2,7 @@ const ModelProduct = require("../model/model-product");
 const cloudinary = require("../utils/util-cloudinary");
 const path = require('path');
 const fs = require('fs');
+const { validationResult } = require("express-validator");
 class ControllerProduct {
 
     constructor() { }
@@ -12,7 +13,7 @@ class ControllerProduct {
 
     // ADMIN CREATE SẢN PHẨM
     createProduct = async (req, res, next) => {
-        let { title, image, price, description} = req.body;
+        let { title, price, description} = req.body;
         let { file } = req;
         let isRole  = req.session.role;
         const { errors } = validationResult(req);
@@ -47,7 +48,64 @@ class ControllerProduct {
         }
     }
 
-    updateProduct = (req, res, next) => { }
+    // ADIM CAP NHAT THONG TIN SAN PHAM
+    updateProduct = async (req, res, next) => {
+        try {
+            let { product, title, image, price, description} = req.body;
+            let { file } = req;
+            let { errors } = validationResult(req);
+            let isRole  = req.session.role;
+
+            let productInfor = await ModelProduct.findById(product);
+
+            if(errors.length) {
+                res.render('pages/admin/product/page-admin-edit-product', {
+                    title: 'Chỉnh sửa thông tin sản phẩm',
+                    path: 'Quan-tri',
+                    isLogin: req.cookies.user? true : false,
+                    isRole:  isRole? isRole : 'Client',
+                    csurfToken: req.csrfToken(),
+                    formError: req.flash('error'),
+                    inputsErrors: errors,
+                    product: { _id: product, title, image, price, description },
+                })
+
+            } else {
+
+                if(file) {
+                    await cloudinary.exists(productInfor.image, (infor) => {
+                        if(infor.status) {
+                            
+                            let imagePath = productInfor.image.split("/");
+                            let image = imagePath[(imagePath.length - 1)].split(".")[0];
+                            cloudinary.destroy(`book_nemo/${image}`, async (infor) => {
+                                // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
+                                if(infor.status) {
+                                    productInfor.image = file.path;
+                                }
+                
+                            })
+    
+                        } else {
+                            productInfor.image = file.path;
+                        }
+                    })
+                }
+    
+                productInfor.title = title;
+                productInfor.price = price;
+                productInfor.description = description;
+                await productInfor.save();
+                res.redirect("/admin");
+            }
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+
+    }
 
     // ADMIN XOÁ SẢN PHẨM
     deleteProduct = async (req, res, next) => {
@@ -61,12 +119,9 @@ class ControllerProduct {
             let image = imagePath[(imagePath.length - 1)].split(".")[0];
 
             // XOÁ ẢNH SẢN PHẨM TRƯỚC KHI XOÁ SẢN PHẨM
-            cloudinary.destroy(`book_nemo/${image}`, async (status) => {
-                console.log(status);
-                let { deleted } = status;
-
+            cloudinary.destroy(`book_nemo/${image}`, async (infor) => {
                 // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
-                if(deleted) {
+                if(infor.status) {
                     await productInfor.deleteOne();
                     res.redirect("/admin");
                 }

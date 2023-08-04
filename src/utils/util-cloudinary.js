@@ -23,17 +23,29 @@ class CLOUDINARY {
         }
     })
 
+    // KIEN TRA FILE TON TAI TREN CLOUD
+    exists = async (public_id, cb) => {
+        try {
+            let result = await cloudinary.api.resource(public_id);
+            cb({status: true, result});
+
+
+        } catch (err) {
+            cb({status: false, result: null});
+        }
+    }
+
 
 
     // XOÁ FILE TRÊN CLOUD
     destroy = async (path, cb) => {
         try {
             let status = await cloudinary.api.delete_resources_by_prefix(path);
-            cb(status);
+            cb({status: true, message: 'Delete image successfully'});
 
 
         } catch (err) {
-            throw err;
+            cb({status: false, message: 'Delete image failed'});
         }
     }
 }
