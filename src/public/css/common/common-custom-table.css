@@ -4,29 +4,38 @@
     width: 100%;
 }
 
-.table {
-    font-size: 1.5rem;
-    margin-bottom: 0px;
+table thead tr th {
+    font-size: 17px;
 }
 
-.table thead tr th, .table tbody tr td {
+table tbody tr td {
+    font-size: 15px;
+}
+
+table thead tr th, table tbody tr td {
     border: 1px solid #dee2e6;
+    padding: 10px;
     vertical-align: middle;
 }
 
-.table tbody tr td:last-child {
-    display: flex;
-    gap: 10px;
+.table-product-thumbnail {
+    height: 90px;
+    width: 120px;
+}
+
+.table-product-action {
+    align-items: center;
+    height: 120px;
 }
 
 @media screen and (min-width: 320px) {
-    .table {
+    table {
         width: calc(100% + 250px);
     }
 }
 
 @media screen and (min-width: 992px) {
-    .table {
+    table {
         width: 100%;
     }
 }

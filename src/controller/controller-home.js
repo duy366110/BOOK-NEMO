@@ -14,7 +14,8 @@ class ControllerHome {
                 path: 'Trang-chu',
                 products,
                 isLogin: req.cookies.user? true : false,
-                isRole:  isRole? isRole : 'Client'
+                isRole:  isRole? isRole : '',
+                csurfToken: req.csrfToken(),
             });
 
         } catch (err) {

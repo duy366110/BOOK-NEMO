@@ -17,6 +17,16 @@
                                         <h2 class="card-infor_title"><%= product.title %></h2>
                                         <p class="card-infor_price">Giá: <%= product.price %> đ</p>
                                     </div>
+                                    <div class="card-actions">
+                                        <a href="#" class="btn">Chi tiết</a>
+                                        <% if(isLogin) { %>
+                                            <form action="/cart/add" method="post">
+                                                <input type="hidden" name="product" value="<%= product._id %>">
+                                                <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+                                                <button class="btn">Mua ngay</button>
+                                            </form>
+                                        <% } %>
+                                    </div>
                                 </div>
                             </div>
                         <% } ) %>

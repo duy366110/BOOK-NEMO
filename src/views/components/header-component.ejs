@@ -9,7 +9,7 @@
                 <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
                 
                 <% if(isLogin) { %>
-                    <li><a href="#">Giỏ hàng</a></li>
+                    <li><a href="/cart" class="<%= path == 'Gio-hang'? 'active' : '' %>">Giỏ hàng</a></li>
                     <li><a href="#">Đặt hành</a></li>
                 <% } %>
 
