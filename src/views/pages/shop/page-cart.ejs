@@ -43,12 +43,13 @@
                             <% }) %>
 
                             <tr>
-                                <!-- <td>Tên khách hàng</td> -->
                                 <td>Tên khách hàng</td>
                                 <td colspan="4"><%= user.name %></td>
                                 <td rowspan="3">
-                                    <form>
-                                        <button class="btn">Thanh toán</button>
+                                    <form action="/order/add" method="post">
+                                        <input type="hidden" name="user" value="<%= user._id %>"/>
+                                        <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+                                        <button type="submit" class="btn">Thanh toán</button>
                                     </form>
                                 </td>
                             </tr>

@@ -1,0 +1,66 @@
+<%- include("../../components/head-component.ejs") %>
+<link rel="stylesheet" href="/css/components/page-home.css" />
+<link rel="stylesheet" href="/css/common/common-custom-table.css" />
+</head>
+
+<body>
+    <main>
+        <%- include("../../components/header-component.ejs") %>
+        <div class="component-wrapper">
+            <div class="container">
+                <div class="table-container">
+                    <% if(bill.order.length ) { %>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Ảnh sản phẩm</th>
+                                    <th scope="col">Giá sản phẩm</th>
+                                    <th scope="col">Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+    
+                                <% bill.order.forEach((item, index) => { %>
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= item.product.title %></td>
+                                        <td>
+                                            <img class="table-product-thumbnail" src="<%= item.product.image %>" alt="Thumbnail" />
+                                        </td>
+                                        <td><%= item.product.price %></td>
+                                        <td><%= item.quantity %></td>
+                                    </tr>
+                                <% }) %>
+    
+                                <tr>
+                                    <td>Tên khách hàng</td>
+                                    <td colspan="3"><%= bill.user_id.name %></td>
+                                    <td rowspan="3">
+                                        <div class="d-flex flex-column">
+                                            <button class="btn">In hoá đơn</button>
+                                            <button class="btn">Thanh toán</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Địa chỉ E-mail</td>
+                                    <td colspan="4"><%= bill.email %></td>
+                                </tr>
+                                <tr>
+                                    <td>Tổng hoá đơn</td>
+                                    <td colspan="4"><%= total %></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <% } else { %>
+                            <p class="blank col-12">Bạn chưa có sản phẩm trong giỏ hàng</p>
+                        <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<%- include("../../components/footer-component.ejs") %>
