@@ -78,6 +78,7 @@ class ControllerCart {
                     }
 
                     await userInfor.save();
+                    res.redirect('/cart');
 
                 } else {
                     res.redirect('/cart');
