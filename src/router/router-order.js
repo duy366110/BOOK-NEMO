@@ -7,6 +7,8 @@ router.get('/', ControllerOrder.renderPageOrder);
 // KHÁCH HÀNG RENDER HOÁ ĐƠN
 router.get("/invoice/:user", ControllerOrder.renderInvoice);
 
+router.get('/payment', ControllerOrder.orderPayment);
+
 // KHÁCH HÀNG THÊM GIỎ HÀNG VÀO THANH TOÁN
 router.post('/add', ControllerOrder.addOrder);
 

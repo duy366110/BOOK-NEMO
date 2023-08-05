@@ -8,10 +8,17 @@ const csurf = require('csurf');
 const multer = require('multer');
 const cloudinary = require("./utils/util-cloudinary");
 const path = require('path');
+const paypal = require('paypal-rest-sdk');
 
 const router = require('./router/router');
 const mongodb = require("./utils/util-database");
 const csurfProtection = csurf({cookie: true});
+
+paypal.configure({
+    'mode': 'sandbox', //sandbox or live
+    'client_id': process.env.CLIENT,
+    'client_secret': process.env.SERECT
+});
 
 const store = new sessionstore({
     uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/book_nemo',

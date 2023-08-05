@@ -6,6 +6,7 @@ const pdfkitTable = require("pdfkit-table");
 const path = require('path');
 const fs = require('fs');
 const ObjectId = mongodb.ObjectId;
+const paypal = require("paypal-rest-sdk");
 
 class ControllerOrder {
 
@@ -82,7 +83,7 @@ class ControllerOrder {
             if(orderInfor) {
                 const doc = new pdfkitTable({ margin: 30, size: 'A4', encodeURI: 'UTF-8' });
                 res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', 'inline; filename=invoice.pdf');
+                res.setHeader('Content-Disposition', 'attachment; filename=invoice.pdf');
 
                 let pathFont = path.join(__dirname,'../', 'public', 'fonts', 'Roboto-Regular.ttf' )
 
@@ -91,7 +92,7 @@ class ControllerOrder {
                 doc.pipe(res);
 
                 doc.fontSize(18).text('HOÁ ĐƠN KHÁCH HÀNG', {width: 535, align: 'center'});
-                
+
                 let total = Number(
                     orderInfor.order.reduce((acc, order) => {
                         acc += parseFloat(order.product.price) * Number(order.quantity);
@@ -179,6 +180,49 @@ class ControllerOrder {
             error.httpStatusCode = 500;
             return next(error);
         }
+    }
+
+    // KHACH HANG THANH TOAN
+    orderPayment = async(req, res, next) => {
+        let create_payment_json = {
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal"
+            },
+            "redirect_urls": {
+                "return_url": "http://localhost:8080",
+                "cancel_url": "http://localhost:8080"
+            },
+            "transactions": [{
+                "item_list": {
+                    "items": [{
+                        "name": "item",
+                        "sku": "item",
+                        "price": "1.00",
+                        "currency": "USD",
+                        "quantity": 1
+                    }]
+                },
+                "amount": {
+                    "currency": "USD",
+                    "total": "1.00"
+                },
+                "description": "This is the payment description."
+            }]
+        };
+
+        paypal.payment.create(create_payment_json, function (error, payment) {
+            if (error) {
+                throw error;
+
+            } else {
+                for(let link of payment.links ) {
+                    if(link.rel === 'approval_url') {
+                        res.redirect(link.href);
+                    }
+                }
+            }
+        });
     }
 
 }
