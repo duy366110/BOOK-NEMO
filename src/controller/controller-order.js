@@ -80,26 +80,61 @@ class ControllerOrder {
                             .exec();
 
             if(orderInfor) {
-                const doc = new pdfkitTable({ margin: 30, size: 'A4' });
+                const doc = new pdfkitTable({ margin: 30, size: 'A4', encodeURI: 'UTF-8' });
                 res.setHeader('Content-Type', 'application/pdf');
                 res.setHeader('Content-Disposition', 'inline; filename=invoice.pdf');
 
+                let pathFont = path.join(__dirname,'../', 'public', 'fonts', 'Roboto-Regular.ttf' )
+
+                doc.font(pathFont);
                 doc.pipe(fs.createWriteStream(path.join(__dirname, "../", "document", 'invoice.pdf')));
                 doc.pipe(res);
 
+                doc.fontSize(18).text('HOÁ ĐƠN KHÁCH HÀNG', {width: 535, align: 'center'});
+                
+                let total = Number(
+                    orderInfor.order.reduce((acc, order) => {
+                        acc += parseFloat(order.product.price) * Number(order.quantity);
+                        return acc;
+                    }, 0)
+                ).toFixed(3);
+
+                let rowsInfor = [
+                    ['Họ và tên', `${orderInfor.user_id.name}`],
+                    ['E-mail', `${orderInfor.email}`],
+                    ['Tổng hoá đơn', `${total} VND`]
+                ]
+
+                let rowsProduct = [
+                   ...orderInfor.order.map((order, index) => {
+                    return [
+                        `${index}`,
+                        `${order.product.title}`,
+                        `${Number(order.product.price).toFixed(3)} VND`,
+                        `${order.quantity}`,
+                    ]
+                   })
+                ]
+
                 const table = {
-                    title: "Title",
-                    subtitle: "Subtitle",
-                    headers: [ "Country", "Conversion rate", "Trend" ],
+                    title: "Đơn hàng: sách",
+                    subtitle: "Trạng thái: thanh toán hoá đơn sau",
+                    headers: [ "STT", "Tên sản phẩm", "Giá", "Số Lượng" ],
                     rows: [
-                      [ "Switzerland", "12%", "+1.12%" ],
-                      [ "France", "67%", "-0.98%" ],
-                      [ "England", "33%", "+4.44%" ],
+                      ...rowsProduct,
+                      ...rowsInfor
                     ],
                   };
 
-                doc.table(table, { 
-                width: 300,
+                doc.table(table, {
+                    width: 535,
+                    prepareHeader: () => {
+                        doc.font(pathFont)
+                    },
+                    prepareRow: (row, indexColumn, indexRow, rectRow) => {
+                        doc.font(pathFont);
+                        indexColumn === 0 && doc.addBackground(rectRow, 'blue', 0.15);
+                    },
                 });
 
                 doc.end();
