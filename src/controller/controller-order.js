@@ -139,9 +139,10 @@ class ControllerOrder {
             }
 
         } catch (err) {
-            let error = Error(err.message);
-            error.httpStatusCode = 500;
-            return next(error);
+            throw err;
+            // let error = Error(err.message);
+            // error.httpStatusCode = 500;
+            // return next(error);
         }
     }
 
