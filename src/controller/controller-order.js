@@ -1,8 +1,7 @@
 const mongodb = require("mongodb");
 const ModelOrder = require("../model/model-order");
 const ModelUser = require("../model/model-user");
-const pdf = require('pdf-creator-node');
-const htmlToPdf = require("html-pdf-node");
+const pdfkit = require("pdfkit");
 const path = require('path');
 const fs = require('fs');
 const ObjectId = mongodb.ObjectId;
@@ -80,80 +79,28 @@ class ControllerOrder {
                             .exec();
 
             if(orderInfor) {
-
-                let information = {
-                    user_name: orderInfor.user_id.name,
-                    user_email: orderInfor.email,
-                    total: Number(orderInfor.order.reduce((acc, order) => {
-                        acc += parseFloat(order.quantity) * parseFloat(order.product.price);
-                        return acc;
-                    }, 0)).toFixed(3),
-                    orders: orderInfor.order.map((order, index) => {
-                        return {
-                            index,
-                            product_name: order.product.title,
-                            product_image: order.product.image,
-                            product_price: order.product.price,
-                            quantity: order.quantity,
-                        }
-                    })
-                }
-
-                let html = fs.readFileSync(path.join(__dirname, "../", "document", "invoice.html"), "utf-8");
-                let options = {
-                    format: "A4",
-                    orientation: "portrait",
-                    border: "10mm",
-                    localUrlAccess: true,
-                    header: {
-                        height: "15mm",
-                        contents: '<div style="text-align: center;"></div>'
-                    },
-                    footer: {
-                        height: "30.7mm",
-                        contents: {
-                            first: 'Cover page',
-                            2: 'Second page', // Any page number is working. 1-based index
-                            default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-                            last: 'Last Page'
-                        }
-                    }
-                };
-
-                var document = {
-                    html: html,
-                    data: {
-                    bill: information,
-                    },
-                    path: path.join(__dirname, "../", "document", "invoice.pdf"),
-                };
-
-                await pdf.create(document, options, {
-                    childProcessOptions: {
-                      env: {
-                        OPENSSL_CONF: '/dev/null',
-                      },
-                    }
-                  });
-
-                let pdfPath = path.join(__dirname, "../", "document", "invoice.pdf");
-                let fileDoc = fs.createReadStream(pdfPath);
-
+                const doc = new pdfkit();
                 res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition',"inline; filename=invoice.pdf");
+                res.setHeader('Content-Disposition', 'inline; filename=invoice.pdf');
 
-                fileDoc.pipe(res);
+                doc.pipe(fs.createWriteStream(path.join(__dirname, "../", "document", 'invoice.pdf')));
+                doc.pipe(res);
 
+                doc.fontSize(25).text('Here is some vector graphics...', 100, 100);
+                doc.end();
+
+                let pathFile = path.join(__dirname, "../", "document", 'invoice.pdf');
+                let filePDF = fs.createReadStream(pathFile);
+                filePDF.pipe(res);
 
             } else {
                 res.redirect("/order");
             }
 
         } catch (err) {
-            throw err;
-            // let error = Error(err.message);
-            // error.httpStatusCode = 500;
-            // return next(error);
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
         }
     }
 
