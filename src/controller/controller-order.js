@@ -2,6 +2,7 @@ const mongodb = require("mongodb");
 const ModelOrder = require("../model/model-order");
 const ModelUser = require("../model/model-user");
 const pdfkit = require("pdfkit");
+const pdfkitTable = require("pdfkit-table");
 const path = require('path');
 const fs = require('fs');
 const ObjectId = mongodb.ObjectId;
@@ -79,14 +80,28 @@ class ControllerOrder {
                             .exec();
 
             if(orderInfor) {
-                const doc = new pdfkit();
+                const doc = new pdfkitTable({ margin: 30, size: 'A4' });
                 res.setHeader('Content-Type', 'application/pdf');
                 res.setHeader('Content-Disposition', 'inline; filename=invoice.pdf');
 
                 doc.pipe(fs.createWriteStream(path.join(__dirname, "../", "document", 'invoice.pdf')));
                 doc.pipe(res);
 
-                doc.fontSize(25).text('Here is some vector graphics...', 100, 100);
+                const table = {
+                    title: "Title",
+                    subtitle: "Subtitle",
+                    headers: [ "Country", "Conversion rate", "Trend" ],
+                    rows: [
+                      [ "Switzerland", "12%", "+1.12%" ],
+                      [ "France", "67%", "-0.98%" ],
+                      [ "England", "33%", "+4.44%" ],
+                    ],
+                  };
+
+                doc.table(table, { 
+                width: 300,
+                });
+
                 doc.end();
 
                 let pathFile = path.join(__dirname, "../", "document", 'invoice.pdf');
