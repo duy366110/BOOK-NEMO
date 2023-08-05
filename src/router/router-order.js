@@ -4,6 +4,9 @@ const ControllerOrder = require("../controller/controller-order");
 // RENDER TRANG ĐƠN HÀNG CỦA KHÁCH HÀNG
 router.get('/', ControllerOrder.renderPageOrder);
 
+// KHÁCH HÀNG RENDER HOÁ ĐƠN
+router.get("/invoice/:user", ControllerOrder.renderInvoice);
+
 // KHÁCH HÀNG THÊM GIỎ HÀNG VÀO THANH TOÁN
 router.post('/add', ControllerOrder.addOrder);
 
