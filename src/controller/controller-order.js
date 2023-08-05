@@ -138,12 +138,17 @@ class ControllerOrder {
                 // });
 
                 let pdfPath = path.join(__dirname, "../", "document", "invoice.pdf");
-                let fileDoc = fs.createReadStream(pdfPath);
+                // let fileDoc = fs.createReadStream(pdfPath);
 
                 res.setHeader('Content-Type', 'application/pdf');
                 res.setHeader('Content-Disposition',"inline; filename=invoice.pdf");
 
-                fileDoc.pipe(res);
+                // fileDoc.pipe(res);
+
+                let data = fs.readFileSync(pdfPath);
+                res.send(data);
+
+
             } else {
                 res.redirect("/order");
             }
