@@ -125,7 +125,17 @@ class ControllerOrder {
                     path: path.join(__dirname, "../", "document", "invoice.pdf"),
                 };
 
-                await pdf.create(document, options);
+                await pdf.create(document, options, {
+                    childProcessOptions: {
+                      env: {
+                        OPENSSL_CONF: '/dev/null',
+                      },
+                    }
+                  });
+
+                // pdf.create(html, { childProcessOptions: { env: { OPENSSL_CONF: '/dev/null' }}).toFile(`./public/invoices/${order.id}.pdf`, (err, res) => {
+                //     if (err) return console.log(err);
+                // });
 
                 let pdfPath = path.join(__dirname, "../", "document", "invoice.pdf");
                 let fileDoc = fs.createReadStream(pdfPath);
