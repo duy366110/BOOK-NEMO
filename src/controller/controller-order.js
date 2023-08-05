@@ -190,8 +190,8 @@ class ControllerOrder {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "http://localhost:8080",
-                "cancel_url": "http://localhost:8080"
+                "return_url": "https://booknemo-dd8b0f6425b8.herokuapp.com",
+                "cancel_url": "https://booknemo-dd8b0f6425b8.herokuapp.com"
             },
             "transactions": [{
                 "item_list": {
