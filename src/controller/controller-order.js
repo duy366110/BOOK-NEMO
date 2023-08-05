@@ -2,6 +2,7 @@ const mongodb = require("mongodb");
 const ModelOrder = require("../model/model-order");
 const ModelUser = require("../model/model-user");
 const pdf = require('pdf-creator-node');
+const htmlToPdf = require("html-pdf-node");
 const path = require('path');
 const fs = require('fs');
 const ObjectId = mongodb.ObjectId;
@@ -79,6 +80,7 @@ class ControllerOrder {
                             .exec();
 
             if(orderInfor) {
+
                 let information = {
                     user_name: orderInfor.user_id.name,
                     user_email: orderInfor.email,
@@ -102,6 +104,7 @@ class ControllerOrder {
                     format: "A4",
                     orientation: "portrait",
                     border: "10mm",
+                    localUrlAccess: true,
                     header: {
                         height: "15mm",
                         contents: '<div style="text-align: center;"></div>'
@@ -125,23 +128,32 @@ class ControllerOrder {
                     path: path.join(__dirname, "../", "document", "invoice.pdf"),
                 };
 
-                await pdf.create(document, options);
+                await pdf.create(document, options, {
+                    childProcessOptions: {
+                      env: {
+                        OPENSSL_CONF: '/dev/null',
+                      },
+                    }
+                  });
 
                 let pdfPath = path.join(__dirname, "../", "document", "invoice.pdf");
                 let fileDoc = fs.createReadStream(pdfPath);
 
                 res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition',"attachment; filename=invoice.pdf");
+                res.setHeader('Content-Disposition',"inline; filename=invoice.pdf");
 
                 fileDoc.pipe(res);
+
+
             } else {
                 res.redirect("/order");
             }
 
         } catch (err) {
-            let error = Error(err.message);
-            error.httpStatusCode = 500;
-            return next(error);
+            throw err;
+            // let error = Error(err.message);
+            // error.httpStatusCode = 500;
+            // return next(error);
         }
     }
 
