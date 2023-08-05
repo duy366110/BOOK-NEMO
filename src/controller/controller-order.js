@@ -102,6 +102,7 @@ class ControllerOrder {
                     format: "A4",
                     orientation: "portrait",
                     border: "10mm",
+                    localUrlAccess: true,
                     header: {
                         height: "15mm",
                         contents: '<div style="text-align: center;"></div>'
