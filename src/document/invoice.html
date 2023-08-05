@@ -44,44 +44,6 @@
     </style>
 </head>
 <body>
-    <table>
-        <thead>
-            <tr>
-                <th scope="col">STT</th>
-                <th scope="col" style="width: 260px;">Tên sản phẩm</th>
-                <th scope="col">Ảnh</th>
-                <th scope="col">Giá</th>
-                <th scope="col">Số lượng</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each bill.orders}}
-                <tr>
-                    <td class="text-center text-title">{{this.index}}</td>
-                    <td style="width: 260px; word-break: break-all">
-                        {{this.product_name}}
-                    </td>
-                    <td class="text-center">
-                        <img src="{{this.product_image}}" alt="thumbnail">
-                    </td>
-                    <td class="text-center">{{this.product_price}}</td>
-                    <td class="text-center">{{this.quantity}}</td>
-                </tr>
-            {{/each}}           
-
-            <tr>
-                <td class="text-title">Họ và Tên</td>
-                <td colspan="4">{{bill.user_name}}</td>
-            </tr>
-            <tr>
-                <td class="text-title">Địa chỉ E-mail</td>
-                <td colspan="4">{{bill.user_email}}</td>
-            </tr>
-            <tr>
-                <td class="text-title">Tổng hoá đơn</td>
-                <td colspan="4">{{bill.total}} VND</td>
-            </tr>
-        </tbody>
-    </table>
+   <h1>Hello world</h1>
 </body>
 </html>
