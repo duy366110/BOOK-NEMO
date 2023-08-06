@@ -16,43 +16,35 @@ class ControllerOrder {
     renderPageOrder = async(req, res, next) => {
         try {
             let { infor }= req.session;
+            try {
+                let total = 0;
+                let orderInfor = await ModelOrder
+                .findOne({email: {$eq: infor.email}})
+                .populate('user_id')
+                .populate('order.product')
+                .exec();
 
-            if(infor) {
-                try {
-
-                    let total = 0;
-                    let orderInfor = await ModelOrder
-                    .findOne({email: {$eq: infor.email}})
-                    .populate('user_id')
-                    .populate('order.product')
-                    .exec();
-
-                    if(orderInfor) {
-                        total = orderInfor.order.reduce((acc, order) => {
-                            acc += parseFloat(order.quantity) * parseFloat(order.product.price);
-                            return acc;
-                        }, 0)
-                    }
-                    
-                    res.render("pages/shop/page-order", {
-                        title: 'Đơn hàng',
-                        path: 'Don-hang',
-                        infor: infor? infor : null,
-                        csurfToken: req.csrfToken(),
-                        formError: req.flash('error'),
-                        bill: orderInfor? orderInfor : null,
-                        total: total,
-                    })
-
-                } catch (err) {
-                    let error = Error(err.message);
-                    error.httpStatusCode = 500;
-                    return next(error);
+                if(orderInfor) {
+                    total = orderInfor.order.reduce((acc, order) => {
+                        acc += parseFloat(order.quantity) * parseFloat(order.product.price);
+                        return acc;
+                    }, 0)
                 }
+                
+                res.render("pages/shop/page-order", {
+                    title: 'Đơn hàng',
+                    path: 'Don-hang',
+                    infor: infor? infor : null,
+                    csurfToken: req.csrfToken(),
+                    formError: req.flash('error'),
+                    bill: orderInfor? orderInfor : null,
+                    total: total,
+                })
 
-            } else {
-                res.redirect("/user/signin");
-
+            } catch (err) {
+                let error = Error(err.message);
+                error.httpStatusCode = 500;
+                return next(error);
             }
 
         } catch (err) {

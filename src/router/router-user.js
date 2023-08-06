@@ -1,18 +1,30 @@
 const router = require('express').Router();
 const ModelUser = require("../model/model-user");
 const { check, body } = require('express-validator');
+const MiddlewarePermission = require("../middleware/middleware-permission");
 const ControllerUser = require("../controller/controller-user");
 
+// RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
 router.get('/signin', ControllerUser.renderUserSignin);
+
+// RENDER TRANG NGƯỜI DÙNG ĐĂNG KÝ
 router.get('/signup', ControllerUser.renderUserSignup);
+
+// NGƯỜI DÙNG ĐĂNG XUẤT
 router.get('/signout', ControllerUser.userSignout);
 
-router.get("/admin", ControllerUser.renderPageAdminUser);
-router.get('/new', ControllerUser.renderNewAccount);
-router.get('/edit', ControllerUser.renderEditAccount);
+// RENDER TRANG QUẢN TRỊ TÀI KHOẢN
+router.get("/admin", MiddlewarePermission.permission, ControllerUser.renderPageAdminUser);
+
+// RENDER TRANG THÊM MỚI TÀI KHOẢN
+router.get('/new', MiddlewarePermission.permission, ControllerUser.renderNewAccount);
+
+// RENDER TRANG CẬP NHẬT THÔNG TIN TÀI KHOẢN
+router.get('/edit', MiddlewarePermission.permission, ControllerUser.renderEditAccount);
 
 // KHÁCH HÀNG ĐĂNG NHẬP BẰNG TÀI KHOẢN
-router.post("/signin",[
+router.post("/signin",
+[
     check('email').isEmail().withMessage('Please enter e-mail'),
     body('password').trim().custom((value, {req}) => {
         if(!value) {
@@ -28,7 +40,8 @@ router.post("/signin",[
 
 
 // KHÁCH HÀNG TỰ TẠO TÀI KHOẢN
-router.post('/signup', [
+router.post('/signup',
+[
     body('user_name').custom((value, {red}) => {
         if(!value) throw new Error('User name not be empty')
         return true;
@@ -63,7 +76,7 @@ router.post('/signup', [
 
 
 // ADMIN TẠO MỚI THÔNG TIN ACCOUNT
-router.post("/new",
+router.post("/new", MiddlewarePermission.permission,
 [
     body('user_name').notEmpty().withMessage('User name not be empty'),
     body('email').custom(async (value, {req}) => {
@@ -101,7 +114,8 @@ router.post("/new",
 
 
 // ADMIN SỮA THÔNG TIN TÀI KHOẢN
-router.post('/edit', [
+router.post('/edit', MiddlewarePermission.permission,
+[
     body('user_name').notEmpty().withMessage('User name not be empty'),
     body('email').custom(async (value, {req}) => {
         if(!value) throw new Error('E-mail cannot be empty');
@@ -119,7 +133,8 @@ router.post('/edit', [
 
 
 // ADMIN XOÁ THÔNG TIN ACCOUNT
-router.post('/delete', [
+router.post('/delete', MiddlewarePermission.permission,
+[
     body('user').notEmpty().withMessage('User ID not empty'),
 ], ControllerUser.deleteAccount);
 
