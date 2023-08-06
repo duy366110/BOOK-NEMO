@@ -1,0 +1,39 @@
+footer {
+    background-color: #f4f5f9;
+    padding-top: 40px;
+}
+
+footer .footer-container a img {
+    margin-bottom: 20px;
+    width: 195px;
+}
+
+footer .footer-container p {
+    color: var(--text-color-grey-02);
+    font-size: 15px;
+    letter-spacing: .3px;
+    margin-bottom: 0px;
+}
+
+.footer-title {
+    color: var(--text-color-grey-03);
+    font-size: 25px;
+    letter-spacing: .3px;
+    text-transform: capitalize;
+}
+
+.footer-container ul li:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.footer-container ul li a {
+    color: var(--text-color-grey-04);
+    display: block;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.footer-container ul li a:hover {
+    color: var(--text-color-grey-02);
+}
+
