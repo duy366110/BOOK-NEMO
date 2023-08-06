@@ -1,0 +1,32 @@
+<%- include("../../../components/head-component.ejs") %>
+<link rel="stylesheet" href="/css/components/page-admin-new-role.css">
+</head>
+<body>
+    <main>
+        <%- include("../../../components/header-component.ejs") %>
+
+        <div class="component-wrapper">
+            <div class="container">
+                <form class="form-container" action="/role/edit" method="post">
+                    <h2 class="form-title">Thêm mới quyền</h2>
+                    <div class="form-group">
+                        <label class="form-label" for="role">Tên quyền</label>
+                        <input
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'role')? 'form-control is-invalid' : 'form-control' %>"
+                            type="text" name="role" id="role" value="<%= formField.role %>"/>
+
+                        <% if(inputsErrors.some((elm)=> elm.path === 'role')) { %>
+                            <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'role')?.msg %></small>
+                        <% } %>
+                    </div>
+
+                    <input type="hidden" name="id" value="<%= formField.id %>">
+                    <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+
+                    <button type="submit" class="btn">Cập nhật</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+<%- include("../../../components/footer-component.ejs") %>

@@ -42,7 +42,7 @@
                                     <td><%= role.users.length %></td>
                                     <td>
                                         <% if(role.name != 'Admin') { %>
-                                            <a href="#" class="btn mb-0">Sửa thông tin</a>
+                                            <a href="/role/admin/edit/<%= role._id %>" class="btn mb-0">Sửa thông tin</a>
                                             <form action="/role/delete" method="post">
                                                 <input type="hidden" name="role" value="<%= role._id %>">
                                                 <input type="hidden" name="_csrf" value="<%= csurfToken %>" />
