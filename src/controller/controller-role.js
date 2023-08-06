@@ -1,5 +1,7 @@
 const ModelRole = require("../model/model-roles");
+const mongdb = require('mongodb');
 const { validationResult } = require('express-validator');
+const ObjectId = mongdb.ObjectId;
 
 class ControllerRole {
 
@@ -17,6 +19,8 @@ class ControllerRole {
                 res.render('pages/admin/page-admin-role', {
                     title: 'Quản trị quyển quản trị',
                     path: 'Quan-tri',
+                    csurfToken: req.csrfToken(),
+                    pageMessage: null,
                     infor,
                     roles
                 });
@@ -42,6 +46,7 @@ class ControllerRole {
                 path: 'Quan-tri',
                 infor,
                 csurfToken: req.csrfToken(),
+                pageMessage: null,
                 inputsErrors: [],
                 formField: {
                     role: ''
@@ -66,6 +71,7 @@ class ControllerRole {
                     path: 'Quan-tri',
                     infor,
                     csurfToken: req.csrfToken(),
+                    pageMessage: null,
                     inputsErrors: errors,
                     formField: {
                         role
@@ -79,6 +85,42 @@ class ControllerRole {
                         res.redirect("/role/admin");
                     }
                 
+                } catch (err) {
+                    let error = Error(err.message);
+                    error.httpStatusCode = 500;
+                    return next(error);
+                }
+            }
+
+        } else {
+            res.redirect("/user/signin");
+        }
+    }
+
+    // ADMIN THỰC HIỆN XOÁ TÀI KHOẢN
+    deleteRole = async(req, res, next) => {
+        let { infor } = req.session;
+        let { role } = req.body;
+        let { errors } = validationResult(req);
+
+        if(infor && infor?.role === "Admin") {
+            if(errors.length) {
+                let roles = await ModelRole.find({});
+
+                res.render('pages/admin/page-admin-role', {
+                    title: 'Quản trị quyển quản trị',
+                    path: 'Quan-tri',
+                    csurfToken: req.csrfToken(),
+                    pageMessage: errors[0].msg,
+                    infor,
+                    roles
+                });
+
+            } else {
+                try {
+                    await ModelRole.deleteOne({_id: {$eq: new ObjectId(role)}});
+                    res.redirect('/role/admin');
+
                 } catch (err) {
                     let error = Error(err.message);
                     error.httpStatusCode = 500;
