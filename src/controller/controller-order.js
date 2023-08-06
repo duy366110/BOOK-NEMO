@@ -39,6 +39,7 @@ class ControllerOrder {
                     formError: req.flash('error'),
                     bill: orderInfor? orderInfor : null,
                     total: total,
+                    footer: true
                 })
 
             } catch (err) {

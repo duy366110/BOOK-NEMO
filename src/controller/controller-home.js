@@ -6,8 +6,6 @@ class ControllerHome {
     renderPageHome = async (req, res, next) => {
         
         try {
-            // console.log(req.session);
-            // let isRole  = req.session.role;
             let { infor } = req.session;
             let products = await ModelProduct.find({});
 
@@ -15,10 +13,9 @@ class ControllerHome {
                 title: 'Trang chủ',
                 path: 'Trang-chu',
                 products,
-                // isLogin: req.cookies.user? true : false,
-                // isRole:  isRole? isRole : '',
                 infor: infor? infor : null,
                 csurfToken: req.csrfToken(),
+                footer: true
             });
 
         } catch (err) {

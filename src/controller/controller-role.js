@@ -20,7 +20,8 @@ class ControllerRole {
                 csurfToken: req.csrfToken(),
                 pageMessage: null,
                 infor,
-                roles
+                roles,
+                footer: false
             });
 
         } catch (err) {
@@ -43,7 +44,8 @@ class ControllerRole {
             inputsErrors: [],
             formField: {
                 role: ''
-            }
+            },
+            footer: false
         })
     }
 
@@ -65,7 +67,8 @@ class ControllerRole {
                 formField: {
                     id: roleInfor? roleInfor._id : '',
                     role: roleInfor? roleInfor.name : ''
-                }
+                },
+                footer: false
             })
 
         } catch (err) {
@@ -91,7 +94,8 @@ class ControllerRole {
                 inputsErrors: errors,
                 formField: {
                     role
-                }
+                },
+                footer: false
             })
 
         } else {
@@ -126,7 +130,8 @@ class ControllerRole {
                 formField: {
                     id,
                     role
-                }
+                },
+                footer: false
             })
 
         } else {
@@ -160,7 +165,8 @@ class ControllerRole {
                 csurfToken: req.csrfToken(),
                 pageMessage: errors[0].msg,
                 infor,
-                roles
+                roles,
+                footer: false
             });
 
         } else {

@@ -30,6 +30,7 @@ class ControllerCart {
                     formError: req.flash('error'),
                     user: userInfor,
                     total,
+                    footer: true
                 })
             }
 

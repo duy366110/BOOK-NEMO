@@ -19,6 +19,7 @@ class ControllerProduct {
                 csurfToken: req.csrfToken(),
                 infor,
                 products,
+                footer: false
             });
 
         } catch (err) {
@@ -44,7 +45,8 @@ class ControllerProduct {
                 image: '',
                 price: '',
                 description: ''
-            }
+            },
+            footer: false
         })
     }
 
@@ -64,6 +66,7 @@ class ControllerProduct {
                 formError: req.flash('error'),
                 inputsErrors: [],
                 product: productInfor? productInfor : null,
+                footer: false
             })
 
         } catch (err) {
@@ -88,7 +91,8 @@ class ControllerProduct {
                 csurfToken: req.csrfToken(),
                 formError: req.flash('error'),
                 inputsErrors: errors,
-                formField: { title, image, price, description }
+                formField: { title, image, price, description },
+                footer: false
             })
 
         } else {
@@ -126,6 +130,7 @@ class ControllerProduct {
                     formError: req.flash('error'),
                     inputsErrors: errors,
                     product: { _id: product, title, image, price, description },
+                    footer: false
                 })
 
             } else {

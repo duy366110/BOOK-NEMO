@@ -18,7 +18,8 @@ class ControllerUser {
                 path: 'Quan-tri',
                 infor,
                 users,
-                csurfToken: req.csrfToken()
+                csurfToken: req.csrfToken(),
+                footer: false
             });
 
         } catch (err) {
@@ -42,7 +43,8 @@ class ControllerUser {
             formField: {
                 email: '',
                 password: ''
-            }
+            },
+            footer: false
         })
     }
 
@@ -62,7 +64,8 @@ class ControllerUser {
                 email: '',
                 password: '',
                 password_confirm: ''
-            }
+            },
+            footer: false
         })
     }
 
@@ -85,7 +88,8 @@ class ControllerUser {
                     password: '',
                     password_confirm: '',
                     role: ''
-                }
+                },
+                footer: false
             })
 
         } catch (err) {
@@ -117,7 +121,8 @@ class ControllerUser {
                     user_name: userInfor.name,
                     email: userInfor.email,
                     role: userInfor?.role? userInfor.role._id : null,
-                }
+                },
+                footer: false
             })
 
         } catch (err) {
@@ -156,7 +161,8 @@ class ControllerUser {
                 infor: infor? infor : null,
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
-                formField: { email, password }
+                formField: { email, password },
+                footer: false
             })
 
         } else {
@@ -204,7 +210,8 @@ class ControllerUser {
                 csurfToken: req.csrfToken(),
                 formError: req.flash('form-error'),
                 inputsErrors: errors,
-                formField: { user_name, email, password, password_confirm }
+                formField: { user_name, email, password, password_confirm },
+                footer: false
             })
 
         } else {
@@ -260,7 +267,8 @@ class ControllerUser {
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
                 roles,
-                formField: { user_name, email, password, password_confirm, role }
+                formField: { user_name, email, password, password_confirm, role },
+                footer: false
             })
 
         } else {
@@ -310,7 +318,8 @@ class ControllerUser {
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
                 roles,
-                formField: { id, user_name, email, role }
+                formField: { id, user_name, email, role },
+                footer: false
             })
 
         } else {
