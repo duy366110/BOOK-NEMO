@@ -122,10 +122,4 @@ router.post('/delete', [
     body('user').notEmpty().withMessage('User ID not empty'),
 ], ControllerUser.deleteAccount);
 
-// KHÁCH HÀNG THÊM SẢN PHẨM VÀO GIỞ HÀNG
-// router.post('/cart', [
-//     body('product').notEmpty().withMessage('Product code not empty'),
-
-// ], ControllerUser.userAddProductToCart);
-
 module.exports = router;

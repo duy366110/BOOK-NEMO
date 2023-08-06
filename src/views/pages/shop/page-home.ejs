@@ -49,7 +49,7 @@
                                     </div>
                                     <div class="card-actions">
                                         <a href="#" class="btn">Chi tiết</a>
-                                        <% if(isLogin) { %>
+                                        <% if(infor) { %>
                                             <form action="/cart/add" method="post">
                                                 <input type="hidden" name="product" value="<%= product._id %>">
                                                 <input type="hidden" name="_csrf" value="<%= csurfToken %>">
@@ -62,7 +62,7 @@
                         <% } ) %>
 
                     <% } else { %> 
-                        <p class="blank col-12">Sabr phẩm chưa cập nhật</p>
+                        <p class="blank col-12">Sản phẩm chưa cập nhật</p>
                     <% } %>
                 </div>
             </div>

@@ -11,7 +11,7 @@
                 <div class="admin-tab-maneger">
                     <a class="btn" href="/admin">Sản phẩm</a>
                     <a class="btn" href="/admin/user">Người dùng</a>
-                    <a class="btn" href="/admin/role">Phân quyền</a>
+                    <a class="btn" href="/role/admin">Phân quyền</a>
                 </div>
 
                 <div class="admin-tab">
@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="row">
-                    <% if(products.length) { %>
+                    <% if(products && products.length) { %>
                         <% products.forEach((product) => { %>
                             <div class="col-12 col-sm-6 col-lg-4  col-xl-3 d-flex align-items-stretch">
                                 <div class="card">

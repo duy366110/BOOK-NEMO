@@ -7,131 +7,59 @@ class ControllerAdmin {
 
     constructor() { }
 
+    // RENDER TRANG QUẢN LÝ SẢN PHẨM
     renderPageAdmin = async (req, res, next) => {
 
         try {
-            let isRole  = req.session.role;
+            let { infor } = req.session;
             let products = await ModelProduct.find({});
 
-            if(isRole !== 'Admin') {
-                res.redirect('/');
-
-            } else {
+            if(infor && infor?.role === 'Admin') {
                 res.render('pages/admin/page-admin', {
                     title: 'Quản trị sản phẩm',
                     path: 'Quan-tri',
                     products,
-                    isLogin: req.cookies.user? true : false,
-                    isRole:  isRole? isRole : 'Client'
+                    infor
                 });
+
+            } else {
+                res.redirect('/user/signin');
             }
 
         } catch (err) {
             let error = Error(err.message);
             error.httpStatusCode = 500;
             return next(error);
-
         }
-
     }
 
 
-    // NGƯỜI DÙNG
-
+    // RENDER TRANG QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG
     renderPageAdminUser = async (req, res, next) => {
 
         try {
-            let isRole  = req.session.role;
+            let { infor } = req.session;
             let users = await ModelUser.find({}).select(['name', 'email', 'role']).populate('role');
 
-            res.render('pages/admin/page-admin-user', {
-                title: 'Quản trị người dùng',
-                path: 'Quan-tri',
-                isLogin: req.cookies.user? true : false,
-                isRole:  isRole? isRole : 'Client',
-                users,
-                csurfToken: req.csrfToken()
-            });
+            if(infor && infor?.role === 'Admin') {
+                res.render('pages/admin/page-admin-user', {
+                    title: 'Quản trị người dùng',
+                    path: 'Quan-tri',
+                    infor,
+                    users,
+                    csurfToken: req.csrfToken()
+                });
+
+            } else {
+                res.redirect('/user/signin');
+
+            }
 
         } catch (err) {
             let error = Error(err.message);
             error.httpStatusCode = 500;
             return next(error);
 
-        }
-    }
-
-    // PHÂN QUYỀN
-    renderPageAdminRole = async (req, res, next) => {
-        
-        try {
-            let isRole  = req.session.role;
-            let roles = await ModelRole.find({});
-
-            res.render('pages/admin/page-admin-role', {
-                title: 'Quản trị quyển quản trị',
-                path: 'Quan-tri',
-                isLogin: req.cookies.user? true : false,
-                isRole:  isRole? isRole : 'Client',
-                roles
-            });
-
-
-        } catch (err) {
-            let error = Error(err.message);
-            error.httpStatusCode = 500;
-            return next(error);
-        }
-    }
-
-    renderPageNewRole = (req, res, next) => {
-        let isRole  = req.session.role;
-
-        res.render('pages/admin/role/page-admin-new-role', {
-            title: 'Quản trị phân quyền',
-            path: 'Quan-tri',
-            isLogin: req.cookies.user? true : false,
-            isRole:  isRole? isRole : 'Client',
-            csurfToken: req.csrfToken(),
-            inputsErrors: [],
-            formField: {
-                role: ''
-            }
-        })
-    }
-
-    saveRole = async (req, res, next) => {
-        let { role } = req.body;
-        let isRole  = req.session.role;
-        let { errors } = validationResult(req);
-
-        if(errors.length) {
-            res.render('pages/admin/role/page-admin-new-role', {
-                title: 'Quản trị phân quyền',
-                path: 'Quan-tri',
-                isLogin: req.cookies.user? true : false,
-                isRole:  isRole? isRole : 'Client',
-                csurfToken: req.csrfToken(),
-                inputsErrors: errors,
-                formField: {
-                    role
-                }
-            })
-
-        } else {
-            try {
-                let roleNew = await ModelRole.create({name: role, users: []});
-                if(roleNew) {
-                    res.redirect("/admin/role");
-                }
-            
-            } catch (err) {
-                let error = Error(err.message);
-                error.httpStatusCode = 500;
-                return next(error);
-            }
-            
-            
         }
     }
 

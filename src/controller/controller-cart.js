@@ -8,31 +8,34 @@ class ControllerCart {
     // KHÁCH HÀNG TRUY CẬP VÀO TRANG GIỎ HÀNG
     renderPageCart = async (req, res, next) => {
         try {
-            let { user }= req.cookies;
-            let isRole  = req.session.role;
+            let { infor } = req.session;
 
-            let userInfor = await ModelUser
-            .findOne({email: {$eq: user.email}})
-            .select(['name', 'email', 'cart'])
-            .populate('cart.product')
-            .exec();
+            if(infor && infor.role) {
+                let userInfor = await ModelUser
+                .findOne({email: {$eq: infor.email}})
+                .select(['name', 'email', 'cart'])
+                .populate('cart.product')
+                .exec();
 
-            if(userInfor) {
-                let total = userInfor.cart.reduce((acc, cart) => {
-                    acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
-                    return acc;
-                }, 0)
+                if(userInfor) {
+                    let total = userInfor.cart.reduce((acc, cart) => {
+                        acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
+                        return acc;
+                    }, 0)
 
-                res.render("pages/shop/page-cart", {
-                    title: 'Giỏ hàng',
-                    path: 'Gio-hang',
-                    isLogin: req.cookies.user? true : false,
-                    isRole:  isRole? isRole : 'Client',
-                    csurfToken: req.csrfToken(),
-                    formError: req.flash('error'),
-                    user: userInfor,
-                    total,
-                })
+                    res.render("pages/shop/page-cart", {
+                        title: 'Giỏ hàng',
+                        path: 'Gio-hang',
+                        infor: infor? infor : null,
+                        csurfToken: req.csrfToken(),
+                        formError: req.flash('error'),
+                        user: userInfor,
+                        total,
+                    })
+                }
+
+            } else {
+                res.redirect('/user/signin');
             }
 
         } catch (err) {

@@ -15,7 +15,7 @@ const mongodb = require("./utils/util-database");
 const csurfProtection = csurf({cookie: true});
 
 paypal.configure({
-    'mode': 'sandbox', //sandbox or live
+    'mode': 'sandbox',
     'client_id': process.env.CLIENT || "AROBkgnUtFyaUFo3B1ieXOzWb_Lr4sE9eGIfMiWFfMXs9TRzhHN8_eYFu51TAbEsxyK__FVQhhZ5b6KE",
     'client_secret': process.env.SERECT || "EM4D6ERyiu8ymqKZNrpP7nYdEGVwabY_9JfHaDooxPUBy461ZjBVjvoryIaWPuu7YAepIZ0ULz9VaUYD"
 });
