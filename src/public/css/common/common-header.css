@@ -1,8 +1,20 @@
 header {
+    height: 60px;
+    /* padding: 15px 0px; */
+    position: relative;
+    z-index: 100;
+}
+
+.header-wrapper {
     background-color: var(--first-color);
     color: #ffffff;
-    padding: 15px 0px;
+    display: flex;
+    align-items: center;
+    height: 60px;
+    position: fixed;
+    width: 100%;
 }
+
 /* LOGO */
 .header-logo {
     color: #ffffff;
@@ -25,6 +37,7 @@ header ul li a {
     display: block;
     padding: 0px 10px;
     font-size: 1.6rem;
+    font-weight: 600;
     text-transform: capitalize;
 }
 

@@ -1,24 +1,56 @@
 <header>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-6 col-lg-2">
-                <h1 class="header-logo">Book nemo</h1>
-            </div>
+    <div class="header-wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-6 col-lg-2">
+                    <h1 class="header-logo">Book nemo</h1>
+                </div>
 
-            <ul class="col-lg-7 d-none d-lg-flex">
-                <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
+                <ul class="col-lg-7 d-none d-lg-flex">
+                    <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
+                    
+                    <% if(infor) { %>
+                        <li><a href="/cart" class="<%= path == 'Gio-hang'? 'active' : '' %>">Giỏ hàng</a></li>
+                        <li><a href="/order" class="<%= path == 'Don-hang'? 'active' : '' %>">Đặt hành</a></li>
+                    <% } %>
+
+                    <% if (infor && infor.role === 'Admin') { %>
+                        <li><a href="/product/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
+                    <% } %>
+                </ul>
+
+                <ul class="col-lg-3 d-none d-lg-flex justify-content-end">
+                    <% if(!infor) { %>
+                        <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
+                        <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
+                    <% } else { %>
+                        <li><a href="/user/signout">Đăng xuất</a></li>
+                    <% } %>
+                </ul>
+                
+                <div class="col-6 d-flex align-items-center justify-content-end d-lg-none">
+                    <button class="header-hamburger b-flex d-lg-none" id="header-hamburger">
+                        <span class="hamburger-content"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-tab" id="navigation-tab">
+            <div class="tab-mask" id="tab-mask"></div>
+            <ul class="tab-wrapper">
+                <li><h2 class="tab-title">Book nemo</h2></li>
+                <li><a href="/">Trang chủ</a></li>
                 
                 <% if(infor) { %>
-                    <li><a href="/cart" class="<%= path == 'Gio-hang'? 'active' : '' %>">Giỏ hàng</a></li>
+                    <li><a href="/cart">Giỏ hàng</a></li>
                     <li><a href="/order" class="<%= path == 'Don-hang'? 'active' : '' %>">Đặt hành</a></li>
                 <% } %>
 
                 <% if (infor && infor.role === 'Admin') { %>
                     <li><a href="/product/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
                 <% } %>
-            </ul>
 
-            <ul class="col-lg-3 d-none d-lg-flex justify-content-end">
                 <% if(!infor) { %>
                     <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
                     <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
@@ -26,38 +58,6 @@
                     <li><a href="/user/signout">Đăng xuất</a></li>
                 <% } %>
             </ul>
-            
-            <div class="col-6 d-flex align-items-center justify-content-end d-lg-none">
-                <button class="header-hamburger b-flex d-lg-none" id="header-hamburger">
-                    <span class="hamburger-content"></span>
-                </button>
-            </div>
         </div>
     </div>
-
-    <div class="navigation-tab" id="navigation-tab">
-        <div class="tab-mask" id="tab-mask"></div>
-        <ul class="tab-wrapper">
-            <li><h2 class="tab-title">Book nemo</h2></li>
-            <li><a href="/">Trang chủ</a></li>
-            
-            <% if(infor) { %>
-                <li><a href="/cart">Giỏ hàng</a></li>
-                <li><a href="/order" class="<%= path == 'Don-hang'? 'active' : '' %>">Đặt hành</a></li>
-            <% } %>
-
-            <% if (infor && infor.role === 'Admin') { %>
-                <li><a href="/product/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
-            <% } %>
-
-            <% if(!infor) { %>
-                <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
-                <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
-            <% } else { %>
-                <li><a href="/user/signout">Đăng xuất</a></li>
-            <% } %>
-        </ul>
-    </div>
-
-
 </header>

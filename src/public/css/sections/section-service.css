@@ -1,0 +1,20 @@
+.section-service-component {
+    background-color: var(--color-grey);
+    padding: 40px 50px;
+}
+
+.service-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.service-container img {
+    width: 80px;
+}
+
+.service-container .sub-title {
+    color: var(--text-color-grey-01);
+    font-size: 16px;
+    font-weight: 400;
+}
