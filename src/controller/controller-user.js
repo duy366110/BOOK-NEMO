@@ -1,11 +1,33 @@
 const ModelUser = require("../model/model-user");
 const ModelRole = require("../model/model-roles");
-const ModelProduct = require("../model/model-product");
 const utilbcrypt = require("../utils/util-bcrypt");
 const { validationResult } = require('express-validator');
 class ControllerUser {
 
     constructor() { }
+
+    // RENDER TRANG QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG
+    renderPageAdminUser = async (req, res, next) => {
+
+        try {
+            let { infor } = req.session;
+            let users = await ModelUser.find({}).select(['name', 'email', 'role']).populate('role');
+
+            res.render('pages/admin/page-admin-user', {
+                title: 'Quản trị người dùng',
+                path: 'Quan-tri',
+                infor,
+                users,
+                csurfToken: req.csrfToken()
+            });
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+
+        }
+    }
 
     // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
     renderUserSignin = (req, res, next) => {
@@ -48,29 +70,23 @@ class ControllerUser {
     renderNewAccount = async (req, res, next) => {
         try {
             let { infor } = req.session;
+            let roles = await ModelRole.find({}).select('name');
 
-            if(infor && infor.role === 'Admin') {
-                let roles = await ModelRole.find({}).select('name');
-
-                res.render("pages/admin/user/page-admin-new-user", {
-                    title: 'Tạo tài khoản',
-                    path: "Quan-tri",
-                    infor: infor? infor : null,
-                    csurfToken: req.csrfToken(),
-                    inputsErrors: [],
-                    roles,
-                    formField: {
-                        user_name: '',
-                        email: '',
-                        password: '',
-                        password_confirm: '',
-                        role: ''
-                    }
-                })
-
-            } else {
-                res.redirect("/user/signin");
-            }
+            res.render("pages/admin/user/page-admin-new-user", {
+                title: 'Tạo tài khoản',
+                path: "Quan-tri",
+                infor: infor? infor : null,
+                csurfToken: req.csrfToken(),
+                inputsErrors: [],
+                roles,
+                formField: {
+                    user_name: '',
+                    email: '',
+                    password: '',
+                    password_confirm: '',
+                    role: ''
+                }
+            })
 
         } catch (err) {
             let error = Error(err.message);
@@ -86,27 +102,23 @@ class ControllerUser {
             let { infor } = req.session;
             let { user } = req.query;
 
-            if(infor && infor.role === "Admin") {
-                let roles = await ModelRole.find({}).select('name');
-                let userInfor = await ModelUser.findOne({_id: {$eq: user}}).populate('role').exec();
+            let roles = await ModelRole.find({}).select('name');
+            let userInfor = await ModelUser.findOne({_id: {$eq: user}}).populate('role').exec();
 
-                res.render("pages/admin/user/page-admin-edit-user", {
-                    title: 'Chỉnh sửa thông tin tài khoản',
-                    path: "Quan-tri",
-                    infor: infor? infor : null,
-                    csurfToken: req.csrfToken(),
-                    inputsErrors: [],
-                    roles,
-                    formField: {
-                        id: userInfor._id,
-                        user_name: userInfor.name,
-                        email: userInfor.email,
-                        role: userInfor?.role? userInfor.role._id : null,
-                    }
-                })
-            } else {
-                res.redirect("/user/signin");
-            }
+            res.render("pages/admin/user/page-admin-edit-user", {
+                title: 'Chỉnh sửa thông tin tài khoản',
+                path: "Quan-tri",
+                infor: infor? infor : null,
+                csurfToken: req.csrfToken(),
+                inputsErrors: [],
+                roles,
+                formField: {
+                    id: userInfor._id,
+                    user_name: userInfor.name,
+                    email: userInfor.email,
+                    role: userInfor?.role? userInfor.role._id : null,
+                }
+            })
 
         } catch (err) {
             let error = Error(err.message);
@@ -238,61 +250,54 @@ class ControllerUser {
         let { user_name, email, password, password_confirm, role } = req.body;
         let { infor } = req.session;
         let { errors } = validationResult(req);
+        let roles = await ModelRole.find({});
 
-        if(infor && infor?.role === "Admin") {
-            let roles = await ModelRole.find({});
-
-            if(errors.length) {
-                res.render("pages/admin/user/page-admin-new-user", {
-                    title: 'Tạo tài khoản',
-                    path: "Quan-tri",
-                    infor: infor? infor : null,
-                    csurfToken: req.csrfToken(),
-                    inputsErrors: errors,
-                    roles,
-                    formField: { user_name, email, password, password_confirm, role }
-                })
-    
-            } else {
-                try {
-                    // MÃ HOÁ MẬT KHẨU
-                    utilbcrypt.hash(password, async (infor) => {
-                        let roleInfor = roles.filter((elm) => elm._id.toString() === role);
-                        roleInfor = roleInfor.length? roleInfor[0] : null;
-    
-                        // TẠO MỚI ACCOUNT
-                        let user = await ModelUser.create({
-                            name: user_name,
-                            email,
-                            password: infor.hash,
-                            role: roleInfor
-                        });
-    
-                        if(user) {
-                            // THÊM ACCOUNT VỪA TẠO VÀO ROLE
-                            roleInfor.users.push(user);
-                            await roleInfor.save();
-                            res.redirect("/admin/user");
-                        }
-                    })
-    
-                } catch (err) {
-                    let error = new Error(err.message);
-                    error.httpStatusCode = 500;
-                    return next(error);
-    
-                }
-            }
+        if(errors.length) {
+            res.render("pages/admin/user/page-admin-new-user", {
+                title: 'Tạo tài khoản',
+                path: "Quan-tri",
+                infor: infor? infor : null,
+                csurfToken: req.csrfToken(),
+                inputsErrors: errors,
+                roles,
+                formField: { user_name, email, password, password_confirm, role }
+            })
 
         } else {
-            res.redirect("/user/signin");
+            try {
+                // MÃ HOÁ MẬT KHẨU
+                utilbcrypt.hash(password, async (infor) => {
+                    let roleInfor = roles.filter((elm) => elm._id.toString() === role);
+                    roleInfor = roleInfor.length? roleInfor[0] : null;
+
+                    // TẠO MỚI ACCOUNT
+                    let user = await ModelUser.create({
+                        name: user_name,
+                        email,
+                        password: infor.hash,
+                        role: roleInfor
+                    });
+
+                    if(user) {
+                        // THÊM ACCOUNT VỪA TẠO VÀO ROLE
+                        roleInfor.users.push(user);
+                        await roleInfor.save();
+                        res.redirect("/admin/user");
+                    }
+                })
+
+            } catch (err) {
+                let error = new Error(err.message);
+                error.httpStatusCode = 500;
+                return next(error);
+
+            }
         }
     }
 
     // ADMIN SỬA THÔNG TIN TÀI KHOẢN
     editAccount = async (req, res, next) => {
         let roles = await ModelRole.find({}).populate('users');
-        // let isRole  = req.session.role;
         let { id, user_name, email,  role} = req.body;
         let { infor } = req.session;
         let { errors } = validationResult(req);

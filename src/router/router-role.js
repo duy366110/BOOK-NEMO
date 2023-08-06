@@ -2,20 +2,22 @@ const router = require('express').Router();
 const mongodb = require('mongodb');
 const { body } = require('express-validator');
 const ModelRole = require("../model/model-roles");
+const MiddlewarePermission = require("../middleware/middleware-permission");
 const ControllerRole = require("../controller/controller-role");
 const ObjectId = mongodb.ObjectId;
 
 // HIỂN THỊ TRANG DANH SÁCH QUYỀN TÀI KHOẢN
-router.get("/admin", ControllerRole.renderPageAdminRole);
+router.get("/admin", MiddlewarePermission.permission, ControllerRole.renderPageAdminRole);
 
 // HIỂN THỊ TRANG THÊM MỚI QUYỀN TÀI KHOẢN
-router.get("/admin/new", ControllerRole.renderPageAdminNewRole);
+router.get("/admin/new", MiddlewarePermission.permission, ControllerRole.renderPageAdminNewRole);
 
 // HIỂN THỊ TRANG SỮA THÔNG TIN QUYỀN TÀI KHOẢN
 router.get("/admin/edit/:role", ControllerRole.renderPageAdminEditRole);
 
 // THÊM MỚI PHÂN QUYỀN TÀI KHOẢN
-router.post("/new", [
+router.post("/new", MiddlewarePermission.permission,
+[
     body('role').custom(async (val, {req}) => {
         if(!val.trim()) throw Error('Quyền tài khoản không được trống');
         if(val) {
@@ -32,7 +34,8 @@ router.post("/new", [
 ], ControllerRole.createRole);
 
 // CẬP NHẬT THÔNG TIN PHÂN QUYỀN TÀI KHOẢN
-router.post("/edit", [
+router.post("/edit", MiddlewarePermission.permission,
+[
     body('id').notEmpty().withMessage('Token quyền tài khoản không được trống'),
     body('role').custom( async(val, {req}) => {
         if(!val.trim()) throw Error('Quyền tài khoản không được trống');
@@ -55,7 +58,8 @@ router.post("/edit", [
 ], ControllerRole.modifiRole);
 
 // XOÁ TÀI PHÂN QUYỀN TÀI KHOẢN
-router.post("/delete",[
+router.post("/delete", MiddlewarePermission.permission,
+[
     body('role').custom( async(val, {req}) => {
         if(!val.trim()) throw Error('Quyền tài khoản không được trống');
         if(val) {

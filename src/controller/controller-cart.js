@@ -10,32 +10,27 @@ class ControllerCart {
         try {
             let { infor } = req.session;
 
-            if(infor && infor.role) {
-                let userInfor = await ModelUser
-                .findOne({email: {$eq: infor.email}})
-                .select(['name', 'email', 'cart'])
-                .populate('cart.product')
-                .exec();
+            let userInfor = await ModelUser
+            .findOne({email: {$eq: infor.email}})
+            .select(['name', 'email', 'cart'])
+            .populate('cart.product')
+            .exec();
 
-                if(userInfor) {
-                    let total = userInfor.cart.reduce((acc, cart) => {
-                        acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
-                        return acc;
-                    }, 0)
+            if(userInfor) {
+                let total = userInfor.cart.reduce((acc, cart) => {
+                    acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
+                    return acc;
+                }, 0)
 
-                    res.render("pages/shop/page-cart", {
-                        title: 'Giỏ hàng',
-                        path: 'Gio-hang',
-                        infor: infor? infor : null,
-                        csurfToken: req.csrfToken(),
-                        formError: req.flash('error'),
-                        user: userInfor,
-                        total,
-                    })
-                }
-
-            } else {
-                res.redirect('/user/signin');
+                res.render("pages/shop/page-cart", {
+                    title: 'Giỏ hàng',
+                    path: 'Gio-hang',
+                    infor: infor? infor : null,
+                    csurfToken: req.csrfToken(),
+                    formError: req.flash('error'),
+                    user: userInfor,
+                    total,
+                })
             }
 
         } catch (err) {
@@ -49,14 +44,14 @@ class ControllerCart {
     addCart = async (req, res, next) => {
         try {
             let { product} = req.body;
-            let { user } = req.cookies;
+            let { infor } = req.session;
             let { errors } = validationResult(req);
 
             if(errors.length) {
                 throw Error('Product token empty');
 
             } else {
-                let userInfor = await ModelUser.findOne({email: {$eq: user.email}});
+                let userInfor = await ModelUser.findOne({email: {$eq: infor.email}});
 
                 if(userInfor) {
                     let productInfor = await ModelProduct.findById(product);
@@ -100,14 +95,14 @@ class ControllerCart {
     deleteProductInCart = async (req, res, next) => {
         try {
             let { product } = req.body;
-            let { user } = req.cookies;
+            let { infor } = req.session;
             let { errors } = validationResult(req);
 
             if(errors.length) {
                 throw Error('Product token empty');
 
             } else {
-                let userInfor = await ModelUser.findOne({email: {$eq: user.email}});
+                let userInfor = await ModelUser.findOne({email: {$eq: infor.email}});
                 userInfor.cart = userInfor.cart.filter((cart) => cart.product.toString() !== product);
                 await userInfor.save();
                 res.redirect("/cart");

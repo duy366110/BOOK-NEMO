@@ -14,7 +14,7 @@
                 <% } %>
 
                 <% if (infor && infor.role === 'Admin') { %>
-                    <li><a href="/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
+                    <li><a href="/product/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
                 <% } %>
             </ul>
 
@@ -47,7 +47,7 @@
             <% } %>
 
             <% if (infor && infor.role === 'Admin') { %>
-                <li><a href="/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
+                <li><a href="/product/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
             <% } %>
 
             <% if(!infor) { %>
