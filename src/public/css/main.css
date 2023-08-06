@@ -1,7 +1,7 @@
 @import url("./root.css");
 
 .component-wrapper {
-    padding-top: 4.5rem;
+    padding: 4.5rem 0rem;
 }
 
 /* PAGE MESSAGE */

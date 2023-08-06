@@ -8,14 +8,41 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    height: 100%;
 }
 
 .new-letter-container img {
-    max-width: 60px;
+    max-width: 55px;
 }
 
 .new-letter-container p {
-    font-size: 25px;
+    font-size: 18px;
     font-weight: 600;
     letter-spacing: .3px;
+    margin-bottom: 0px;
+}
+
+.new-letter-form input, .new-letter-form button {
+    border: none;
+    height: 40px;
+}
+
+.new-letter-form input {
+    border-top-left-radius: 20px!important;
+    border-bottom-left-radius: 20px!important;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    font-size: 15px;
+    padding-left: 15px;
+    width: 290px;
+}
+
+.new-letter-form button {
+    border-top-right-radius: 20px!important;
+    border-bottom-right-radius: 20px!important;
+    background-color: #004376;
+    color: #ffffff;
+    font-weight: 600;
+    font-size:15px;
+    width: 105px;
 }

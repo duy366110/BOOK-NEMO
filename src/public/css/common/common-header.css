@@ -5,7 +5,9 @@ header {
 }
 
 .header-wrapper {
-    background-color: var(--first-color);
+    /* background-color: var(--first-color); */
+    background-color: #ffffff;
+    border-bottom: 3px solid var(--first-color);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -22,6 +24,10 @@ header {
     text-transform: capitalize;
 }
 
+.header-logo a img {
+    width: 115px;
+}
+
 /* LIST */
 header ul {
     display: flex;
@@ -32,7 +38,7 @@ header ul {
 }
 
 header ul li a {
-    color: #ffffff;
+    color: var(--first-color);;
     display: block;
     padding: 0px 10px;
     font-size: 1.6rem;
@@ -41,7 +47,7 @@ header ul li a {
 }
 
 header ul li a.active, header ul li a:hover {
-    color: #f5e10b;
+    color: var(--last-color);
     text-decoration: none;
 }
 
