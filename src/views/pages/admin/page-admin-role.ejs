@@ -15,7 +15,7 @@
                 </div>
 
                 <div class="admin-tab">
-                    <a class="btn" href="/role/admin/new">Thêm phân quyền</a>
+                    <a class="btn" href="/role/new">Thêm phân quyền</a>
                 </div>
 
                 <% if(pageMessage) {%>
@@ -42,7 +42,7 @@
                                     <td><%= role.users.length %></td>
                                     <td>
                                         <% if(role.name != 'Admin') { %>
-                                            <a href="/role/admin/edit/<%= role._id %>" class="btn mb-0">Sửa thông tin</a>
+                                            <a href="/role/edit/<%= role._id %>" class="btn mb-0">Sửa thông tin</a>
                                             <form action="/role/delete" method="post">
                                                 <input type="hidden" name="role" value="<%= role._id %>">
                                                 <input type="hidden" name="_csrf" value="<%= csurfToken %>" />

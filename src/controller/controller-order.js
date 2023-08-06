@@ -154,7 +154,7 @@ class ControllerOrder {
                 if(orderInfor) {
                     userInfor.cart = [];
                     await userInfor.save();
-                    res.redirect("/");
+                    res.redirect("/order");
                 }
             }
 

@@ -16,6 +16,7 @@ class ControllerProduct {
             res.render('pages/admin/page-admin', {
                 title: 'Quản trị sản phẩm',
                 path: 'Quan-tri',
+                csurfToken: req.csrfToken(),
                 infor,
                 products,
             });
@@ -98,7 +99,7 @@ class ControllerProduct {
                 }
 
                 let product = await ModelProduct.create({title, image: pathImage, price, description});
-                if(product) res.redirect("/");
+                if(product) res.redirect("/product/admin");
 
             } catch (err) {
                 let error = new Error('');
@@ -155,7 +156,7 @@ class ControllerProduct {
                 }
                 
                 await productInfor.save();
-                res.redirect("/admin");
+                res.redirect("/product/admin");
             }
 
         } catch (err) {
@@ -169,7 +170,7 @@ class ControllerProduct {
     // ADMIN XOÁ SẢN PHẨM
     deleteProduct = async (req, res, next) => {
         try {
-            let { product } = req.params;
+            let { product } = req.body;
 
             let productInfor = await ModelProduct.findById(product);
             let imagePath = productInfor.image.split("/");
@@ -181,7 +182,7 @@ class ControllerProduct {
             // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
             if(status) {
                 await productInfor.deleteOne();
-                res.redirect("/admin");
+                res.redirect("/product/admin");
             }
 
 
