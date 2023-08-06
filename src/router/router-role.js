@@ -10,10 +10,10 @@ const ObjectId = mongodb.ObjectId;
 router.get("/admin", MiddlewarePermission.permission, ControllerRole.renderPageAdminRole);
 
 // HIỂN THỊ TRANG THÊM MỚI QUYỀN TÀI KHOẢN
-router.get("/admin/new", MiddlewarePermission.permission, ControllerRole.renderPageAdminNewRole);
+router.get("/new", MiddlewarePermission.permission, ControllerRole.renderPageAdminNewRole);
 
 // HIỂN THỊ TRANG SỮA THÔNG TIN QUYỀN TÀI KHOẢN
-router.get("/admin/edit/:role", ControllerRole.renderPageAdminEditRole);
+router.get("/edit/:role", ControllerRole.renderPageAdminEditRole);
 
 // THÊM MỚI PHÂN QUYỀN TÀI KHOẢN
 router.post("/new", MiddlewarePermission.permission,

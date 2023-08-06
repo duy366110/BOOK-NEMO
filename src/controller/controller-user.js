@@ -282,7 +282,7 @@ class ControllerUser {
                         // THÊM ACCOUNT VỪA TẠO VÀO ROLE
                         roleInfor.users.push(user);
                         await roleInfor.save();
-                        res.redirect("/admin/user");
+                        res.redirect("/user/admin");
                     }
                 })
 
@@ -338,7 +338,7 @@ class ControllerUser {
                 }
 
                 await user.save();
-                res.redirect("/admin/user");
+                res.redirect("/user/admin");
 
             } catch (err) {
                 let error = Error(err.message);
@@ -361,7 +361,7 @@ class ControllerUser {
             await roleInfor.save();
             await userInfor.deleteOne();
             
-            res.redirect("/admin/user");
+            res.redirect("/user/admin");
 
 
         } catch (err) {

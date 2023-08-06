@@ -29,9 +29,13 @@
                                         <p class="card-infor_price">Giá: <%= product.price %> đ</p>
                                     </div>
 
-                                    <div class="card-action">
-                                        <a class="btn" href="/admin/product/edit?product=<%= product._id %>">Sửa thông tin</a>
-                                        <a class="btn" href="/product/del/<%= product._id %>">Xoá</a>
+                                    <div class="card-action d-flex justify-content-between mt-auto">
+                                        <a class="btn" href="/product/edit?product=<%= product._id %>">Sửa thông tin</a>
+                                        <form action="/product/delete" method="post">
+                                            <input type="hidden" name="product" value="<%= product._id %>" />
+                                            <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+                                            <button type="submit" class="btn">Xoá </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

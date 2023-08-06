@@ -9,6 +9,9 @@ router.get("/admin", MiddlewarePermission.permission, ControllerProduct.renderPa
 // RENDER TRANG THÊM MỚI SẢN PHẨM
 router.get("/new",MiddlewarePermission.permission, ControllerProduct.renderPageNewProduct);
 
+// RENDER TRANG CẬP NHẬT THÔNG TIN SẢN PHẨM
+router.get("/edit", MiddlewarePermission.permission, ControllerProduct.renderPageEditProduct);
+
 // ADMIN THEM MOI PRODUCT
 router.post('/new', MiddlewarePermission.permission, [
     body('title').custom((value, {req}) => {
@@ -45,6 +48,10 @@ router.post('/edit', MiddlewarePermission.permission, [
     })
 ], ControllerProduct.updateProduct);
 
-router.get("/del/:product", MiddlewarePermission.permission, ControllerProduct.deleteProduct);
+router.post("/delete", MiddlewarePermission.permission,
+[
+    body('product').notEmpty().withMessage('Mã sản phẩm không được trống'),
+
+], ControllerProduct.deleteProduct);
 
 module.exports = router;
