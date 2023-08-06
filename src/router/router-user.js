@@ -7,6 +7,7 @@ router.get('/signin', ControllerUser.renderUserSignin);
 router.get('/signup', ControllerUser.renderUserSignup);
 router.get('/signout', ControllerUser.userSignout);
 
+router.get("/admin", ControllerUser.renderPageAdminUser);
 router.get('/new', ControllerUser.renderNewAccount);
 router.get('/edit', ControllerUser.renderEditAccount);
 

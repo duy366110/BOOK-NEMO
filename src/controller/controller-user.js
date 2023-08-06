@@ -1,11 +1,39 @@
 const ModelUser = require("../model/model-user");
 const ModelRole = require("../model/model-roles");
-const ModelProduct = require("../model/model-product");
 const utilbcrypt = require("../utils/util-bcrypt");
 const { validationResult } = require('express-validator');
 class ControllerUser {
 
     constructor() { }
+
+    // RENDER TRANG QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG
+    renderPageAdminUser = async (req, res, next) => {
+
+        try {
+            let { infor } = req.session;
+            let users = await ModelUser.find({}).select(['name', 'email', 'role']).populate('role');
+
+            if(infor && infor?.role === 'Admin') {
+                res.render('pages/admin/page-admin-user', {
+                    title: 'Quản trị người dùng',
+                    path: 'Quan-tri',
+                    infor,
+                    users,
+                    csurfToken: req.csrfToken()
+                });
+
+            } else {
+                res.redirect('/user/signin');
+
+            }
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+
+        }
+    }
 
     // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
     renderUserSignin = (req, res, next) => {
