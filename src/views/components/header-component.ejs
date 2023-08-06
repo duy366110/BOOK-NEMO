@@ -8,18 +8,18 @@
             <ul class="col-lg-7 d-none d-lg-flex">
                 <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
                 
-                <% if(isLogin) { %>
+                <% if(infor) { %>
                     <li><a href="/cart" class="<%= path == 'Gio-hang'? 'active' : '' %>">Giỏ hàng</a></li>
                     <li><a href="/order" class="<%= path == 'Don-hang'? 'active' : '' %>">Đặt hành</a></li>
                 <% } %>
 
-                <% if (isRole === 'Admin') { %>
+                <% if (infor && infor.role === 'Admin') { %>
                     <li><a href="/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
                 <% } %>
             </ul>
 
             <ul class="col-lg-3 d-none d-lg-flex justify-content-end">
-                <% if(!isLogin) { %>
+                <% if(!infor) { %>
                     <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
                     <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
                 <% } else { %>
@@ -41,16 +41,16 @@
             <li><h2 class="tab-title">Book nemo</h2></li>
             <li><a href="/">Trang chủ</a></li>
             
-            <% if(isLogin) { %>
+            <% if(infor) { %>
                 <li><a href="/cart">Giỏ hàng</a></li>
                 <li><a href="/order" class="<%= path == 'Don-hang'? 'active' : '' %>">Đặt hành</a></li>
             <% } %>
 
-            <% if (isRole === 'Admin') { %>
+            <% if (infor && infor.role === 'Admin') { %>
                 <li><a href="/admin" class="<%= path == 'Quan-tri'? 'active' : '' %>">Quản trị</a></li>
             <% } %>
 
-            <% if(!isLogin) { %>
+            <% if(!infor) { %>
                 <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
                 <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
             <% } else { %>

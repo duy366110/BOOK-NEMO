@@ -9,13 +9,15 @@ class ControllerUser {
 
     // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
     renderUserSignin = (req, res, next) => {
-        let isRole  = req.session.role;
+        // let isRole  = req.session.role;
+        let { infor } = req.session;
 
         res.render("pages/auth/page-auth-signin", {
             title: 'Đăng ký',
             path: "Dang-nhap",
-            isLogin: req.cookies.user? true : false,
-            isRole:  isRole? isRole : 'Client',
+            // isLogin: req.cookies.user? true : false,
+            // isRole:  isRole? isRole : 'Client',
+            infor: null,
             csurfToken: req.csrfToken(),
             inputsErrors: [],
             formField: {
@@ -27,13 +29,15 @@ class ControllerUser {
 
     // RENDER TRANG ĐỂ NGƯỜI DÙNG TỰ ĐĂNG KÝ
     renderUserSignup = (req, res, next) => {
-        let isRole  = req.session.role;
+        // let isRole  = req.session.role;
+        let { infor } = req.session;
 
         res.render("pages/auth/page-auth-signup", {
             title: 'Đăng nhập',
             path: "Dang-ky",
-            isLogin: req.cookies.user? true : false,
-            isRole:  isRole? isRole : 'Client',
+            // isLogin: req.cookies.user? true : false,
+            // isRole:  isRole? isRole : 'Client',
+            infor: infor? infor : null,
             csurfToken: req.csrfToken(),
             formError: req.flash('form-error'),
             inputsErrors: [],
@@ -151,8 +155,12 @@ class ControllerUser {
                     utilbcrypt.compare(password, user.password, (status) => {
 
                         if(status) {
-                            res.cookie('user', { username: user.name, email: user.email });
-                            req.session.role = user.role.name;
+                            req.session.infor = {
+                                id: user._id,
+                                name: user.name,
+                                email: user.email,
+                                role: user.role.name
+                            }
                             res.redirect("/");
                         }
                     })
@@ -174,14 +182,14 @@ class ControllerUser {
     userSignup = async (req, res, next) => {
         let { user_name, email, password, password_confirm} = req.body;
         let isRole  = req.session.role;
+        let { infor } = req.session;
         let {errors} = validationResult(req);
 
         if(errors.length) {
             res.render("pages/auth/page-auth-signup", {
                 title: 'Đăng nhập',
                 path: "Dang-ky",
-                isLogin: req.cookies.user? true : false,
-                isRole:  isRole? isRole : 'Client',
+                infor: infor? infor : null,
                 csurfToken: req.csrfToken(),
                 formError: req.flash('form-error'),
                 inputsErrors: errors,
@@ -200,8 +208,14 @@ class ControllerUser {
                             clientRole.users.push(user);
                             await clientRole.save();
 
-                            res.cookie('user', {username: user.name, email: user.email});
-                            req.session.role = clientRole.name;
+                            // res.cookie('user', {username: user.name, email: user.email});
+                            // req.session.role = clientRole.name;
+                            req.session.infor = {
+                                id: user._id,
+                                name: user.name,
+                                email: user.email,
+                                role: user.role.name
+                            }
                             res.redirect("/");
                         }
 
@@ -343,47 +357,6 @@ class ControllerUser {
             
             res.redirect("/admin/user");
 
-
-        } catch (err) {
-            let error = Error(err.message);
-            error.httpStatusCode = 500;
-            return next(error);
-        }
-    }
-
-    // NGƯỜI DÙNG THÊM SẢN PHẨM VÀO GIỞ HÀNG
-    userAddProductToCart = async (req, res, next) => {
-        try {
-            let { product } = req.body;
-            let { errors } = validationResult(req);            
-            let { user } = req.cookies;
-
-            if(errors.length) {
-
-            } else {
-                let userInfor = await ModelUser.findOne({email: {$eq: user.email}});
-
-                if(userInfor) {
-                    let productInfor = await ModelProduct.findById(product);
-
-                    console.log(userInfor);
-                    console.log(productInfor);
-
-                    if(userInfor.cart.length) {
-
-                    } else {
-                        userInfor.cart.push({
-                            product: productInfor,
-                            quantity: 1
-                        })
-                    }
-
-                    await userInfor.save();
-
-                } else {
-                    res.redirect('/cart');
-                }
-            }
 
         } catch (err) {
             let error = Error(err.message);
