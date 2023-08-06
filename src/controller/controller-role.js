@@ -58,6 +58,39 @@ class ControllerRole {
         }
     }
 
+    // RENDER TRANG SỮA THÔNG TIN PHÂN QUYỀN TÀI KHOẢN
+    renderPageAdminEditRole = async(req, res, next) => {
+        let { infor } = req.session;
+        let { role } = req.params;
+
+        if(infor && infor?.role === 'Admin') {
+            try {
+                let roleInfor = await ModelRole.findById(role);
+
+                res.render('pages/admin/role/page-admin-edit-role', {
+                    title: 'Quản trị phân quyền',
+                    path: 'Quan-tri',
+                    infor,
+                    csurfToken: req.csrfToken(),
+                    pageMessage: null,
+                    inputsErrors: [],
+                    formField: {
+                        id: roleInfor? roleInfor._id : '',
+                        role: roleInfor? roleInfor.name : ''
+                    }
+                })
+
+            } catch (err) {
+                let error = Error(err.message);
+                error.httpStatusCode = 500;
+                return next(error);
+            }
+
+        } else {
+            res.redirect("/user/signin");
+        }
+    }
+
     // ADMIN THÊM PHÂN QUYỀN TÀI KHOẢN
     createRole = async (req, res, next) => {
         let { role } = req.body;
@@ -84,6 +117,47 @@ class ControllerRole {
                     if(roleNew) {
                         res.redirect("/role/admin");
                     }
+                
+                } catch (err) {
+                    let error = Error(err.message);
+                    error.httpStatusCode = 500;
+                    return next(error);
+                }
+            }
+
+        } else {
+            res.redirect("/user/signin");
+        }
+    }
+
+    // ADMIN CẬP NHẬT THÔNG TIN PHÂN QUYỀN TÀI KHOẢN
+    modifiRole = async (req, res, next) => {
+        let { role, id } = req.body;
+        let { infor } = req.session;
+        let { errors } = validationResult(req);
+
+        if(infor && infor?.role === 'Admin') {
+            if(errors.length) {
+                res.render('pages/admin/role/page-admin-edit-role', {
+                    title: 'Quản trị phân quyền',
+                    path: 'Quan-tri',
+                    infor,
+                    csurfToken: req.csrfToken(),
+                    pageMessage: null,
+                    inputsErrors: errors,
+                    formField: {
+                        id,
+                        role
+                    }
+                })
+
+            } else {
+                try {
+                    let roleInfor = await ModelRole.findById(id);
+                    roleInfor.name = role;
+
+                    await roleInfor.save();
+                    res.redirect("/role/admin");
                 
                 } catch (err) {
                     let error = Error(err.message);
