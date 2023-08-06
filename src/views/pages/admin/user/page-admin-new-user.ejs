@@ -7,14 +7,14 @@
 
         <div class="component-wrapper">
             <div class="container">
-                <form class="form-container" action="/user/new" method="post" novalidate>
+                <form class="form-container" action="/user/new" method="post">
                     <h2 class="form-title">Thêm mới tài khoản</h2>
 
                     <div class="form-group">
                         <label class="form-label" for="user_name">Họ và tên người dùng</label>
                         <input
                             class="<%= inputsErrors.find((elm)=> elm.path === 'user_name')? 'form-control is-invalid' : 'form-control' %>"
-                            type="text" name="user_name" id="user_name"/>
+                            type="text" name="user_name" id="user_name" value="<%= formField.user_name %>"/>
 
                             <% if(inputsErrors.some((elm)=> elm.path === 'user_name')) { %>
                                 <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'user_name')?.msg %></small>
@@ -25,7 +25,7 @@
                         <label class="form-label" for="email">E-mail</label>
                         <input
                             class="<%= inputsErrors.find((elm)=> elm.path === 'email')? 'form-control is-invalid' : 'form-control' %>"
-                            type="email" name="email" id="email"/>
+                            type="email" name="email" id="email" value="<%= formField.email %>"/>
 
                             <% if(inputsErrors.some((elm)=> elm.path === 'email')) { %>
                                 <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'email')?.msg %></small>
@@ -36,7 +36,7 @@
                         <label class="form-label" for="password">Mật khẩu</label>
                         <input
                             class="<%= inputsErrors.find((elm)=> elm.path === 'password')? 'form-control is-invalid' : 'form-control' %>"
-                            type="password" name="password" id="password"/>
+                            type="password" name="password" id="password" value="<%= formField.password %>"/>
 
                             <% if(inputsErrors.some((elm)=> elm.path === 'password')) { %>
                                 <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'password')?.msg %></small>
@@ -47,7 +47,7 @@
                         <label class="form-label" for="password_confirm">Nhập lại mật khẩu</label>
                         <input
                             class="<%= inputsErrors.find((elm)=> elm.path === 'password_confirm')? 'form-control is-invalid' : 'form-control' %>"
-                            type="password" name="password_confirm" id="password_confirm"/>
+                            type="password" name="password_confirm" id="password_confirm" value="<%= formField.password_confirm %>"/>
 
                             <% if(inputsErrors.some((elm)=> elm.path === 'password_confirm')) { %>
                                 <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'password_confirm')?.msg %></small>
