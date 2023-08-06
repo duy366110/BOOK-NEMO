@@ -1,0 +1,21 @@
+.section-new-letter {
+    background-color: var(--first-color);
+    color: #ffffff;
+    padding: 40px 50px;
+}
+
+.new-letter-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.new-letter-container img {
+    max-width: 60px;
+}
+
+.new-letter-container p {
+    font-size: 25px;
+    font-weight: 600;
+    letter-spacing: .3px;
+}
