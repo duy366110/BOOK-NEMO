@@ -1,8 +1,9 @@
 const ModelProduct = require("../model/model-product");
-class ControllerHome {
+class ControllerCommon {
 
     constructor() { }
 
+    //  RENDER TRANG CHỦ
     renderPageHome = async (req, res, next) => {
         
         try {
@@ -25,6 +26,19 @@ class ControllerHome {
             
         }
     }
+
+    // RENDER TRANG GIỚI THIỆU
+    renderPageIntroduction = async (req, res, next) => {
+        let { infor } = req.session;
+
+        res.render("pages/shop/page-introduction", {
+            title: 'Giới thiệu',
+            path: 'Gioi-thieu',
+            infor: infor? infor : null,
+            csurfToken: req.csrfToken(),
+            footer: true
+        });
+    }
 }
 
-module.exports = new ControllerHome();
+module.exports = new ControllerCommon();

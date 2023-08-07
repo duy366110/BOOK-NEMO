@@ -1,0 +1,19 @@
+@import url("../common/common-header.css");
+@import url("../common/common-footer.css");
+
+.introduction-container {
+    padding: 40px 0px;
+}
+
+.introduction-container .title {
+    letter-spacing: .3px;
+    font-size:20px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+
+.introduction-container .desc {
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    line-height: 1.7;
+}
