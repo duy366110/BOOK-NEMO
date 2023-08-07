@@ -1,0 +1,30 @@
+.breadcrumb-component {
+    background-color: #f4f5f9;
+    padding: 15px 0px;
+}
+
+.breadcrumb-list {
+    display: flex;
+    align-items: center;
+    margin: 0px;
+    padding: 0px;
+}
+
+.breadcrumb-list li {
+    font-size: 15px;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.breadcrumb-list li:not(:last-child)::after {
+    content: "/";
+    display: inline-block;
+    margin: 0px 5px;
+}
+
+.breadcrumb-list li a {
+    color: var(--first-color);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+}
