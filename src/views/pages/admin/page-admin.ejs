@@ -18,33 +18,26 @@
                     <a class="btn" href="/product/new">Thêm mới sản phẩm</a>
                 </div>
 
-                <div class="row">
-                    <% if(products && products.length) { %>
-                        <% products.forEach((product) => { %>
-                            <div class="col-12 col-sm-6 col-lg-4  col-xl-3 d-flex align-items-stretch">
-                                <div class="card">
+                <% if(products && products.length) { %>
+                    <div class="product-container">
+                    <% products.forEach((product) => { %>
+                        <div class="card">
+                            <a href="#" class="card-wrapper">
+                                <div class="thumbnail-wrapper">
                                     <img class="image-fluid card-thumbnail" src="<%= product.image %>" alt="product thumbnail" />
-                                    <div class="card-infor">
-                                        <h2 class="card-infor_title"><%= product.title %></h2>
-                                        <p class="card-infor_price">Giá: <%= product.price %> đ</p>
-                                    </div>
-
-                                    <div class="card-action d-flex justify-content-between mt-auto">
-                                        <a class="btn" href="/product/edit?product=<%= product._id %>">Sửa thông tin</a>
-                                        <form action="/product/delete" method="post">
-                                            <input type="hidden" name="product" value="<%= product._id %>" />
-                                            <input type="hidden" name="_csrf" value="<%= csurfToken %>">
-                                            <button type="submit" class="btn">Xoá </button>
-                                        </form>
-                                    </div>
                                 </div>
-                            </div>
-                        <% } ) %>
+                                <div class="card-infor">
+                                    <h2 class="card-infor_title"><%= product.title %></h2>
+                                    <p class="card-infor_price"><%= product.price %>.000 <span>đ</span></p>
+                                </div>
+                            </a>
+                        </div>
+                    <% } ) %>
+                    </div>
 
-                    <% } else { %> 
-                        <p class="blank">Product blank</p>
-                    <% } %>
-                </div>
+                <% } else { %> 
+                    <p class="blank">Product blank</p>
+                <% } %>
             </div>
         </div>
     </main>

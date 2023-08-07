@@ -1,34 +1,102 @@
+.product-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
 .card {
     background-color: #f2f2f2;
-    border: unset;
-    box-shadow: 0px 0px 2px 0px #000000;
+    border: 1px solid #F2F4F5;
     display: flex;
     flex-direction: column;
     margin-bottom: 25px;
-    padding: 10px;
+}
+
+.card-wrapper {
+    color: var(--text-color-grey-03);
+    display: block;
+}
+
+.card-wrapper:hover {
+    color: var(--text-color-grey-03);
+    text-decoration: unset;
+}
+
+.thumbnail-wrapper {
+    display: flex;
+    align-items: stretch;
+    min-height: 195px;
+    max-height: 195px;
+    overflow: hidden;
+}
+
+.card-thumbnail {
+    transition: all .3s ease;
+    width: 100%;
 }
 
 .card-infor {
     margin-bottom:10px;
-}
-
-.card-thumbnail {
-    margin-bottom: 15px;
+    padding: 15px 10px 0px;
 }
 
 .card-infor_title {
+    display: -webkit-box;
     font-size: 1.7rem;
+    font-weight: 400;
+    line-height: 1.4em;
+    word-break: break-word;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .card-infor_price {
+    color: var(--first-color);
      font-size: 1.5rem;
-     font-weight: 600;
+     font-weight: 700;
+     letter-spacing: .3px;
      margin-bottom: 0px;
+     text-align: center;
 }
 
-.card-actions {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
+.card-infor_price span {
+    text-decoration: underline;
+}
+
+.card:hover .card-thumbnail {
+    transform: scale(1.1);
+}
+
+@media screen and (min-width: 320px) {
+    .card {
+        width: calc((100%) - 20px);
+    }
+}
+
+@media screen and (min-width: 412px) {
+    .card {
+        width: calc((100% / 2) - 20px);
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .card {
+        width: calc((100% / 3) - 20px);
+    }
+}
+
+@media screen and (min-width: 912px) {
+    .card {
+        width: calc((100% / 5) - 20px);
+    }
+}
+
+@media screen and (max-width: 412px) {
+    .thumbnail-wrapper {
+        max-height: 315px;
+    }
 }
