@@ -29,6 +29,25 @@ class ControllerProduct {
         }
     }
 
+    // RENDER TRÀN CHI TIẾT SẢN PHẨM
+    renderPageProductDetail = async (req, res, next) => {
+        try {
+            let { infor } = req.session;
+            res.render('pages/shop/page-product-detail', {
+                title: 'Chi tiết sản phẩm',
+                path: 'Chi-tiet-san-pham',
+                csurfToken: req.csrfToken(),
+                infor,                
+                footer: true
+            });
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+    }
+
     // RENDER TRANG THÊM MỚI SẢN PHẨM
     renderPageNewProduct = (req, res, next) => {
         let { infor } = req.session;
