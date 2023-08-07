@@ -1,0 +1,17 @@
+<div class="breadcrumb-component">
+    <div class="container">
+        <ul class="list-unstyled breadcrumb-list">
+            <li><a href="/">Trang chủ</a></li>
+            <% if(path === 'Gioi-thieu') { %>
+                <li>Giới thiệu</li>
+                
+            <% } else if(path === 'Gio-hang') { %>
+                <li>Giỏ hàng</li>
+
+            <% } else { %>
+                <li>Đặt hàng</li>
+
+            <% } %>
+        </ul>
+    </div>
+</div>

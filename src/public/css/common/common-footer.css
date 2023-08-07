@@ -1,6 +1,6 @@
 footer {
     background-color: #f4f5f9;
-    padding: 40px 0px;
+    padding-top: 40px;
 }
 
 footer .footer-container a img {
@@ -35,5 +35,15 @@ footer .footer-container p {
 
 .footer-container ul li a:hover {
     color: var(--text-color-grey-02);
+}
+
+.coppy-right {
+    background-color: #e5e5e5;
+    letter-spacing: .3px;
+    font-size: 13px;
+    margin-bottom: 0px;
+    margin-top: 15px;
+    padding: 15px;
+    text-align: center;
 }
 
