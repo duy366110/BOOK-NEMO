@@ -19,24 +19,46 @@
                 </div>
 
                 <% if(products && products.length) { %>
-                    <div class="product-container">
-                    <% products.forEach((product) => { %>
-                        <div class="card">
-                            <a href="#" class="card-wrapper">
-                                <div class="thumbnail-wrapper">
-                                    <img class="image-fluid card-thumbnail" src="<%= product.image %>" alt="product thumbnail" />
-                                </div>
-                                <div class="card-infor">
-                                    <h2 class="card-infor_title"><%= product.title %></h2>
-                                    <p class="card-infor_price"><%= product.price %>.000 <span>đ</span></p>
-                                </div>
-                            </a>
-                        </div>
-                    <% } ) %>
+                    <div class="table-container">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Ảnh</th>
+                                    <th scope="col">Giá</th>
+                                    <th scope="col">Hoá đơn sản phẩm</th>
+                                    <th scope="col">Chức năng</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <% products.forEach((product, index) => { %>
+                                <tr>
+                                    <td scope="row"><%= index %></td>
+                                    <td><%= product.title %></td>
+                                    <td>
+                                        <img src="<%= product.image %>" width="100" alt="thumbnail">
+                                    </td>
+                                    <td><%= product.price %> đ</td>
+                                    <td><%= product?.product_ref %></td>
+                                    <td class="h-100">
+                                        <a class="btn" href="/product/edit?product=<%= product._id %>">Sữa</a>
+                                        <form action="/product/delete" method="post">
+                                            <input type="hidden" name="product" value="<%= product._id %>" />
+                                            <input type="hidden" name="_csrf" value="<%= csurfToken %>">
+                                            <button type="submit" class="btn">Xoá </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
                     </div>
 
                 <% } else { %> 
                     <p class="blank">Product blank</p>
+
                 <% } %>
             </div>
         </div>

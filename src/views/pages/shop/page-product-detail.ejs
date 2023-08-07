@@ -12,17 +12,17 @@
                     <div class="row">
                         <div class="col-12 col-md-6 mb-5 mb-md-0">
                             <div class="product-thumbnail">
-                                <img src="https://res.cloudinary.com/doxnf7bp0/image/upload/v1691132606/book_nemo/bogsbc89nsstf0bklz3h.jpg" alt="Product thumbnail" />
+                                <img src="<%= product.image %>" alt="Product thumbnail" />
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="product-infor">
-                                <h2 class="title">Basic Grammar in Use Students Book ( sach mau + den trang )</h2>
-                                <h3 class="price">129.000 đ</h3>
-                                <p class="desc">With simple explanations, clear examples, and easy to understand exercises, it is perfect for students who are learning on their own, but can also be used in the classroom</p>
+                                <h2 class="title"><%= product.title %></h2>
+                                <h3 class="price"><%= product.price %> đ</h3>
+                                <p class="desc"><%= product.description %></p>
                                 <div>
                                     <form action="/cart/add" method="post">
-                                        <input type="hidden" name="product" value="<%= 1 %>">
+                                        <input type="hidden" name="product" value="<%= product._id %>">
                                         <input type="hidden" name="_csrf" value="<%= csurfToken %>">
                                         <button class="btn">Mua ngay</button>
                                     </form>

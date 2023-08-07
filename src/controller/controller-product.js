@@ -13,6 +13,12 @@ class ControllerProduct {
             let { infor } = req.session;
 
             let products = await ModelProduct.find({});
+
+            products = products.map((product) => {
+                product.price = Number(product.price).toFixed(3);
+                return product;
+            })
+
             res.render('pages/admin/page-admin', {
                 title: 'Quản trị sản phẩm',
                 path: 'Quan-tri',
@@ -33,11 +39,17 @@ class ControllerProduct {
     renderPageProductDetail = async (req, res, next) => {
         try {
             let { infor } = req.session;
+            let { product } = req.params;
+            let productInfor = await ModelProduct.findById(product);
+
+            productInfor.price = Number(productInfor.price).toFixed(3);
+
             res.render('pages/shop/page-product-detail', {
                 title: 'Chi tiết sản phẩm',
                 path: 'Chi-tiet-san-pham',
                 csurfToken: req.csrfToken(),
-                infor,                
+                infor,
+                product: productInfor,               
                 footer: true
             });
 
@@ -121,6 +133,7 @@ class ControllerProduct {
                     pathImage = file.path? file.path : '';
                 }
 
+                price = Number(price).toFixed(3);
                 let product = await ModelProduct.create({title, image: pathImage, price, description});
                 if(product) res.redirect("/product/admin");
 
@@ -155,7 +168,7 @@ class ControllerProduct {
             } else {
                 let productInfor = await ModelProduct.findById(product);
                 productInfor.title = title;
-                productInfor.price = price;
+                productInfor.price = Number(price).toFixed(3);
                 productInfor.description = description;
 
                 if(file) {
