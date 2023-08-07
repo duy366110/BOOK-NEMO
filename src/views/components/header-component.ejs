@@ -12,6 +12,7 @@
 
                 <ul class="col-lg-7 d-none d-lg-flex">
                     <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
+                    <li><a href="/introduction" class="<%= path == 'Gioi-thieu'? 'active' : '' %>">Giới thiệu</a></li>
                     
                     <% if(infor) { %>
                         <li><a href="/cart" class="<%= path == 'Gio-hang'? 'active' : '' %>">Giỏ hàng</a></li>
@@ -44,7 +45,8 @@
             <div class="tab-mask" id="tab-mask"></div>
             <ul class="tab-wrapper">
                 <li><h2 class="tab-title">Book nemo</h2></li>
-                <li><a href="/">Trang chủ</a></li>
+                <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
+                <li><a href="/introduction" class="<%= path == 'Gioi-thieu'? 'active' : '' %>">Giới thiệu</a></li>
                 
                 <% if(infor) { %>
                     <li><a href="/cart">Giỏ hàng</a></li>

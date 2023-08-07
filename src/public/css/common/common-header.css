@@ -66,7 +66,7 @@ header ul li a.active, header ul li a:hover {
 }
 
 .header-hamburger::before, .header-hamburger::after {
-    background-color: #ffffff;
+    background-color: var(--first-color);
     content: '';
     height: 5px;
     position: absolute;
@@ -85,7 +85,7 @@ header ul li a.active, header ul li a:hover {
 }
 
 .hamburger-content {
-    background-color: #ffffff;
+    background-color: var(--first-color);
     height: 5px;
     transition: all .3s ease;
     width: 50px;
@@ -151,6 +151,7 @@ header ul li a.active, header ul li a:hover {
 }
 
 .tab-wrapper li a {
+    color: #ffffff;
     letter-spacing: .3px;
     font-size: 1.7rem;
     font-weight: 600;
