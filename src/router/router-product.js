@@ -12,6 +12,9 @@ router.get("/new",MiddlewarePermission.permission, ControllerProduct.renderPageN
 // RENDER TRANG CẬP NHẬT THÔNG TIN SẢN PHẨM
 router.get("/edit", MiddlewarePermission.permission, ControllerProduct.renderPageEditProduct);
 
+// RENDER TRANG CHI TIẾT SẢN PHẨM
+router.get("/detail/:product", ControllerProduct.renderPageProductDetail);
+
 // ADMIN THEM MOI PRODUCT
 router.post('/new', MiddlewarePermission.permission, [
     body('title').custom((value, {req}) => {

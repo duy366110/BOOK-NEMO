@@ -43,7 +43,7 @@
                         <div class="product-container">
                         <% products.forEach((product) => { %>
                             <div class="card">
-                                <a href="#" class="card-wrapper">
+                                <a href="/product/detail/<%= product._id %>" class="card-wrapper">
                                     <div class="thumbnail-wrapper">
                                         <img class="image-fluid card-thumbnail" src="<%= product.image %>" alt="product thumbnail" />
                                     </div>
