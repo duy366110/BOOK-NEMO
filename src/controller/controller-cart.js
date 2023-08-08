@@ -17,6 +17,7 @@ class ControllerCart {
             .exec();
 
             if(userInfor) {
+                // TÍNH TỔNG HOÁ ĐƠN TRƯỚC KHI TRẢ VỀ KHÁCH HÀNG
                 let total = userInfor.cart.reduce((acc, cart) => {
                     acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
                     return acc;
@@ -54,16 +55,21 @@ class ControllerCart {
             } else {
                 let userInfor = await ModelUser.findOne({email: {$eq: infor.email}});
 
+                // TRƯỜNG HỢP NGƯỜI DÙNG TÀI KHOẢN CÓ TỒN TẠI
                 if(userInfor) {
                     let productInfor = await ModelProduct.findById(product);
 
+                    // TÀI KHOẢN ĐÃ CÓ CART VÀ SẢN PHẨM
                     if(userInfor.cart.length) {
                         let index = userInfor.cart.findIndex((cart) => cart.product.toString() === product);
 
                         if(index != -1) {
+                            // SẢN PHẨM ĐÃ CÓ TRONG CART TĂNG SỐ LƯỢNG LÊN 1 - CHO MỖI LẦN MUA THÊM
                             userInfor.cart[index].quantity = userInfor.cart[index].quantity + 1;
 
                         } else {
+                            // THÊM SẢN PHẨM KHI SẢN PHẨM CHƯA CÓ TRONG CART
+                            productInfor.product_ref = productInfor.product_ref + 1;
                             userInfor.cart.push({
                                 product: productInfor,
                                 quantity: 1
@@ -71,16 +77,24 @@ class ControllerCart {
                         }
 
                     } else {
+                        // TRƯỜNG HỢP TÀI CHƯA CÓ CART VÀ SẢN PHẨM
+                        productInfor.product_ref = productInfor.product_ref + 1;
                         userInfor.cart.push({
                             product: productInfor,
                             quantity: 1
                         })
                     }
 
+                    // LƯU CART NGƯỜI DÙNG
                     await userInfor.save();
+
+                    // XÁC NHẬN SẢN PHẨM CÓ TRONG BAO NHIÊU GIỎ HÀNG VÀ HOÁ ĐƠN
+                    await productInfor.save();
+
                     res.redirect('/cart');
 
                 } else {
+                    // TÀI KHOẢN NGƯỜI DÙNG KHÔNG TỒN TẠI
                     res.redirect('/cart');
                 }
             }
@@ -103,8 +117,22 @@ class ControllerCart {
                 throw Error('Product token empty');
 
             } else {
-                let userInfor = await ModelUser.findOne({email: {$eq: infor.email}});
-                userInfor.cart = userInfor.cart.filter((cart) => cart.product.toString() !== product);
+                let userInfor = await ModelUser
+                                    .findOne({email: {$eq: infor.email}})
+                                    .populate("cart.product")
+                                    .exec();
+                
+                let productInfor = userInfor.cart.find((cart) => cart.product._id.toString() === product);
+                userInfor.cart = userInfor.cart.filter((cart) => cart.product._id.toString() !== product);
+
+                // XOÁ HIỆN DIỆN CỦA SẢN PHẨM TRONG CÁC GIỎ HÀNG
+                if(productInfor) {
+                    if(productInfor.product.product_ref > 0) {
+                        productInfor.product.product_ref = productInfor.product.product_ref - 1;
+                    }
+                    await productInfor.product.save();
+                }
+
                 await userInfor.save();
                 res.redirect("/cart");
             }

@@ -11,7 +11,6 @@ class ControllerProduct {
     renderPageAdminProduct = async (req, res, next) => {
         try {
             let { infor } = req.session;
-
             let products = await ModelProduct.find({});
 
             products = products.map((product) => {
