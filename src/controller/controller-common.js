@@ -10,10 +10,10 @@ class ControllerCommon {
             let { infor } = req.session;
             let products = await ModelProduct.find({});
 
-            // products = products.map((product) => {
-            //     product.price = products.price.toFixed(3);
-            //     return product;
-            // })
+            products = products.map((product) => {
+                product.price = Number(product.price).toFixed(3);
+                return product;
+            })
 
             res.render('pages/shop/page-home', {
                 title: 'Trang chủ',

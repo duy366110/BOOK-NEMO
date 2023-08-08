@@ -25,10 +25,15 @@ class ControllerOrder {
                 .exec();
 
                 if(orderInfor) {
-                    total = orderInfor.order.reduce((acc, order) => {
+                    total = Number(orderInfor.order.reduce((acc, order) => {
                         acc += parseFloat(order.quantity) * parseFloat(order.product.price);
                         return acc;
-                    }, 0)
+                    }, 0)).toFixed(3);
+
+                    orderInfor.order.map((order) => {
+                        order.product.price = Number(order.product.price).toFixed(3);
+                        return order;
+                    })
                 }
                 
                 res.render("pages/shop/page-order", {
