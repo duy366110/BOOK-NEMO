@@ -18,10 +18,15 @@ class ControllerCart {
 
             if(userInfor) {
                 // TÍNH TỔNG HOÁ ĐƠN TRƯỚC KHI TRẢ VỀ KHÁCH HÀNG
-                let total = userInfor.cart.reduce((acc, cart) => {
+                let total = Number(userInfor.cart.reduce((acc, cart) => {
                     acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
                     return acc;
-                }, 0)
+                }, 0)).toFixed(3);
+
+                userInfor.cart = userInfor.cart.map((cart) => {
+                    cart.product.price = Number(cart.product.price).toFixed(3);
+                    return cart
+                })
 
                 res.render("pages/shop/page-cart", {
                     title: 'Giỏ hàng',
