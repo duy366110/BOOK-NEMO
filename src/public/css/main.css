@@ -28,9 +28,19 @@
     padding: 5px 15px;
 }
 
+.btn-danger {
+    background-color: var(--first-color-danger);
+    border-color: var(--first-color-danger);
+}
+
 .btn:hover {
     color: #ffffff;
     background-color: var(--two-color);
+}
+
+.btn-danger:hover {
+    background-color: var(--two-color-danger);
+    border-color: var(--two-color-danger);
 }
 
 /* CAROUSEL */
