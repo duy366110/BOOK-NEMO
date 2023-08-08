@@ -41,8 +41,17 @@
                                     <td colspan="3"><%= bill.user_id.name %></td>
                                     <td rowspan="3">
                                         <div class="d-flex flex-column">
-                                            <a href="#" class="btn btn-danger">Huỷ đơn hàng</a>
+                                            <!-- HUỶ ĐƠN HÀNG -->
+                                            <form action="/order/cancel" method="post">
+                                                <input type="hidden" name="order" value="<%= bill._id %>" />
+                                                <input type="hidden" name="_csrf" value="<%= csurfToken %>" />
+                                                <button type="submit" class="btn btn-danger w-100">Huỷ đơn hàng</button>
+                                            </form>
+
+                                            <!-- XUẤT ĐƠN HÀNG -->
                                             <a href="/order/invoice/<%=  bill.user_id._id %>" class="btn">Xuất đơn hàng</a>
+
+                                            <!-- FLOW ĐI PAYMENT -->
                                             <a href="/order/payment" class="btn">Thanh toán</a>
                                         </div>
                                     </td>

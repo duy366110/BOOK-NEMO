@@ -1,7 +1,6 @@
 const mongodb = require("mongodb");
 const ModelOrder = require("../model/model-order");
 const ModelUser = require("../model/model-user");
-const pdfkit = require("pdfkit");
 const pdfkitTable = require("pdfkit-table");
 const path = require('path');
 const fs = require('fs');
@@ -16,6 +15,7 @@ class ControllerOrder {
     renderPageOrder = async(req, res, next) => {
         try {
             let { infor }= req.session;
+
             try {
                 let total = 0;
                 let orderInfor = await ModelOrder
@@ -207,6 +207,34 @@ class ControllerOrder {
                 }
             }
         });
+    }
+
+    // KHÁCH HÀNG HUỶ ĐƠN HÀNG
+    orderCancel = async (req, res, next) => {
+        try {
+            let { infor } = req.session;
+            let { order } = req.body;
+
+            let orderInfor = await ModelOrder
+                            .findById(order)
+                            .populate(['user_id', "order.product"])
+                            .exec();
+
+            // XOÁ CỦA SẢN PHẨM VỚI HOÁ ĐƠN
+            for(let order of orderInfor.order) {
+                order.product.product_ref = order.product.product_ref - 1;
+                await order.product.save();
+            }
+
+            // XOÁ ĐƠN HÀNG
+            await orderInfor.deleteOne();
+            res.redirect("/order");
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
     }
 
 }
