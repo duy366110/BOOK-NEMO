@@ -47,10 +47,18 @@
                                     <td>Tên khách hàng</td>
                                     <td colspan="4"><%= user.name %></td>
                                     <td rowspan="3">
+                                        <!-- HUỶ GIỎ HÀNG -->
+                                        <form action="/cart/cancel" method="post">
+                                            <input type="hidden" name="user" value="<%= user._id %>" />
+                                            <input type="hidden" name="_csrf" value="<%= csurfToken %>" />
+                                            <button type="submit" class="btn btn-danger w-100">Huỷ giỏ hàng</button>
+                                        </form>
+
+                                        <!-- FLOW ĐI ORDER -->
                                         <form action="/order/add" method="post">
                                             <input type="hidden" name="user" value="<%= user._id %>"/>
                                             <input type="hidden" name="_csrf" value="<%= csurfToken %>">
-                                            <button type="submit" class="btn">Đặt hàng</button>
+                                            <button type="submit" class="btn w-100">Đặt hàng</button>
                                         </form>
                                     </td>
                                 </tr>

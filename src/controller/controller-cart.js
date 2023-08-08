@@ -143,6 +143,33 @@ class ControllerCart {
             return next(error);
         }
     }
+
+    // KHÁCH HÀNG HUỶ CART
+    cartCancel = async (req, res, next) => {
+        try {
+            let { infor } = req.session;
+            let { user } = req.body;
+
+            let userInfor = await ModelUser.findById(user).populate(['cart.product']).exec();
+            let productsInfor = userInfor.cart;
+
+            for(let cart of productsInfor) {
+                if(cart.product.product_ref > 0) {
+                    cart.product.product_ref = cart.product.product_ref - 1;
+                    await cart.product.save();
+                }
+            }
+
+            userInfor.cart = [];
+            await userInfor.save();
+            res.redirect("/cart");
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+    }
 }
 
 module.exports = new ControllerCart();

@@ -19,4 +19,7 @@ router.post('/del/product', MiddlewarePermission.userExists,
     body('product').notEmpty().withMessage('Product token not empty')
 ], ControllerCart.deleteProductInCart);
 
+// KHÁCH HÀNG HUỶ GIỎ HÀNG
+router.post("/cancel", MiddlewarePermission.userExists, ControllerCart.cartCancel);
+
 module.exports = router;
