@@ -30,7 +30,11 @@ const ModelUser = new Schema({
                 default: 0
             }
         }
-    ]
+    ],
+    order: {
+        type: Schema.Types.ObjectId,
+        ref: 'orders'
+    }
 }, {
     collection: 'users'
 })
