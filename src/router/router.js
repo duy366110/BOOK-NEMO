@@ -5,6 +5,7 @@ const RouterUser = require("./router-user");
 const RouterOrder = require("./router-order");
 const RouterRole = require("./router-role");
 const RouterProduct = require("./router-product");
+const RouterTransaction = require("./router-transaction");
 const ControllerException = require("../controller/controller-exception");
 
 router.use('/', RouterCommon);
@@ -13,6 +14,7 @@ router.use('/user', RouterUser);
 router.use("/order", RouterOrder);
 router.use('/product', RouterProduct);
 router.use('/role', RouterRole);
+router.use("/transaction", RouterTransaction);
 
 router.use(ControllerException.renderinternalServerFailed);
 router.use(ControllerException.renderNotFoundPage);
