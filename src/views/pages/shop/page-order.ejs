@@ -38,7 +38,7 @@
     
                                 <tr>
                                     <td>Tên khách hàng</td>
-                                    <td colspan="3"><%= bill.user_id.name %></td>
+                                    <td colspan="3"><%= bill.user.name %></td>
                                     <td rowspan="3">
                                         <div class="d-flex flex-column">
                                             <!-- HUỶ ĐƠN HÀNG -->
@@ -49,7 +49,7 @@
                                             </form>
 
                                             <!-- XUẤT ĐƠN HÀNG -->
-                                            <a href="/order/invoice/<%=  bill.user_id._id %>" class="btn w-100">Xuất đơn hàng</a>
+                                            <a href="/order/invoice/<%=  bill.user._id %>" class="btn w-100">Xuất đơn hàng</a>
 
                                             <!-- FLOW ĐI PAYMENT -->
                                             <a href="/order/payment" class="btn w-100">Thanh toán</a>

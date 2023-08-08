@@ -20,7 +20,7 @@ class ControllerOrder {
                 let total = 0;
                 let orderInfor = await ModelOrder
                 .findOne({email: {$eq: infor.email}})
-                .populate('user_id')
+                .populate('user')
                 .populate('order.product')
                 .exec();
 
@@ -64,8 +64,8 @@ class ControllerOrder {
     renderInvoice = async (req, res, next) => {
         try {
             let { user } = req.params;
-            let orderInfor = await ModelOrder.findOne({user_id: {$eq: new ObjectId(user)}})
-                            .populate('user_id')
+            let orderInfor = await ModelOrder.findOne({user: {$eq: new ObjectId(user)}})
+                            .populate('user')
                             .populate('order.product')
                             .exec();
 
@@ -90,7 +90,7 @@ class ControllerOrder {
                 ).toFixed(3);
 
                 let rowsInfor = [
-                    ['Họ và tên', `${orderInfor.user_id.name}`],
+                    ['Họ và tên', `${orderInfor.user.name}`],
                     ['E-mail', `${orderInfor.email}`],
                     ['Tổng hoá đơn', `${total} VND`]
                 ]
@@ -150,18 +150,32 @@ class ControllerOrder {
             let { user }= req.body;
 
             if(user) {
-                let userInfor = await ModelUser.findById(user).populate('cart.product');
-                let orderInfor = await ModelOrder.create({
-                    user_id: userInfor,
-                    email: userInfor.email,
-                    order: userInfor.cart
-                });
+                let userInfor = await ModelUser.findById(user).populate(['cart.product', 'order']);
+                let orderInfor = userInfor.order;
 
                 if(orderInfor) {
+                    // THÊM CART VÀO ORDER HIỆN CÓ
+                    orderInfor.order.push(...userInfor.cart);
+                    await orderInfor.save();
                     userInfor.cart = [];
-                    await userInfor.save();
-                    res.redirect("/order");
+
+                } else {
+                    // THỰC HIỆN TẠO ORDER
+                    let status = await ModelOrder.create({
+                        user: userInfor,
+                        email: userInfor.email,
+                        order: userInfor.cart
+                    });
+
+                    if(status) {
+                        userInfor.cart = [];
+                        // TẠO LIÊN KẾT GIỮA ORDER VÀ TÀI KHOẢN
+                        userInfor.order = orderInfor;
+                    }
                 }
+
+                await userInfor.save();
+                res.redirect("/order");
             }
 
         } catch (err) {
@@ -222,8 +236,9 @@ class ControllerOrder {
 
             let orderInfor = await ModelOrder
                             .findById(order)
-                            .populate(['user_id', "order.product"])
+                            .populate(['user', "order.product"])
                             .exec();
+            let userInfor = orderInfor.user;
 
             // XOÁ CỦA SẢN PHẨM VỚI HOÁ ĐƠN
             for(let order of orderInfor.order) {
@@ -233,6 +248,9 @@ class ControllerOrder {
 
             // XOÁ ĐƠN HÀNG
             await orderInfor.deleteOne();
+
+            userInfor.order = null;
+            await userInfor.save();
             res.redirect("/order");
 
         } catch (err) {
