@@ -187,45 +187,67 @@ class ControllerOrder {
 
     // KHACH HANG THANH TOAN
     orderPayment = async(req, res, next) => {
-        let create_payment_json = {
-            "intent": "sale",
-            "payer": {
-                "payment_method": "paypal"
-            },
-            "redirect_urls": {
-                "return_url": "https://booknemo-dd8b0f6425b8.herokuapp.com",
-                "cancel_url": "https://booknemo-dd8b0f6425b8.herokuapp.com"
-            },
-            "transactions": [{
-                "item_list": {
-                    "items": [{
-                        "name": "item",
-                        "sku": "item",
-                        "price": "1.00",
+        try {
+            let { user } = req.body;
+            let userInfor = await ModelUser.findById(user).populate(['order']).exec();
+            let orderInfor = await ModelOrder.findById(userInfor.order._id).populate(['order.product']).exec();
+
+            // TÍNH TỔNG HOÁ ĐƠN
+            let total = Number(orderInfor.order.reduce((acc, order) => {
+                acc += Number(order.product.price) * Number(order.quantity);
+                return acc;
+            }, 0)).toFixed(2);
+
+            // CẤU HÌNH PAYPAL THANH TOÁN HOÁ ĐƠN
+            let create_payment_json = {
+                "intent": "sale",
+                "payer": {
+                    "payment_method": "paypal"
+                },
+                "redirect_urls": {
+                    "return_url": "http://localhost:8080/transaction",
+                    "cancel_url": "https://booknemo-dd8b0f6425b8.herokuapp.com"
+                },
+                "transactions": [{
+                    "item_list": {
+                        "items": [{
+                            "name": "Payment order",
+                            "sku": "Payment order",
+                            "price": parseFloat(total),
+                            "currency": "USD",
+                            "quantity": 1
+                        }]
+                    },
+                    "amount": {
                         "currency": "USD",
-                        "quantity": 1
-                    }]
-                },
-                "amount": {
-                    "currency": "USD",
-                    "total": "1.00"
-                },
-                "description": "This is the payment description."
-            }]
-        };
+                        "total": parseFloat(total)
+                    },
+                    "description": "This is the payment description."
+                }]
+            };
 
-        paypal.payment.create(create_payment_json, function (error, payment) {
-            if (error) {
-                throw error;
+            // TIẾN HÀNH THANH TOÁN
+            paypal.payment.create(create_payment_json, function (error, payment) {
+                req.flash('payment', {id: payment, order: orderInfor._id});
 
-            } else {
-                for(let link of payment.links ) {
-                    if(link.rel === 'approval_url') {
-                        res.redirect(link.href);
+                if (error) {
+                    throw error;
+
+                } else {
+                    // PAYPAL CHẤP NHẬN THANH TOÁN - CHUYỂN ĐẾN TRANG THANH TOÁN
+                    for(let link of payment.links ) {
+                        if(link.rel === 'approval_url') {
+                            res.redirect(link.href);
+                        }
                     }
                 }
-            }
-        });
+            });
+
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
     }
 
     // KHÁCH HÀNG HUỶ ĐƠN HÀNG
