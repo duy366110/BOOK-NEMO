@@ -150,7 +150,7 @@ class ControllerOrder {
             let { user }= req.body;
 
             if(user) {
-                let userInfor = await ModelUser.findById(user).populate(['cart.product', 'order']);
+                let userInfor = await ModelUser.findById(user).populate(['cart.product', 'order']).exec();
                 let orderInfor = userInfor.order;
 
                 if(orderInfor) {
@@ -161,16 +161,16 @@ class ControllerOrder {
 
                 } else {
                     // THỰC HIỆN TẠO ORDER
-                    let status = await ModelOrder.create({
+                    let statusCreateOrder = await ModelOrder.create({
                         user: userInfor,
                         email: userInfor.email,
                         order: userInfor.cart
                     });
 
-                    if(status) {
+                    if(statusCreateOrder) {
                         userInfor.cart = [];
                         // TẠO LIÊN KẾT GIỮA ORDER VÀ TÀI KHOẢN
-                        userInfor.order = orderInfor;
+                        userInfor.order = statusCreateOrder;
                     }
                 }
 
