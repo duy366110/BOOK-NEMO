@@ -228,7 +228,11 @@ class ControllerOrder {
 
             // TIẾN HÀNH THANH TOÁN
             paypal.payment.create(create_payment_json, function (error, payment) {
-                req.flash('payment', {id: payment, order: orderInfor._id});
+                req.flash('payment', {transaction: payment, order: orderInfor._id});
+
+                // console.log('thuc thien gia dich');
+                // req.session.inforTransaction = {transaction: payment, order: orderInfor._id};
+                // console.log(payment);
 
                 if (error) {
                     throw error;

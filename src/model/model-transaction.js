@@ -7,7 +7,11 @@ const ModelTransaction = new Schema({
         required: true,
         ref: 'users'
     },
-    createDate: {
+    payment_id: {
+        type: String,
+        default: ''
+    },
+    paymentDate: {
         type: Date,
         default: new Date().toISOString()
     },

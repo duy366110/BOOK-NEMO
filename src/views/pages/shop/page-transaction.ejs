@@ -1,12 +1,57 @@
 <%- include("../../components/head-component.ejs") %>
 <link rel="stylesheet" href="/css/components/page-transaction.css" />
+<link rel="stylesheet" href="/css/common/common-custom-table.css" />
 </head>
 
 <body>
     <main>
         <%- include("../../components/header-component.ejs") %>
         <%- include("../../components/breadcrumb-component") %>
-        Transaction
+
+        <div class="component-wrapper">
+            <div class="container">
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Tên sản phẩm</th>
+                                <th scope="col">Ảnh sản phẩm</th>
+                                <th scope="col">Giá sản phẩm</th>
+                                <th scope="col">Số lượng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Test - 01</td>
+                                <td>Test - 01</td>
+                                <td>Test - 01</td>
+                                <td>Test - 01</td>
+                                <td>Test - 01</td>                                
+                            </tr>
+
+                            <tr>
+                                <td class="t-highlights">Mã giao dịch</td>
+                                <td colspan="2">Test - 01</td>
+                                <td class="t-highlights">Thời gian giao dịch</td>
+                                <td>Test - 01</td>
+                            </tr>
+                            <tr>
+                                <td class="t-highlights">Tên khách hàng</td>
+                                <td colspan="2">Test - 01</td>
+                                <td class="t-highlights">E-mail</td>
+                                <td>Test - 01</td>
+                            </tr>
+                            <tr>
+                                <td class="t-highlights">Tổng hoá đơn</td>
+                                <td colspan="5">Test - 01 đ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="blank col-12">Hoá đơn trống</p>
+            </div>
+        </div>
     </main>
 
 <%- include("../../components/footer-component.ejs") %>
