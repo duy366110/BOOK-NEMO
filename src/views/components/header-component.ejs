@@ -52,7 +52,7 @@
                 <% if(infor) { %>
                     <li><a href="/cart" class="<%= path == 'Gio-hang'? 'active' : '' %>">Giỏ hàng</a></li>
                     <li><a href="/order" class="<%= path == 'Don-hang'? 'active' : '' %>">Đặt hành</a></li>
-                    <li><a href="#" class="<%= path == 'Giao-dich'? 'active' : '' %>">Giao dich</a></li>
+                    <li><a href="/transaction" class="<%= path == 'Giao-dich'? 'active' : '' %>">Giao dich</a></li>
                 <% } %>
 
                 <% if (infor && infor.role === 'Admin') { %>
