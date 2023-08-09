@@ -52,7 +52,12 @@
                                             <a href="/order/invoice/<%=  bill.user._id %>" class="btn w-100">Xuất đơn hàng</a>
 
                                             <!-- FLOW ĐI PAYMENT -->
-                                            <a href="/order/payment" class="btn w-100">Thanh toán</a>
+                                            <!-- <a href="/order/payment" class="btn w-100">Thanh toán</a> -->
+                                            <form action="/order/payment" method="post">
+                                                <input type="hidden" name="user" value="<%= bill.user._id %>">
+                                                <input type="hidden" name="_csrf" value="<%= csurfToken %>" />
+                                                <button class="btn w-100">Thanh toán</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

@@ -1,0 +1,66 @@
+<%- include("../../components/head-component.ejs") %>
+<link rel="stylesheet" href="/css/components/page-transaction.css" />
+<link rel="stylesheet" href="/css/common/common-custom-table.css" />
+</head>
+
+<body>
+    <main>
+        <%- include("../../components/header-component.ejs") %>
+        <%- include("../../components/breadcrumb-component") %>
+
+        <div class="component-wrapper">
+            <div class="container">
+                <% if(transactions) { %>
+
+                    <% transactions.forEach((transaction) => { %> 
+                        <div class="table-container mb-5">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th scope="col">STT</th>
+                                        <th scope="col">Tên sản phẩm</th>
+                                        <th scope="col">Ảnh sản phẩm</th>
+                                        <th scope="col">Giá sản phẩm</th>
+                                        <th scope="col">Số lượng</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% transaction.order.forEach((order, index) => { %> 
+                                    <tr>
+                                        <td><%= index %></td>
+                                        <td><%= order.product.title %></td>
+                                        <td>Test - 01</td>
+                                        <td><%= order.product.price %> đ</td>
+                                        <td><%= order.quantity %></td>                                
+                                    </tr>
+                                    <% }) %>
+
+                                    <tr>
+                                        <td class="t-highlights">Mã giao dịch</td>
+                                        <td colspan="2"><%= transaction.payment_id %></td>
+                                        <td class="t-highlights">Thời gian</td>
+                                        <td><%= transaction.paymentDate %></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="t-highlights">Họ và tên</td>
+                                        <td colspan="2"><%= transaction.user.name %></td>
+                                        <td class="t-highlights">E-mail</td>
+                                        <td><%= transaction.user.email %></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="t-highlights">Tổng hoá đơn</td>
+                                        <td colspan="5"><%= transaction.total %> đ</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    <% }) %>
+
+                <% } else { %> 
+                    <p class="blank col-12">Giao dịch trống</p>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+<%- include("../../components/footer-component.ejs") %>

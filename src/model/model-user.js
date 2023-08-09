@@ -34,7 +34,13 @@ const ModelUser = new Schema({
     order: {
         type: Schema.Types.ObjectId,
         ref: 'orders'
-    }
+    },
+    transactions: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'transactions'
+        }
+    ]
 }, {
     collection: 'users'
 })
