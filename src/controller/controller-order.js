@@ -205,8 +205,8 @@ class ControllerOrder {
                     "payment_method": "paypal"
                 },
                 "redirect_urls": {
-                    "return_url": "https://booknemo-dd8b0f6425b8.herokuapp.com/transaction", // http://localhost:8080/transaction
-                    "cancel_url": "https://booknemo-dd8b0f6425b8.herokuapp.com/order" // http://localhost:8080/order
+                    "return_url": "https://booknemo-dd8b0f6425b8.herokuapp.com/transaction", // http://localhost:8080/transaction - https://booknemo-dd8b0f6425b8.herokuapp.com/transaction
+                    "cancel_url": "https://booknemo-dd8b0f6425b8.herokuapp.com/order" // http://localhost:8080/order - https://booknemo-dd8b0f6425b8.herokuapp.com/order
                 },
                 "transactions": [{
                     "item_list": {
@@ -228,7 +228,6 @@ class ControllerOrder {
 
             // TIẾN HÀNH THANH TOÁN
             paypal.payment.create(create_payment_json, function (error, payment) {
-                req.flash('payment', {transaction: payment, order: orderInfor._id});
 
                 if (error) {
                     throw error;
