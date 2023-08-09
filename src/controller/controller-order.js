@@ -205,7 +205,7 @@ class ControllerOrder {
                     "payment_method": "paypal"
                 },
                 "redirect_urls": {
-                    "return_url": "http://localhost:8080/transaction",
+                    "return_url": "https://booknemo-dd8b0f6425b8.herokuapp.com/transaction", //http://localhost:8080/transaction
                     "cancel_url": "https://booknemo-dd8b0f6425b8.herokuapp.com"
                 },
                 "transactions": [{
@@ -229,10 +229,6 @@ class ControllerOrder {
             // TIẾN HÀNH THANH TOÁN
             paypal.payment.create(create_payment_json, function (error, payment) {
                 req.flash('payment', {transaction: payment, order: orderInfor._id});
-
-                // console.log('thuc thien gia dich');
-                // req.session.inforTransaction = {transaction: payment, order: orderInfor._id};
-                // console.log(payment);
 
                 if (error) {
                     throw error;

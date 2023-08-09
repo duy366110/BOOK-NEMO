@@ -21,7 +21,7 @@ const ModelTransaction = new Schema({
                 type: Schema.Types.ObjectId,
                 ref: 'products'
             },
-            quantify: {
+            quantity: {
                 type: Number,
                 default: 0
             }
