@@ -30,6 +30,12 @@
                         <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
                         <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
                     <% } else { %>
+                        <li>
+                            <p class="user-infor">
+                                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                <%= infor.email %>
+                            </p>
+                        </li>
                         <li><a href="/user/signout">Đăng xuất</a></li>
                     <% } %>
                 </ul>
@@ -45,7 +51,18 @@
         <div class="navigation-tab" id="navigation-tab">
             <div class="tab-mask" id="tab-mask"></div>
             <ul class="tab-wrapper">
-                <li><h2 class="tab-title">Book nemo</h2></li>
+                <li>
+                    <h2 class="tab-title">
+                        <span>Book nemo</span>
+                        <% if(infor) { %>
+                            <p class="user-infor-tab-left">
+                                <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                                <%= infor.email %>
+                            </p>
+                        <% } %>
+                    </h2>
+                </li>
+
                 <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
                 <li><a href="/introduction" class="<%= path == 'Gioi-thieu'? 'active' : '' %>">Giới thiệu</a></li>
                 

@@ -46,6 +46,17 @@ header ul li a {
     text-transform: capitalize;
 }
 
+header ul li .user-infor {
+    color: var(--last-color);
+    font-size: 15px;
+    font-weight: 700;
+    overflow: hidden;
+    margin-bottom: 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 125px;
+}
+
 header ul li a.active, header ul li a:hover {
     color: var(--last-color);
     text-decoration: none;
@@ -157,6 +168,15 @@ header ul li a.active, header ul li a:hover {
     font-weight: 600;
     padding: 10px 15px;
     text-transform: capitalize;
+}
+
+.user-infor-tab-left {
+    font-size: 12px;
+    font-weight: 700;
+    overflow: hidden;
+    margin: 5px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .tab-wrapper li:not(:last-child) a {
