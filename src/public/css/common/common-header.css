@@ -40,10 +40,13 @@ header ul {
 header ul li a {
     color: var(--first-color);;
     display: block;
-    padding: 0px 10px;
     font-size: 1.6rem;
     font-weight: 600;
     text-transform: capitalize;
+}
+
+.header-user-list-action li a {
+    padding: 0px 10px;
 }
 
 header ul li .user-infor {
@@ -54,7 +57,7 @@ header ul li .user-infor {
     margin-bottom: 0px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 125px;
+    width: 95px;
 }
 
 header ul li a.active, header ul li a:hover {
