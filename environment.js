@@ -1,7 +1,7 @@
 const environmet = {
     pagination: {
         pageProduct: {
-            quantityItemOfPage: 1
+            quantityItemOfPage: 15
         }
     }
 }

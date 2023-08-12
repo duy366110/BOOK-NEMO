@@ -1,18 +1,24 @@
-<div class="pagination-component">
-    <ul class="pagination-list">
-        <li>
-            <a href="#">
-                <i class="fa fa-angle-left" aria-hidden="true"></i>
-            </a>
-        </li>
-        <% paginations.forEach((elm, index) => { %> 
-            <li><a href="<%= link %>/<%= index %>"><%= (index + 1 ) %></a></li>
-        <% }) %>
+<% if(paginations.length > 0) { %>
+    <div class="pagination-component">
+        <ul class="pagination-list">
+            <li>
+                <a href="<%= link %>/previous-<%= currentPage %>">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                </a>
+            </li>
+            <% paginations.forEach((elm, index) => { %> 
+                <li>
+                    <a href="<%= link %>/<%= index %>" class="<%= currentPage == elm? 'active' : '' %>">
+                        <%= (index + 1 ) %>
+                    </a>
+                </li>
+            <% }) %>
 
-        <li>
-            <a href="#">
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-            </a>
-        </li>
-    </ul>
-</div>
+            <li>
+                <a href="<%= link %>/next-<%= currentPage %>">
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+<% } %>
