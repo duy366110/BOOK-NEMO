@@ -15,7 +15,7 @@
 }
 
 .pagination-list li a {
-    background-color: green;
+    background-color: var(--first-color);
     display: block;
     color: #ffffff;
     font-size: 13px;
@@ -25,4 +25,8 @@
 
 .pagination-list li a:hover {
     text-decoration: none;
+}
+
+.pagination-list li a.active {
+    background-color: var(--last-color);
 }

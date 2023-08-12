@@ -10,7 +10,7 @@
                     </h1>
                 </div>
 
-                <ul class="col-lg-7 d-none d-lg-flex justify-content-between">
+                <ul class="col-lg-7 d-none d-lg-flex">
                     <li><a href="/" class="<%= path == 'Trang-chu'? 'active' : '' %>">Trang chủ</a></li>
                     <li><a href="/introduction" class="<%= path == 'Gioi-thieu'? 'active' : '' %>">Giới thiệu</a></li>
                     <li><a href="/products/0" class="<%= path == 'San-pham'? 'active' : '' %>">Sản phẩm</a></li>
@@ -26,7 +26,7 @@
                     <% } %>
                 </ul>
 
-                <ul class="header-user-list-action col-lg-3 d-none d-lg-flex justify-content-end">
+                <ul class="col-lg-3 d-none d-lg-flex justify-content-end">
                     <% if(!infor) { %>
                         <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
                         <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>

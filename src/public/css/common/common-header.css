@@ -45,8 +45,8 @@ header ul li a {
     text-transform: capitalize;
 }
 
-.header-user-list-action li a {
-    padding: 0px 10px;
+header ul li:not(:last-child) a, header ul li:not(:last-child) p {
+    padding-right: 13px;
 }
 
 header ul li .user-infor {
