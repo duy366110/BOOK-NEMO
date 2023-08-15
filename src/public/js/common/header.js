@@ -4,8 +4,6 @@ window.onload = function(event) {
     let navigationtab = $('#navigation-tab');
     let tabmask = $('#tab-mask');
 
-    console.log(hamburger);
-
     hamburger.addEventListener('click', (event) => {
         hamburger.classList.toggle('active');
         navigationtab.classList.add('active');
