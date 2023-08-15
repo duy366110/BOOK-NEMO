@@ -13,7 +13,7 @@ class MiddlewareAmount {
             let amount = await ModelProduct.find({}).count().exec();
 
             // TÍNH SỐ TRANG DỰA VÀO SỐ LƯỢNG SẢN PHẨM HIỆN CÓ
-            let quantityPage = Math.ceil(amount / environment.pagination.pageProduct.quantityItemOfPage);
+            let quantityPage = Math.ceil(amount / environment.pagination.quantityItemOfPage);
 
             // TRƯỜNG HỢP TRANG CHỈ CÓ 1
             if(quantityPage <= 1) {

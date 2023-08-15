@@ -1,0 +1,32 @@
+[{
+  "_id": {
+    "$oid": "64b2c27edee88cd244c28630"
+  },
+  "name": "Admin",
+  "users": [
+    {
+      "$oid": "64b38cbd0f1929e13250daf9"
+    }
+  ],
+  "__v": 2
+},
+{
+  "_id": {
+    "$oid": "64b35ce43357bb969d0f6bf6"
+  },
+  "name": "Editor",
+  "users": [],
+  "__v": 7
+},
+{
+  "_id": {
+    "$oid": "64b35cee3357bb969d0f6bfa"
+  },
+  "name": "Client",
+  "users": [
+    {
+      "$oid": "64d74f9eaf390f00fdd074c3"
+    }
+  ],
+  "__v": 18
+}]

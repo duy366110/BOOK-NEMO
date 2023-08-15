@@ -1,0 +1,28 @@
+[{
+  "_id": {
+    "$oid": "64d7584b852e26fd49b693a1"
+  },
+  "title": "Cây Cam Ngọt Của Tôi",
+  "image": "https://res.cloudinary.com/doxnf7bp0/image/upload/v1691834442/book_nemo/kfyykgzvpfg0jb9bag6r.jpg",
+  "price": {
+    "$numberDecimal": "70.200"
+  },
+  "description": "Trong trường hợp hiếm hoi sản phẩm quý khách nhận được có khiếm khuyết, hư hỏng hoặc không như mô tả, Fahasa.com cam kết bảo vệ khách hàng bằng chính sách đổi trả/ hoàn tiền trên tinh thần bảo vệ quyền lợi người tiêu dùng nhằm cam kết với quý khách về chất lượng sản phẩm và dịch vụ của chúng tôi.",
+  "product_ref": 0,
+  "status": false,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64d758d0852e26fd49b693a7"
+  },
+  "title": "Vừa Nhắm Mắt Vừa Mở Cửa Số (Tái Bản 2022)",
+  "image": "https://res.cloudinary.com/doxnf7bp0/image/upload/v1691834575/book_nemo/jdqyftuwiuiejvsaotou.jpg",
+  "price": {
+    "$numberDecimal": "63.750"
+  },
+  "description": "Trong trường hợp hiếm hoi sản phẩm quý khách nhận được có khiếm khuyết, hư hỏng hoặc không như mô tả, Fahasa.com cam kết bảo vệ khách hàng bằng chính sách đổi trả/ hoàn tiền trên tinh thần bảo vệ quyền lợi người tiêu dùng nhằm cam kết với quý khách về chất lượng sản phẩm và dịch vụ của chúng tôi.",
+  "product_ref": 0,
+  "status": false,
+  "__v": 0
+}]

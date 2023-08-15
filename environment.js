@@ -1,8 +1,6 @@
 const environmet = {
     pagination: {
-        pageProduct: {
-            quantityItemOfPage: 15
-        }
+        quantityItemOfPage: 20
     }
 }
 
