@@ -9,30 +9,40 @@
 
         <div class="component-wrapper">
             <div class="container-fluid">
-                    <% if(products && products.length) { %>
-                        <div class="product-container">
-                        <% products.forEach((product) => { %>
-                            <div class="card">
-                                <a href="/product/detail/<%= product._id %>" class="card-wrapper">
-                                    <div class="thumbnail-wrapper">
-                                        <img class="image-fluid card-thumbnail" src="<%= product.image %>" alt="product thumbnail" />
-                                    </div>
-                                    <div class="card-infor">
-                                        <h2 class="card-infor_title"><%= product.title %></h2>
-                                        <p class="card-infor_price"><%= product.price %> <span>đ</span></p>
-                                    </div>
-                                </a>
+
+                <div class="row">
+                    <div class="col-3 d-none d-lg-block">
+                        <%- include("../../components/tab-category") %>
+                    </div>
+                    
+                    <div class="col-12 col-lg-9">
+                        <% if(products && products.length) { %>
+                            <div class="product-container">
+                            <% products.forEach((product) => { %>
+                                <div class="card">
+                                    <a href="/product/detail/<%= product._id %>" class="card-wrapper">
+                                        <div class="thumbnail-wrapper">
+                                            <img class="image-fluid card-thumbnail" src="<%= product.image %>" alt="product thumbnail" />
+                                        </div>
+                                        <div class="card-infor">
+                                            <h2 class="card-infor_title"><%= product.title %></h2>
+                                            <p class="card-infor_price"><%= product.price %> <span>đ</span></p>
+                                        </div>
+                                    </a>
+                                </div>
+                            <% } ) %>
                             </div>
-                        <% } ) %>
-                        </div>
-
-                    <% } else { %> 
-                        <p class="blank col-12">Sản phẩm chưa cập nhật</p>
-                    <% } %>
-
-                    <%- include("../../components/pagination-component"), {paginations, link, currentPage} %>
+    
+                        <% } else { %> 
+                            <p class="blank col-12">Sản phẩm chưa cập nhật</p>
+                        <% } %>
+    
+                        <%- include("../../components/pagination-component"), {paginations, link, currentPage} %>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
+    <script src="/js/common/tab-category.js"></script>
 <%- include("../../components/footer-component.ejs") %>
