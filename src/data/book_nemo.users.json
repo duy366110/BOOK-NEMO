@@ -1,0 +1,27 @@
+[{
+  "_id": {
+    "$oid": "64b38cbd0f1929e13250daf9"
+  },
+  "name": "Duy Nguyen",
+  "email": "duynguyen@gmail.com",
+  "password": "$2a$12$xUrT733EkhURMZ1JDGzOfep5n2c/bkc6ZT5oiZ7HTvFgs818YjLr2",
+  "role": {
+    "$oid": "64b2c27edee88cd244c28630"
+  },
+  "cart": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "64d74f9eaf390f00fdd074c3"
+  },
+  "name": "Khanh Pham",
+  "email": "khanhpham@gmail.com",
+  "password": "$2a$12$rz1of8hYQxfDbp83OiBQReclkqZ.gFCO2X5gk2oe3FOMOL.ARdW5a",
+  "role": {
+    "$oid": "64b35cee3357bb969d0f6bfa"
+  },
+  "transactions": [],
+  "cart": [],
+  "__v": 0
+}]

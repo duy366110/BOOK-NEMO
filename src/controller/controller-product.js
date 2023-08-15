@@ -3,6 +3,8 @@ const cloudinary = require("../utils/util-cloudinary");
 const path = require('path');
 const fs = require('fs');
 const { validationResult } = require("express-validator");
+const utilpagination = require("../utils/util-pagination");
+const environment = require("../../environment");
 class ControllerProduct {
 
     constructor() { }
@@ -11,7 +13,20 @@ class ControllerProduct {
     renderPageAdminProduct = async (req, res, next) => {
         try {
             let { infor } = req.session;
-            let products = await ModelProduct.find({});
+
+            let { page } = req.params;
+            let { paginations } = req;   
+
+            // KIỂM TRA SỐ LƯỢNG TRANG CÓ LỚN HƠN 1
+            if(paginations.length) {
+                page = utilpagination.methodPagination(page, paginations);
+            }
+
+            // THỰC HIỆN LẤY SẢN THEO YÊU VỀ SỐ LƯỢNG
+            let products = await ModelProduct.find({})
+            .limit(environment.pagination.quantityItemOfPage)
+            .skip(environment.pagination.quantityItemOfPage * page)
+            .exec();
 
             products = products.map((product) => {
                 product.price = Number(product.price).toFixed(3);
@@ -19,11 +34,14 @@ class ControllerProduct {
             })
 
             res.render('pages/admin/page-admin', {
+                currentPage: Number(page),
+                link: '/product/admin',
                 title: 'Quản trị sản phẩm',
                 path: 'Quan-tri',
                 csurfToken: req.csrfToken(),
                 infor,
                 products,
+                paginations,
                 footer: false
             });
 
@@ -134,7 +152,7 @@ class ControllerProduct {
 
                 price = Number(price).toFixed(3);
                 let product = await ModelProduct.create({title, image: pathImage, price, description});
-                if(product) res.redirect("/product/admin");
+                if(product) res.redirect("/product/admin/0");
 
             } catch (err) {
                 let error = new Error('');
@@ -192,7 +210,7 @@ class ControllerProduct {
                 }
                 
                 await productInfor.save();
-                res.redirect("/product/admin");
+                res.redirect("/product/admin/0");
             }
 
         } catch (err) {
@@ -218,7 +236,7 @@ class ControllerProduct {
             // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
             if(status) {
                 await productInfor.deleteOne();
-                res.redirect("/product/admin");
+                res.redirect("/product/admin/0");
             }
 
 

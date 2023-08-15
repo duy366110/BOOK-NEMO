@@ -1,5 +1,6 @@
 const ModelProduct = require("../model/model-product");
 const environment = require("../../environment");
+const utilpagination = require("../utils/util-pagination");
 class ControllerCommon {
 
     constructor() { }
@@ -9,7 +10,7 @@ class ControllerCommon {
         
         try {
             let { infor } = req.session;
-            let products = await ModelProduct.find({});
+            let products = await ModelProduct.find({}).limit(35).skip(0).exec();
 
             products = products.map((product) => {
                 product.price = Number(product.price).toFixed(3);
@@ -42,39 +43,13 @@ class ControllerCommon {
 
             // KIỂM TRA SỐ LƯỢNG TRANG CÓ LỚN HƠN 1
             if(paginations.length) {
-
-                // KIỂM TRA NGƯỜI DÙNG NHẤN VÀO BUTTON PREVIOUS - NẼT
-                if(!Number(page)) {
-                    let params = page.split("-");
-                    let preFix = params[0];
-                    let currentPage = Number(params[1]);
-    
-                    // TRƯỜNG HỢP LÀ PREVIOUS
-                    if(preFix === "previous") {
-                        if(currentPage === 0) {
-                            page = (paginations.length - 1);
-    
-                        } else {
-                            page = currentPage - 1;
-                        }
-                    }
-
-                    // TRƯỜNG HỢP LÀ NEXT
-                    if(preFix === "next") {
-                        if(currentPage === (paginations.length - 1)) {
-                            page = 0;
-    
-                        } else {
-                            page = currentPage + 1;
-                        }
-                    }
-                }
+                page = utilpagination.methodPagination(page, paginations);
             }
 
             // THỰC HIỆN LẤY SẢN THEO YÊU VỀ SỐ LƯỢNG
             let products = await ModelProduct.find({})
-            .limit(environment.pagination.pageProduct.quantityItemOfPage)
-            .skip(environment.pagination.pageProduct.quantityItemOfPage * page)
+            .limit(environment.pagination.quantityItemOfPage)
+            .skip(environment.pagination.quantityItemOfPage * page)
             .exec();
 
             // FORMAT GIÁ SẢN PHẨM

@@ -1,10 +1,11 @@
 const router = require("express").Router();
 const { body } = require('express-validator');
 const MiddlewarePermission = require("../middleware/middleware-permission");
+const MiddlewareAmount = require("../middleware/middleware-amount");
 const ControllerProduct = require("../controller/controller-product");
 
 // RENDER TRANG QUẢN TRỊ DANH MỤC SẢN PHẨM
-router.get("/admin", MiddlewarePermission.permission, ControllerProduct.renderPageAdminProduct);
+router.get("/admin/:page", MiddlewarePermission.permission, MiddlewareAmount.getProductAmount, ControllerProduct.renderPageAdminProduct);
 
 // RENDER TRANG THÊM MỚI SẢN PHẨM
 router.get("/new",MiddlewarePermission.permission, ControllerProduct.renderPageNewProduct);
