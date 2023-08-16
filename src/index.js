@@ -9,6 +9,7 @@ const multer = require('multer');
 const cloudinary = require("./utils/util-cloudinary");
 const path = require('path');
 const paypal = require('paypal-rest-sdk');
+const compression = require("compression");
 
 const router = require('./router/router');
 const mongodb = require("./utils/util-database");
@@ -29,6 +30,7 @@ const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(compression());
 
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
