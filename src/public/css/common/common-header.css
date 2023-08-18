@@ -155,7 +155,7 @@ header ul li a.active, header ul li a:hover {
     width: 250px;
 }
 
-.tab-title {
+.tab-title-brand {
     border-bottom: 2px solid #ffffff;
     letter-spacing: .3px;
     font-size: 2rem;
