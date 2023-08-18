@@ -1,5 +1,7 @@
 .tab-category-component {
     background-color: transparent;
+    display: flex;
+    justify-content: center;
     position: relative;
 }
 
@@ -8,13 +10,12 @@
     box-shadow: 0 2px 8px 0 rgba(26,26,26,0.16);
     border-radius: 5px;
     overflow: hidden;
-    width: 100%;
+    width: 340px;
 }
 
 .category-wrapper.active {
     position: fixed;
-    top: 85px;
-    width: 235.5px;
+    top: 85px;    
 }
 
 .tab-title {
