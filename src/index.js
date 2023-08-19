@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bodyparser = require('body-parser');
 const cookieparser = require("cookie-parser");
@@ -12,17 +13,24 @@ const paypal = require('paypal-rest-sdk');
 const compression = require("compression");
 
 const router = require('./router/router');
-const mongodb = require("./utils/util-database");
+require("./utils/util-database");
 const csurfProtection = csurf({cookie: true});
+const Helper = require("./helpers/helper");
+
+const CONFIG_MONGODB  = require("./configs/config.mongodb");
+const CONFIG_PAYPAL = require("./configs/config.paypal");
+
+// KIỂM TRA LƯỢNG TRUY CẬP CÓ QUÁ LỚN  - CẦN NÂNG CẤP HỆ THỐNG (LƯỢNG QUÁ TẢI HỆ THỐNG)
+Helper.overloadSystem();
 
 paypal.configure({
     'mode': 'sandbox',
-    'client_id': process.env.CLIENT || "AROBkgnUtFyaUFo3B1ieXOzWb_Lr4sE9eGIfMiWFfMXs9TRzhHN8_eYFu51TAbEsxyK__FVQhhZ5b6KE",
-    'client_secret': process.env.SERECT || "EM4D6ERyiu8ymqKZNrpP7nYdEGVwabY_9JfHaDooxPUBy461ZjBVjvoryIaWPuu7YAepIZ0ULz9VaUYD"
+    'client_id': CONFIG_PAYPAL.CLIENT,
+    'client_secret': CONFIG_PAYPAL.SERECT,
 });
 
 const store = new sessionstore({
-    uri: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/book_nemo',
+    uri: CONFIG_MONGODB.URI,
     collection: 'session'
 })
 

@@ -7,6 +7,9 @@ const fs = require('fs');
 const ObjectId = mongodb.ObjectId;
 const paypal = require("paypal-rest-sdk");
 
+
+const CONFIG_PAYPAL = require("../configs/config.paypal");
+
 class ControllerOrder {
 
     constructor() { }
@@ -205,8 +208,8 @@ class ControllerOrder {
                     "payment_method": "paypal"
                 },
                 "redirect_urls": {
-                    "return_url": "https://booknemo-dd8b0f6425b8.herokuapp.com/transaction", // http://localhost:8080/transaction - https://booknemo-dd8b0f6425b8.herokuapp.com/transaction
-                    "cancel_url": "https://booknemo-dd8b0f6425b8.herokuapp.com/order" // http://localhost:8080/order - https://booknemo-dd8b0f6425b8.herokuapp.com/order
+                    "return_url": CONFIG_PAYPAL.PAGE_SUCCESS,
+                    "cancel_url": CONFIG_PAYPAL.PAGE_CANCEL
                 },
                 "transactions": [{
                     "item_list": {

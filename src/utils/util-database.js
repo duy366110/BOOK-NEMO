@@ -1,18 +1,39 @@
+"use strict"
+require('dotenv').config();
 const mongoose = require('mongoose');
-
+const CONFIG = require("../configs/config.mongodb");
+const Helper = require("../helpers/helper");
 class Mongodb  {
      
-    constructor() { }
+    constructor() {
+        this.#connect();
+    }
 
-    connect = (callback) => {
-        mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/book_nemo')
+    static getInstance() {
+        if(!Mongodb.instance) {
+            Mongodb.instance = new Mongodb();
+        }
+
+        return Mongodb.instance;
+    }
+
+    #connect = (type = 'mongodb') => {
+        // MODE DEV
+        if(1 === 2) {
+            mongoose.set('debug', true);
+            mongoose.set('debug', {color: true});
+        }
+
+        mongoose.connect(CONFIG.URI)
         .then((result) => {
-            callback();
+            console.log("Connect DB successfully");
+            Helper.connectCount();
         })
         .catch((error) => {
-            throw error;
+            console.log("Connect DB failed" + error);
         })
     }
 }
 
-module.exports = new Mongodb();
+const mongodbInstance = Mongodb.getInstance();
+module.exports = mongodbInstance;
