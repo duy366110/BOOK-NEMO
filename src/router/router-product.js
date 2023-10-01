@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const { body } = require('express-validator');
-const MiddlewarePermission = require("../middleware/middleware-permission");
+const MiddlewarePermission = require("../middleware/middleware.permission");
 const MiddlewareAmount = require("../middleware/middleware-amount");
+const MiddlewareProduct = require("../middleware/middleware.product");
 const ControllerProduct = require("../controller/controller-product");
 
 // RENDER TRANG QUẢN TRỊ DANH MỤC SẢN PHẨM
@@ -50,12 +51,12 @@ router.post('/edit', MiddlewarePermission.permission, [
         if(!value) throw Error('Mô tả sản phẩm không được trống');
         return true;
     })
-], ControllerProduct.updateProduct);
+], MiddlewareProduct.findProductById, ControllerProduct.update);
 
 router.post("/delete", MiddlewarePermission.permission,
 [
     body('product').notEmpty().withMessage('Mã sản phẩm không được trống'),
 
-], ControllerProduct.deleteProduct);
+], MiddlewareProduct.findProductById, ControllerProduct.delete);
 
 module.exports = router;

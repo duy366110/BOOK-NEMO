@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { body } = require("express-validator");
-const MiddlewarePermission = require("../middleware/middleware-permission");
+const MiddlewarePermission = require("../middleware/middleware.permission");
 const ControllerCart = require("../controller/controller-cart");
 
 // RENDER TRANG GIỎ HÀNG CỦA NGƯỜI DUNG

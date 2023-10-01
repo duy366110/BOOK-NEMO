@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const ModelUser = require("../model/model-user");
 const { check, body } = require('express-validator');
-const MiddlewarePermission = require("../middleware/middleware-permission");
+const MiddlewarePermission = require("../middleware/middleware.permission");
 const ControllerUser = require("../controller/controller-user");
 
 // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP

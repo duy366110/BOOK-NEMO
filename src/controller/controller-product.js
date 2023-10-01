@@ -1,7 +1,4 @@
-const ModelProduct = require("../model/model-product");
-const cloudinary = require("../utils/util-cloudinary");
-const path = require('path');
-const fs = require('fs');
+"use strict"
 const { validationResult } = require("express-validator");
 const utilpagination = require("../utils/util-pagination");
 const environment = require("../../environment");
@@ -129,7 +126,7 @@ class ControllerProduct {
 
     // ADMIN CREATE SẢN PHẨM
     async createProduct(req, res, next) {
-        let { title, price, description} = req.body;
+        let { title, price, quantity, description} = req.body;
         let { file } = req;
         let { infor } = req.session;
         const { errors } = validationResult(req);
@@ -142,7 +139,7 @@ class ControllerProduct {
                 csurfToken: req.csrfToken(),
                 formError: req.flash('error'),
                 inputsErrors: errors,
-                formField: { title, image, price, description },
+                formField: { title, image, price, quantity, description },
                 footer: false
             })
 
@@ -171,7 +168,7 @@ class ControllerProduct {
                             csurfToken: req.csrfToken(),
                             formError: req.flash('error'),
                             inputsErrors: errors,
-                            formField: { title, image, price, description },
+                            formField: { title, image, price, quantity, description },
                             footer: false
                         })
                     }
@@ -186,10 +183,9 @@ class ControllerProduct {
     }
 
     // ADIM CAP NHAT THONG TIN SAN PHAM
-    updateProduct = async (req, res, next) => {
+    async update(req, res, next) {
         try {
-            let { product, title, image, price, description} = req.body;
-            let { file } = req;
+            let { product, title, image, price, quantity, description} = req.body;
             let { errors } = validationResult(req);
             let { infor } = req.session;
 
@@ -206,34 +202,24 @@ class ControllerProduct {
                 })
 
             } else {
-                let productInfor = await ModelProduct.findById(product);
-                productInfor.title = title;
-                productInfor.price = Number(price).toFixed(3);
-                productInfor.description = description;
+                let { file } = req;
+                let { product } = req;
 
-                if(file) {
-                    let imagePath = productInfor.image.split("/");
-                    let image = imagePath[(imagePath.length - 1)].split(".")[0];
-
-                    // THUC HIEN KIEM TRA XEM FILE CO TON TAI TREN CLOUD
-                    let checkImage = await cloudinary.exists(`book_nemo/${image}`);
-
-                    if(checkImage.status) {
-                        // XOA FILE CU CAP NHAT FILE MOI
-                        let { status } = await cloudinary.destroy(`book_nemo/${image}`);
-
-                        if(status) {
-                            productInfor.image = file.path;
-                        }
-
-                    } else {
-                        // FILE KHONG TON TAI TIEN HANH CAP NHAT
-                        productInfor.image = file.path;
-                    }
+                let productInfor = {
+                    model: product,
+                    title,
+                    image: file.path? file.path : '',
+                    price: Number(price).toFixed(3),
+                    quantity,
+                    description
                 }
-                
-                await productInfor.save();
-                res.redirect("/product/admin/0");
+
+                await ServiceProduct.update(productInfor, (information) => {
+                    let { status, message, error } = information;
+                    if(status) {
+                        res.redirect("/product/admin/0");
+                    }
+                })
             }
 
         } catch (err) {
@@ -245,23 +231,18 @@ class ControllerProduct {
     }
 
     // ADMIN XOÁ SẢN PHẨM
-    deleteProduct = async (req, res, next) => {
+    async delete (req, res, next) {
         try {
-            let { product } = req.body;
+            let { product } = req;
 
-            let productInfor = await ModelProduct.findById(product);
-            let imagePath = productInfor.image.split("/");
-            let image = imagePath[(imagePath.length - 1)].split(".")[0];
-
-            // XOÁ ẢNH SẢN PHẨM TRƯỚC KHI XOÁ SẢN PHẨM
-            let { status } = await cloudinary.destroy(`book_nemo/${image}`);
-
-            // XOÁ ẢNH SẢN PHẨM THÀNH CÔNG - XOA SẢN PHẨM
-            if(status) {
-                await productInfor.deleteOne();
-                res.redirect("/product/admin/0");
+            if(!product.ref) {
+                await ServiceProduct.delete({model: product}, (information) => {
+                    let { status, message } = information;
+                    if(status) {
+                        res.redirect("/product/admin/0");
+                    }
+                })
             }
-
 
         } catch (err) {
             let error = new Error(err.message);

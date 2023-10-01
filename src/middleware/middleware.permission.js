@@ -3,10 +3,11 @@ class MiddlewarePermission {
     constructor() { }
 
     // KIỂM TRA TÀI KHOẢN CÓ ĐỦ QUYỀN ĐỂ TRUY CẬP TRANG QUẢN TRỊ
-    permission = async (req, res, next) => {
+    async permission(req, res, next) {
         let { infor } = req.session;
 
         if(infor && infor.role === "Admin") {
+            req.user = infor;
             next();
 
         } else {
@@ -19,6 +20,7 @@ class MiddlewarePermission {
         let { infor } = req.session;
 
         if(infor) {
+            req.user = infor;
             next();
 
         } else {

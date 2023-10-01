@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const MiddlewarePermission = require("../middleware/middleware-permission");
+const MiddlewarePermission = require("../middleware/middleware.permission");
 const ControllerOrder = require("../controller/controller-order");
 
 // RENDER TRANG ĐƠN HÀNG CỦA KHÁCH HÀNG
