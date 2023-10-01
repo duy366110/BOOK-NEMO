@@ -21,7 +21,7 @@ class CLOUDINARY {
             cb(null, file.originalname); 
         },
         params: {
-            folder: 'book_nemo',
+            folder: CONFIG_CLOUDINARY.DIRECTORY,
         }
     })
 

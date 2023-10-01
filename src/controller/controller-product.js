@@ -5,15 +5,16 @@ const fs = require('fs');
 const { validationResult } = require("express-validator");
 const utilpagination = require("../utils/util-pagination");
 const environment = require("../../environment");
+
+const ServiceProduct = require("../services/service.product");
 class ControllerProduct {
 
     constructor() { }
 
     // RENDER TRANG QUẢN LÝ SẢN PHẨM
-    renderPageAdminProduct = async (req, res, next) => {
+    async renderPageAdminProduct(req, res, next) {
         try {
             let { infor } = req.session;
-
             let { page } = req.params;
             let { paginations } = req;   
 
@@ -22,28 +23,24 @@ class ControllerProduct {
                 page = utilpagination.methodPagination(page, paginations);
             }
 
-            // THỰC HIỆN LẤY SẢN THEO YÊU VỀ SỐ LƯỢNG
-            let products = await ModelProduct.find({})
-            .limit(environment.pagination.quantityItemOfPage)
-            .skip(environment.pagination.quantityItemOfPage * page)
-            .exec();
+            await ServiceProduct.getProducts(environment.pagination.quantityItemOfPage, (environment.pagination.quantityItemOfPage * page), (information) => {
+                 let { status, message, products, error } = information;
 
-            products = products.map((product) => {
-                product.price = Number(product.price).toFixed(3);
-                return product;
+                 if(status) {
+                    res.render('pages/admin/page-admin', {
+                        currentPage: Number(page),
+                        link: '/product/admin',
+                        title: 'Quản trị sản phẩm',
+                        path: 'Quan-tri',
+                        csurfToken: req.csrfToken(),
+                        infor,
+                        products,
+                        paginations,
+                        footer: false
+                    });
+
+                 }
             })
-
-            res.render('pages/admin/page-admin', {
-                currentPage: Number(page),
-                link: '/product/admin',
-                title: 'Quản trị sản phẩm',
-                path: 'Quan-tri',
-                csurfToken: req.csrfToken(),
-                infor,
-                products,
-                paginations,
-                footer: false
-            });
 
         } catch (err) {
             let error = Error(err.message);
@@ -53,22 +50,25 @@ class ControllerProduct {
     }
 
     // RENDER TRÀN CHI TIẾT SẢN PHẨM
-    renderPageProductDetail = async (req, res, next) => {
+    async renderPageProductDetail(req, res, next) {
         try {
             let { infor } = req.session;
             let { product } = req.params;
-            let productInfor = await ModelProduct.findById(product);
 
-            productInfor.price = Number(productInfor.price).toFixed(3);
+            await ServiceProduct.getById(product, (information) => {
+                let { status, message, product, error } = information;
 
-            res.render('pages/shop/page-product-detail', {
-                title: 'Chi tiết sản phẩm',
-                path: 'Chi-tiet-san-pham',
-                csurfToken: req.csrfToken(),
-                infor,
-                product: productInfor,               
-                footer: true
-            });
+                if(status) {
+                    res.render('pages/shop/page-product-detail', {
+                        title: 'Chi tiết sản phẩm',
+                        path: 'Chi-tiet-san-pham',
+                        csurfToken: req.csrfToken(),
+                        infor,
+                        product,               
+                        footer: true
+                    });
+                }
+            })
 
         } catch (err) {
             let error = Error(err.message);
@@ -100,21 +100,24 @@ class ControllerProduct {
 
     // RENDER TRANG CẬP NHẬT THÔNG TIN SẢN PHẨM
     renderPageEditProduct = async (req, res, next) => {
-        let { product } = req.query;
-        let { infor } = req.session;
-
         try {
-            let productInfor = await ModelProduct.findById(product);
+            let { infor } = req.session;
+            let { product } = req.query;
 
-            res.render('pages/admin/product/page-admin-edit-product', {
-                title: 'Chỉnh sửa thông tin sản phẩm',
-                path: 'Quan-tri',
-                infor: infor? infor : null,
-                csurfToken: req.csrfToken(),
-                formError: req.flash('error'),
-                inputsErrors: [],
-                product: productInfor? productInfor : null,
-                footer: false
+            await ServiceProduct.getById(product, (information) => {
+                let { status, message, product, error } = information;
+                if(status) {
+                    res.render('pages/admin/product/page-admin-edit-product', {
+                        title: 'Chỉnh sửa thông tin sản phẩm',
+                        path: 'Quan-tri',
+                        infor: infor? infor : null,
+                        csurfToken: req.csrfToken(),
+                        formError: req.flash('error'),
+                        inputsErrors: [],
+                        product,
+                        footer: false
+                    })
+                }
             })
 
         } catch (err) {
@@ -125,7 +128,7 @@ class ControllerProduct {
     }
 
     // ADMIN CREATE SẢN PHẨM
-    createProduct = async (req, res, next) => {
+    async createProduct(req, res, next) {
         let { title, price, description} = req.body;
         let { file } = req;
         let { infor } = req.session;
@@ -145,14 +148,34 @@ class ControllerProduct {
 
         } else {
             try {
-                let pathImage = '';
-                if(file) {
-                    pathImage = file.path? file.path : '';
+                
+                let product = {
+                    title,
+                    image: file.path? file.path : '',
+                    price: Number(price).toFixed(3),
+                    quantity,
+                    description
                 }
 
-                price = Number(price).toFixed(3);
-                let product = await ModelProduct.create({title, image: pathImage, price, description});
-                if(product) res.redirect("/product/admin/0");
+                await ServiceProduct.create(product, (information) => {
+                    let { status, message, error } = information;
+
+                    if(status) {
+                        res.redirect("/product/admin/0");
+
+                    } else {
+                        res.render("pages/admin/product/page-admin-new-product", {
+                            title: 'Thêm mới sản phẩm',
+                            path: 'Quan-tri',
+                            infor: infor? infor : null,
+                            csurfToken: req.csrfToken(),
+                            formError: req.flash('error'),
+                            inputsErrors: errors,
+                            formField: { title, image, price, description },
+                            footer: false
+                        })
+                    }
+                })
 
             } catch (err) {
                 let error = new Error('');

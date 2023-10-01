@@ -1,28 +1,20 @@
 [{
   "_id": {
-    "$oid": "64d7584b852e26fd49b693a1"
+    "$oid": "6518fce1ffd0a4289c652984"
   },
-  "title": "Cây Cam Ngọt Của Tôi",
-  "image": "https://res.cloudinary.com/doxnf7bp0/image/upload/v1691834442/book_nemo/kfyykgzvpfg0jb9bag6r.jpg",
+  "title": "Video Ngắn: Từ Chiến Lược Đến Thực Thi",
+  "image": "https://res.cloudinary.com/doxnf7bp0/image/upload/v1696136417/test_book/kbdmqrhgrfmy48f7orjf.jpg",
   "price": {
-    "$numberDecimal": "70.200"
+    "$numberDecimal": "180.000"
   },
   "description": "Trong trường hợp hiếm hoi sản phẩm quý khách nhận được có khiếm khuyết, hư hỏng hoặc không như mô tả, Fahasa.com cam kết bảo vệ khách hàng bằng chính sách đổi trả/ hoàn tiền trên tinh thần bảo vệ quyền lợi người tiêu dùng nhằm cam kết với quý khách về chất lượng sản phẩm và dịch vụ của chúng tôi.",
-  "product_ref": 0,
+  "quantity": 0,
   "status": false,
-  "__v": 0
-},
-{
-  "_id": {
-    "$oid": "64d758d0852e26fd49b693a7"
+  "createDate": {
+    "$date": "2023-10-01T05:00:17.987Z"
   },
-  "title": "Vừa Nhắm Mắt Vừa Mở Cửa Số (Tái Bản 2022)",
-  "image": "https://res.cloudinary.com/doxnf7bp0/image/upload/v1691834575/book_nemo/jdqyftuwiuiejvsaotou.jpg",
-  "price": {
-    "$numberDecimal": "63.750"
+  "updateDate": {
+    "$date": "2023-10-01T05:00:17.987Z"
   },
-  "description": "Trong trường hợp hiếm hoi sản phẩm quý khách nhận được có khiếm khuyết, hư hỏng hoặc không như mô tả, Fahasa.com cam kết bảo vệ khách hàng bằng chính sách đổi trả/ hoàn tiền trên tinh thần bảo vệ quyền lợi người tiêu dùng nhằm cam kết với quý khách về chất lượng sản phẩm và dịch vụ của chúng tôi.",
-  "product_ref": 0,
-  "status": false,
   "__v": 0
 }]
