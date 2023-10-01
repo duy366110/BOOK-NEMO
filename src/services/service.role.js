@@ -47,6 +47,7 @@ class ServiceRole {
     async update(role = {}, cb) {
         try {
             role.model.name = role.name;
+            role.model.updateDate = new Date().toISOString();
             await role.model.save();
             cb({status: true, message: 'Update role successfully'});
 

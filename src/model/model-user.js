@@ -31,6 +31,14 @@ const ModelUser = new Schema({
             }
         }
     ],
+    createDate: {
+        type: Date,
+        default: Date.now
+    },
+    updateDate: {
+        type: Date,
+        default: Date.now
+    },
     order: {
         type: Schema.Types.ObjectId,
         ref: 'orders'

@@ -4,6 +4,9 @@ const environmet = {
         role: {
             quantityItemOfPage: 15
         },
+        user: {
+            quantityItemOfPage: 25
+        },
         product: {
             quantityItemOfPage: 25
         }

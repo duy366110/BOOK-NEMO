@@ -67,6 +67,7 @@ class ServiceProduct {
             product.model.price = product.price;
             product.model.quantity = product.quantity;
             product.model.description = product.description;
+            product.model.updateDate = new Date().toISOString();
 
             if(product.image) {
                 let imagePath = product.model.image.split("/");

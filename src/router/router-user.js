@@ -2,6 +2,7 @@ const router = require('express').Router();
 const ModelUser = require("../model/model-user");
 const { check, body } = require('express-validator');
 const MiddlewarePermission = require("../middleware/middleware.permission");
+const MiddlewareAmount = require("../middleware/middleware.amount");
 const ControllerUser = require("../controller/controller-user");
 
 // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
@@ -14,7 +15,7 @@ router.get('/signup', ControllerUser.renderUserSignup);
 router.get('/signout', ControllerUser.userSignout);
 
 // RENDER TRANG QUẢN TRỊ TÀI KHOẢN
-router.get("/admin", MiddlewarePermission.permission, ControllerUser.renderPageAdminUser);
+router.get("/admin/0", MiddlewarePermission.permission, MiddlewareAmount.getAmountUser, ControllerUser.renderPageAdminUser);
 
 // RENDER TRANG THÊM MỚI TÀI KHOẢN
 router.get('/new', MiddlewarePermission.permission, ControllerUser.renderNewAccount);
