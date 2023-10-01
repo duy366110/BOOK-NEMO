@@ -2,7 +2,7 @@ const router = require('express').Router();
 const mongodb = require('mongodb');
 const { body } = require('express-validator');
 const ModelRole = require("../model/model-roles");
-const MiddlewarePermission = require("../middleware/middleware-permission");
+const MiddlewarePermission = require("../middleware/middleware.permission");
 const ControllerRole = require("../controller/controller-role");
 const ObjectId = mongodb.ObjectId;
 

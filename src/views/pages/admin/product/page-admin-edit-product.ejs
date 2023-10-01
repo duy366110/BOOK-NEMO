@@ -49,6 +49,17 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="form-label" for="quantity">Số lượng sản phẩm</label>
+                        <input
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'quantity')? 'form-control is-invalid' : 'form-control' %>"
+                            type="number" name="quantity" id="quantity" step="1" value="<%= product.quantity %>">
+
+                            <% if(inputsErrors.some((elm)=> elm.path === 'quantity')) { %>
+                                <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'quantity')?.msg %></small>
+                            <% } %>
+                    </div>
+
+                    <div class="form-group">
                         <label class="form-label" for="description">Mô tả</label>
                         <textarea
                             class="<%= inputsErrors.find((elm)=> elm.path === 'description')? 'form-control is-invalid' : 'form-control' %>"

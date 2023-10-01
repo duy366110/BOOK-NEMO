@@ -28,6 +28,7 @@
                                     <th scope="col">Ảnh</th>
                                     <th scope="col">Giá</th>
                                     <th scope="col">Số lượng</th>
+                                    <th scope="col">Hoá đơn/ đơn hàng</th>
                                     <th scope="col">Chức năng</th>
                                 </tr>
                             </thead>
@@ -42,6 +43,7 @@
                                     </td>
                                     <td><%= product.price %> đ</td>
                                     <td><%= product?.quantity %></td>
+                                    <td><%= product?.ref %></td>
                                     <td class="h-100">
                                         <a class="btn" href="/product/edit?product=<%= product._id %>">Sữa</a>
                                         <form action="/product/delete" method="post">

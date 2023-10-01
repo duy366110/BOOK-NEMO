@@ -1,20 +1,21 @@
 [{
   "_id": {
-    "$oid": "6518fce1ffd0a4289c652984"
+    "$oid": "651915ffe5d6fcb2349236fe"
   },
-  "title": "Video Ngắn: Từ Chiến Lược Đến Thực Thi",
-  "image": "https://res.cloudinary.com/doxnf7bp0/image/upload/v1696136417/test_book/kbdmqrhgrfmy48f7orjf.jpg",
+  "title": "Test 01",
+  "image": "https://res.cloudinary.com/doxnf7bp0/image/upload/v1696142966/test_book/p38axr3v4anxagp7rkbh.jpg",
   "price": {
-    "$numberDecimal": "180.000"
+    "$numberDecimal": "190.000"
   },
-  "description": "Trong trường hợp hiếm hoi sản phẩm quý khách nhận được có khiếm khuyết, hư hỏng hoặc không như mô tả, Fahasa.com cam kết bảo vệ khách hàng bằng chính sách đổi trả/ hoàn tiền trên tinh thần bảo vệ quyền lợi người tiêu dùng nhằm cam kết với quý khách về chất lượng sản phẩm và dịch vụ của chúng tôi.",
-  "quantity": 0,
+  "description": "Test 01",
+  "quantity": 90,
+  "ref": 0,
   "status": false,
   "createDate": {
-    "$date": "2023-10-01T05:00:17.987Z"
+    "$date": "2023-10-01T06:47:27.559Z"
   },
   "updateDate": {
-    "$date": "2023-10-01T05:00:17.987Z"
+    "$date": "2023-10-01T06:47:27.559Z"
   },
   "__v": 0
 }]

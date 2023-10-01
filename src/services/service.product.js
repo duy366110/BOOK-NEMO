@@ -1,5 +1,7 @@
 "use strict"
 const ModelProduct = require("../model/model-product");
+const cloudinary = require("../utils/util-cloudinary");
+const CONFIG_CLOUDINARY = require("../configs/config.cloudinary");
 
 class ServiceProduct {
 
@@ -7,7 +9,7 @@ class ServiceProduct {
 
     async getProducts(limit, skip, cb) {
         try {
-            let products = await ModelProduct.find({}).limit(limit).skip(skip).lean();
+            let products = await ModelProduct.find({}).limit(limit).skip(skip).sort({createDate: 'desc'}).lean();
             products = products.map((product) => {
                 product.price = Number(product.price).toFixed(3);
                 return product;
@@ -55,6 +57,55 @@ class ServiceProduct {
         } catch (error) {
             // PHƯƠNG THỨC LỖI
             cb({status: false, message: 'Method failed', error});
+        }
+    }
+
+    async update(product = {}, cb) {
+        try {
+
+            product.model.title = product.title;
+            product.model.price = product.price;
+            product.model.quantity = product.quantity;
+            product.model.description = product.description;
+
+            if(product.image) {
+                let imagePath = product.model.image.split("/");
+                let image = imagePath[(imagePath.length - 1)].split(".")[0];
+                let status = await cloudinary.exists(`${CONFIG_CLOUDINARY.DIRECTORY}/${image}`);
+
+                if(status) {
+                    await cloudinary.destroy(`${CONFIG_CLOUDINARY.DIRECTORY}/${image}`);
+                    product.model.image = product.image;
+                }
+            }
+
+            await product.model.save();
+            cb({status: true, message: 'Update product information successfully'});
+
+        } catch (err) {
+            // PHƯƠNG THỨC LỖI
+            cb({status: false, message: 'Method failed', err});
+        }
+    }
+
+    async delete(product = {}, cb) {
+        try {
+            if(product.model.image) {
+                let imagePath = product.model.image.split("/");
+                let image = imagePath[(imagePath.length - 1)].split(".")[0];
+                let status = await cloudinary.exists(`${CONFIG_CLOUDINARY.DIRECTORY}/${image}`);
+
+                if(status) {
+                    await cloudinary.destroy(`${CONFIG_CLOUDINARY.DIRECTORY}/${image}`);
+                }
+
+                await product.model.deleteOne();
+                cb({status: true, message: 'Delete product successfully'});
+            }
+
+        } catch (err) {
+             // PHƯƠNG THỨC LỖI
+             cb({status: false, message: 'Method failed', err});
         }
     }
 
