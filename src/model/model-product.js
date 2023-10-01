@@ -19,9 +19,17 @@ const ModelProduct = new Schema({
         type: String,
         default: ''
     },
-    product_ref: {
+    quantity: {
         type: Number,
         default: 0
+    },
+    createDate: {
+        type: Date,
+        default: Date.now
+    },
+    updateDate: {
+        type: Date,
+        default: Date.now
     },
     status: {
         type: Boolean,
