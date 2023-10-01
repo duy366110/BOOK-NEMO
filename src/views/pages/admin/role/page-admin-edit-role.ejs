@@ -10,17 +10,17 @@
                 <form class="form-container" action="/role/edit" method="post">
                     <h2 class="form-title">Thêm mới quyền</h2>
                     <div class="form-group">
-                        <label class="form-label" for="role">Tên quyền</label>
+                        <label class="form-label" for="name">Tên quyền</label>
                         <input
-                            class="<%= inputsErrors.find((elm)=> elm.path === 'role')? 'form-control is-invalid' : 'form-control' %>"
-                            type="text" name="role" id="role" value="<%= formField.role %>"/>
+                            class="<%= inputsErrors.find((elm)=> elm.path === 'name')? 'form-control is-invalid' : 'form-control' %>"
+                            type="text" name="name" id="name" value="<%= formField.name %>"/>
 
-                        <% if(inputsErrors.some((elm)=> elm.path === 'role')) { %>
-                            <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'role')?.msg %></small>
+                        <% if(inputsErrors.some((elm)=> elm.path === 'name')) { %>
+                            <small class="input-message"><%= inputsErrors.find((elm) => elm.path === 'name')?.msg %></small>
                         <% } %>
                     </div>
 
-                    <input type="hidden" name="id" value="<%= formField.id %>">
+                    <input type="hidden" name="role" value="<%= formField.role %>">
                     <input type="hidden" name="_csrf" value="<%= csurfToken %>">
 
                     <button type="submit" class="btn">Cập nhật</button>

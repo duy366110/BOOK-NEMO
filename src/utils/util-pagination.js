@@ -2,7 +2,7 @@ class UtilPagination {
 
     constructor() { }
 
-    methodPagination = (page, paginations) => {
+    methodPagination(page, paginations) {
         // KIỂM TRA NGƯỜI DÙNG NHẤN VÀO BUTTON PREVIOUS - NẼT
         if(!Number(page)) {
             let params = page.split("-");

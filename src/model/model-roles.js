@@ -6,6 +6,14 @@ const ModelRole = new Schema({
         type: String,
         default: ''
     },
+    createDate: {
+        type: Date,
+        default: Date.now
+    },
+    updateDate: {
+        type: Date,
+        default: Date.now
+    },
     users: [
         {
             type: Schema.Types.ObjectId,

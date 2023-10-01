@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { body } = require('express-validator');
 const MiddlewarePermission = require("../middleware/middleware.permission");
-const MiddlewareAmount = require("../middleware/middleware-amount");
+const MiddlewareAmount = require("../middleware/middleware.amount");
 const MiddlewareProduct = require("../middleware/middleware.product");
 const ControllerProduct = require("../controller/controller-product");
 

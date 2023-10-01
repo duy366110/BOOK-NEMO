@@ -11,7 +11,7 @@
                 <div class="admin-tab-maneger">
                     <a class="btn" href="/product/admin/0">Sản phẩm</a>
                     <a class="btn" href="/user/admin">Người dùng</a>
-                    <a class="btn" href="/role/admin">Phân quyền</a>
+                    <a class="btn" href="/role/admin/0">Phân quyền</a>
                 </div>
 
                 <div class="admin-tab">
@@ -60,6 +60,8 @@
                         <h2 class="balnk-value">Không có nội dung phù hợp</h2>
                     <% } %>
                 </div>
+
+                <%- include("../../components/pagination-component"), {paginations, link, currentPage} %>
 
             </div>
         </div>
