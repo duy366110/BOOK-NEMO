@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const MiddlewareAmount = require("../middleware/middleware-amount");
+const MiddlewareAmount = require("../middleware/middleware.amount");
 const ControllerCommon = require("../controller/controller-common");
 
 //  ROUTER RENDER TRANG CHỦ

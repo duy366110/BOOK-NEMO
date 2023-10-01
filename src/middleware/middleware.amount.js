@@ -1,8 +1,8 @@
-"use strict"
 const environment = require("../../environment");
 const ModelProduct = require("../model/model-product");
+const ModelRole = require("../model/model-roles");
 
-class MiddlewareProduct {
+class MiddlewareAmount {
 
     constructor() { }
 
@@ -11,10 +11,10 @@ class MiddlewareProduct {
         try {
 
             // THỰC HIỆN ĐẾM SỐ SẢN PHẨM HIỆN CÓ
-            let amount = await ModelProduct.find({}).count().exec();
+            let amount = await ModelProduct.find({}).count().lean();
 
             // TÍNH SỐ TRANG DỰA VÀO SỐ LƯỢNG SẢN PHẨM HIỆN CÓ
-            let quantityPage = Math.ceil(amount / environment.pagination.quantityItemOfPage);
+            let quantityPage = Math.ceil(amount / environment.pagination.product.quantityItemOfPage);
 
             // TRƯỜNG HỢP TRANG CHỈ CÓ 1
             if(quantityPage <= 1) {
@@ -34,21 +34,33 @@ class MiddlewareProduct {
             return next(error);
         }
     }
-    
-    async findProductById(req, res, next) {
+
+    async getAmountRole(req, res, next) {
         try {
-            let { product } = req.body;
-            let productInfor = await ModelProduct.findById(product).exec();
-            req.product = productInfor;
+            // THỰC HIỆN ĐẾM SỐ SẢN PHẨM HIỆN CÓ
+            let amount = await ModelRole.find({}).count().lean();
+
+            // TÍNH SỐ TRANG DỰA VÀO SỐ LƯỢNG SẢN PHẨM HIỆN CÓ
+            let quantityPage = Math.ceil(amount / environment.pagination.role.quantityItemOfPage);
+
+            // TRƯỜNG HỢP TRANG CHỈ CÓ 1
+            if(quantityPage <= 1) {
+                req.paginations = [];
+
+            } else {
+                // TRƯỜNG HỢP TRANG NHIỀU HƠN 1
+                req.paginations = Array.from({length: quantityPage}, (elm, index) => index);
+            }
+
             next();
 
         } catch (err) {
-            console.log(err);
-            let error = new Error(err.message);
+            // PHƯƠNG THỨC LỖI
+            let error = Error(err.message);
             error.httpStatusCode = 500;
             return next(error);
         }
     }
 }
 
-module.exports = new MiddlewareProduct();
+module.exports = new MiddlewareAmount();

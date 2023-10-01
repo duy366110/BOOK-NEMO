@@ -20,7 +20,7 @@ class ControllerProduct {
                 page = utilpagination.methodPagination(page, paginations);
             }
 
-            await ServiceProduct.getProducts(environment.pagination.quantityItemOfPage, (environment.pagination.quantityItemOfPage * page), (information) => {
+            await ServiceProduct.getProducts(environment.pagination.product.quantityItemOfPage, (environment.pagination.quantityItemOfPage * page), (information) => {
                  let { status, message, products, error } = information;
 
                  if(status) {

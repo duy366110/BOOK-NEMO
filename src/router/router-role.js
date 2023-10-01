@@ -1,13 +1,19 @@
+"use strict"
 const router = require('express').Router();
 const mongodb = require('mongodb');
 const { body } = require('express-validator');
 const ModelRole = require("../model/model-roles");
+const MiddlewareAmount = require("../middleware/middleware.amount");
 const MiddlewarePermission = require("../middleware/middleware.permission");
 const ControllerRole = require("../controller/controller-role");
+const MiddlewareRole = require('../middleware/middleware.role');
 const ObjectId = mongodb.ObjectId;
 
 // HIỂN THỊ TRANG DANH SÁCH QUYỀN TÀI KHOẢN
-router.get("/admin", MiddlewarePermission.permission, ControllerRole.renderPageAdminRole);
+router.get("/admin/:page",
+MiddlewarePermission.permission,
+MiddlewareAmount.getAmountRole,
+ControllerRole.renderPageAdminRole);
 
 // HIỂN THỊ TRANG THÊM MỚI QUYỀN TÀI KHOẢN
 router.get("/new", MiddlewarePermission.permission, ControllerRole.renderPageAdminNewRole);
@@ -31,17 +37,17 @@ router.post("/new", MiddlewarePermission.permission,
         return true;
     }),
 
-], ControllerRole.createRole);
+], ControllerRole.create);
 
 // CẬP NHẬT THÔNG TIN PHÂN QUYỀN TÀI KHOẢN
 router.post("/edit", MiddlewarePermission.permission,
 [
-    body('id').notEmpty().withMessage('Token quyền tài khoản không được trống'),
-    body('role').custom( async(val, {req}) => {
+    body('role').notEmpty().withMessage('Token quyền tài khoản không được trống'),
+    body('name').custom( async(val, {req}) => {
         if(!val.trim()) throw Error('Quyền tài khoản không được trống');
 
         if(val) {
-            let roleInfor = await ModelRole.findById(req.body.id);
+            let roleInfor = await ModelRole.findById(req.body.role);
             let roleNameInfor = await ModelRole.findOne({name: {$eq: val}});
 
             if(roleInfor.users.length) {
@@ -55,7 +61,7 @@ router.post("/edit", MiddlewarePermission.permission,
 
         return true;
     })
-], ControllerRole.modifiRole);
+], MiddlewareRole.findRoleById, ControllerRole.update);
 
 // XOÁ TÀI PHÂN QUYỀN TÀI KHOẢN
 router.post("/delete", MiddlewarePermission.permission,
@@ -73,6 +79,6 @@ router.post("/delete", MiddlewarePermission.permission,
         return true;
     }),
 
-],ControllerRole.deleteRole);
+], MiddlewareRole.findRoleById ,ControllerRole.delete);
 
 module.exports = router;

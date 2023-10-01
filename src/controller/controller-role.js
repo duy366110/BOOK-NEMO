@@ -3,26 +3,48 @@ const mongdb = require('mongodb');
 const { validationResult } = require('express-validator');
 const ObjectId = mongdb.ObjectId;
 
+const utilpagination =require("../utils/util-pagination");
+const ServiceRole = require("../services/service.role");
+const environment = require("../../environment");
+const serviceRole = require("../services/service.role");
+
 class ControllerRole {
 
     constructor() { }
 
     // RENDER TRANG PHÂN QUYỀN TÀI KHOẢN
-    renderPageAdminRole = async (req, res, next) => {
-        
+    async renderPageAdminRole(req, res, next) {
         try {
             let { infor } = req.session;
-            let roles = await ModelRole.find({});
+            let { page } = req.params;
+            let { paginations } = req;
 
-            res.render('pages/admin/page-admin-role', {
-                title: 'Quản trị quyển quản trị',
-                path: 'Quan-tri',
-                csurfToken: req.csrfToken(),
-                pageMessage: null,
-                infor,
-                roles,
-                footer: false
-            });
+            // KIỂM TRA SỐ LƯỢNG TRANG CÓ LỚN HƠN 1
+            if(paginations.length) {
+                page = utilpagination.methodPagination(page, paginations);
+            }
+
+            let limit = (environment.pagination.role.quantityItemOfPage);
+            let skip = (environment.pagination.role.quantityItemOfPage * page);
+
+            await ServiceRole.getRoles(limit, skip, (information) => {
+                let { status, message, roles, error } = information;
+
+                if(status) {
+                    return res.render('pages/admin/page-admin-role', {
+                        currentPage: Number(page),
+                        link: '/role/admin',
+                        title: 'Quản trị quyển quản trị',
+                        path: 'Quan-tri',
+                        csurfToken: req.csrfToken(),
+                        pageMessage: null,
+                        infor,
+                        roles,
+                        paginations,
+                        footer: false
+                    });
+                }
+            })
 
         } catch (err) {
             let error = Error(err.message);
@@ -50,25 +72,29 @@ class ControllerRole {
     }
 
     // RENDER TRANG SỮA THÔNG TIN PHÂN QUYỀN TÀI KHOẢN
-    renderPageAdminEditRole = async(req, res, next) => {
-        let { infor } = req.session;
-        let { role } = req.params;
-
+    async renderPageAdminEditRole(req, res, next) {
         try {
-            let roleInfor = await ModelRole.findById(role);
+            let { infor } = req.session;
+            let { role } = req.params;
 
-            res.render('pages/admin/role/page-admin-edit-role', {
-                title: 'Quản trị phân quyền',
-                path: 'Quan-tri',
-                infor,
-                csurfToken: req.csrfToken(),
-                pageMessage: null,
-                inputsErrors: [],
-                formField: {
-                    id: roleInfor? roleInfor._id : '',
-                    role: roleInfor? roleInfor.name : ''
-                },
-                footer: false
+            await ServiceRole.getById(role, (information) => {
+                let { status, message, role, error } = information;
+
+                if(status) {
+                    return res.render('pages/admin/role/page-admin-edit-role', {
+                        title: 'Quản trị phân quyền',
+                        path: 'Quan-tri',
+                        infor,
+                        csurfToken: req.csrfToken(),
+                        pageMessage: null,
+                        inputsErrors: [],
+                        formField: {
+                            role: role? role._id : '',
+                            name: role? role.name : ''
+                        },
+                        footer: false
+                    })
+                }
             })
 
         } catch (err) {
@@ -79,7 +105,7 @@ class ControllerRole {
     }
 
     // ADMIN THÊM PHÂN QUYỀN TÀI KHOẢN
-    createRole = async (req, res, next) => {
+    async create(req, res, next) {
         let { role } = req.body;
         let { infor } = req.session;
         let { errors } = validationResult(req);
@@ -100,10 +126,12 @@ class ControllerRole {
 
         } else {
             try {
-                let roleNew = await ModelRole.create({name: role, users: []});
-                if(roleNew) {
-                    res.redirect("/role/admin");
-                }
+                await serviceRole.create({name: role}, (information) => {
+                    let { status, message, error } = information;
+                    if(status) {
+                        res.redirect("/role/admin/0");
+                    }
+                })
             
             } catch (err) {
                 let error = Error(err.message);
@@ -114,8 +142,8 @@ class ControllerRole {
     }
 
     // ADMIN CẬP NHẬT THÔNG TIN PHÂN QUYỀN TÀI KHOẢN
-    modifiRole = async (req, res, next) => {
-        let { role, id } = req.body;
+    async update(req, res, next) {
+        let { name, role } = req.body;
         let { infor } = req.session;
         let { errors } = validationResult(req);
 
@@ -128,19 +156,27 @@ class ControllerRole {
                 pageMessage: null,
                 inputsErrors: errors,
                 formField: {
-                    id,
-                    role
+                    role,
+                    name
                 },
                 footer: false
             })
 
         } else {
             try {
-                let roleInfor = await ModelRole.findById(id);
-                roleInfor.name = role;
+                let { role } = req;
+                await ServiceRole.update({model: role, name}, (information) => {
+                    let { status, message, error } = information;
 
-                await roleInfor.save();
-                res.redirect("/role/admin");
+                    if(status) {
+                        res.redirect("/role/admin/0");
+
+                    } else {
+                        let err = new Error(message);
+                        err.httpStatusCode = 500;
+                        return next(err);
+                    }
+                })
             
             } catch (err) {
                 let error = Error(err.message);
@@ -151,9 +187,8 @@ class ControllerRole {
     }
 
     // ADMIN THỰC HIỆN XOÁ TÀI KHOẢN
-    deleteRole = async(req, res, next) => {
+    async delete(req, res, next) {
         let { infor } = req.session;
-        let { role } = req.body;
         let { errors } = validationResult(req);
 
         if(errors.length) {
@@ -171,8 +206,19 @@ class ControllerRole {
 
         } else {
             try {
-                await ModelRole.deleteOne({_id: {$eq: new ObjectId(role)}});
-                res.redirect('/role/admin');
+                let { role } = req;
+                await ServiceRole.delete({model: role}, (information) => {
+                    let { status, message, error} = information;
+
+                    if(status) {
+                        res.redirect('/role/admin/0');
+
+                    } else {
+                        let error = Error(err.message);
+                        error.httpStatusCode = 500;
+                        return next(error);
+                    }
+                })
 
             } catch (err) {
                 let error = Error(err.message);
