@@ -15,14 +15,6 @@
 },
 {
   "_id": {
-    "$oid": "64b35ce43357bb969d0f6bf6"
-  },
-  "name": "Editor",
-  "users": [],
-  "__v": 7
-},
-{
-  "_id": {
     "$oid": "64b35cee3357bb969d0f6bfa"
   },
   "name": "Client",
@@ -43,5 +35,25 @@
       "$oid": "64da2294fd1fe75282fa1d30"
     }
   ],
-  "__v": 18
+  "__v": 24,
+  "createDate": {
+    "$date": "2023-10-02T08:50:29.117Z"
+  },
+  "updateDate": {
+    "$date": "2023-10-02T08:50:29.117Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "651988686f6283d6efd716f5"
+  },
+  "name": "Editor",
+  "users": [],
+  "createDate": {
+    "$date": "2023-10-01T14:55:36.121Z"
+  },
+  "updateDate": {
+    "$date": "2023-10-01T14:55:36.121Z"
+  },
+  "__v": 9
 }]
