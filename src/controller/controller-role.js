@@ -1,12 +1,9 @@
-const ModelRole = require("../model/model-roles");
-const mongdb = require('mongodb');
+"use strict"
 const { validationResult } = require('express-validator');
-const ObjectId = mongdb.ObjectId;
-
+const ModelRole = require("../model/model-roles");
 const utilpagination =require("../utils/util-pagination");
 const ServiceRole = require("../services/service.role");
 const environment = require("../../environment");
-const serviceRole = require("../services/service.role");
 
 class ControllerRole {
 
@@ -126,7 +123,7 @@ class ControllerRole {
 
         } else {
             try {
-                await serviceRole.create({name: role}, (information) => {
+                await ServiceRole.create({name: role}, (information) => {
                     let { status, message, error } = information;
                     if(status) {
                         res.redirect("/role/admin/0");

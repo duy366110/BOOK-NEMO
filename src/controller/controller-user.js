@@ -2,36 +2,57 @@ const ModelUser = require("../model/model-user");
 const ModelRole = require("../model/model-roles");
 const utilbcrypt = require("../utils/util-bcrypt");
 const { validationResult } = require('express-validator');
+
+const utilpagination = require("../utils/util-pagination");
+const ServiceUser = require("../services/service.user");
+const environment = require("../../environment");
+
 class ControllerUser {
 
     constructor() { }
 
-    // RENDER TRANG QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG
-    renderPageAdminUser = async (req, res, next) => {
+    // RENDER PAGE LIST USER ACCOUNT.
+    async renderPageAdminUser(req, res, next) {
 
         try {
             let { infor } = req.session;
-            let users = await ModelUser.find({}).select(['name', 'email', 'role']).populate('role');
+            let { page } = req.params;
+            let { paginations } = req;
 
-            res.render('pages/admin/page-admin-user', {
-                title: 'Quản trị người dùng',
-                path: 'Quan-tri',
-                infor,
-                users,
-                csurfToken: req.csrfToken(),
-                footer: false
-            });
+            // KIỂM TRA SỐ LƯỢNG TRANG CÓ LỚN HƠN 1
+            if(paginations.length) {
+                page = utilpagination.methodPagination(page, paginations);
+            }
 
+            let limit = (environment.pagination.user.quantityItemOfPage);
+            let skip = (environment.pagination.user.quantityItemOfPage * page);
+
+            await ServiceUser.getUsers(limit, skip, (information) => {
+                let { status, message, users, error } = information;
+
+                if(status) {
+                    res.render('pages/admin/page-admin-user', {
+                        currentPage: Number(page),
+                        link: '/user/admin',
+                        title: 'Quản trị người dùng',
+                        path: 'Quan-tri',
+                        infor,
+                        users,
+                        paginations,
+                        csurfToken: req.csrfToken(),
+                        footer: false
+                    });
+                }
+            })
         } catch (err) {
             let error = Error(err.message);
             error.httpStatusCode = 500;
             return next(error);
-
         }
     }
 
     // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
-    renderUserSignin = (req, res, next) => {
+    renderUserSignin (req, res, next) {
         let { infor } = req.session;
 
         res.render("pages/auth/page-auth-signin", {
@@ -49,7 +70,7 @@ class ControllerUser {
     }
 
     // RENDER TRANG ĐỂ NGƯỜI DÙNG TỰ ĐĂNG KÝ
-    renderUserSignup = (req, res, next) => {
+    renderUserSignup (req, res, next) {
         let { infor } = req.session;
 
         res.render("pages/auth/page-auth-signup", {
@@ -69,8 +90,8 @@ class ControllerUser {
         })
     }
 
-    // RENDER TRANG ĐỂ ADMIN TẠO TÀI KHOẢN CHO NGƯỜI DÙNG
-    renderNewAccount = async (req, res, next) => {
+    // RENDER PAGE CREATE ACCOUNT.
+    async renderNewAccount (req, res, next) {
         try {
             let { infor } = req.session;
             let roles = await ModelRole.find({}).select('name');
@@ -100,8 +121,8 @@ class ControllerUser {
 
     }
 
-    // RENDER TRANG ĐỂ ADMIN CHỈNH SỬA THÔNG TIN TÀI KHOẢN
-    renderEditAccount = async (req, res, next) => {
+    // RENDER PAGE EDIT ACCOUNT.
+    async renderEditAccount (req, res, next) {
         try {
             let { infor } = req.session;
             let { user } = req.query;
@@ -133,7 +154,7 @@ class ControllerUser {
     }
 
     // NGƯỜI DÙNG ĐĂNG XUẤT
-    userSignout = (req, res, next) => {
+    userSignout (req, res, next) {
         req.session.destroy((err) => {
             if(err) {
                 let error = Error('Logout failed');
@@ -149,7 +170,7 @@ class ControllerUser {
     }
 
     // NGƯỜI DÙNG ĐĂNG NHẬP
-    userSignin = async (req, res, next) => {
+    async userSignin (req, res, next) {
         let { email , password} = req.body;
         let { infor } = req.session;
         let { errors } = validationResult(req);
@@ -197,7 +218,7 @@ class ControllerUser {
     }
 
     // NGƯỜI DÙNG ĐĂNG KÝ
-    userSignup = async (req, res, next) => {
+    async userSignup (req, res, next) {
         let { user_name, email, password, password_confirm} = req.body;
         let { infor } = req.session;
         let {errors} = validationResult(req);
@@ -252,12 +273,12 @@ class ControllerUser {
         }
     }
 
-    // ADMIN TẠO TÀI KHOẢN NGƯỜI DÙNG
-    newAccount = async (req, res, next) => {
+    // CREATE ACCOUNT
+    async create (req, res, next) {
         let { user_name, email, password, password_confirm, role } = req.body;
-        let { infor } = req.session;
         let { errors } = validationResult(req);
-        let roles = await ModelRole.find({});
+        let { infor } = req.session;
+        let { roles } = req;
 
         if(errors.length) {
             res.render("pages/admin/user/page-admin-new-user", {
@@ -273,24 +294,18 @@ class ControllerUser {
 
         } else {
             try {
-                // MÃ HOÁ MẬT KHẨU
-                utilbcrypt.hash(password, async (infor) => {
-                    let roleInfor = roles.filter((elm) => elm._id.toString() === role);
-                    roleInfor = roleInfor.length? roleInfor[0] : null;
+                let roleInfor = roles.find((roleElm) => roleElm._id.toString() === role);
 
-                    // TẠO MỚI ACCOUNT
-                    let user = await ModelUser.create({
-                        name: user_name,
-                        email,
-                        password: infor.hash,
-                        role: roleInfor
-                    });
+                await ServiceUser.create({name: user_name, email, password}, roleInfor, (information) => {
+                    let { status, message, error } = information;
 
-                    if(user) {
-                        // THÊM ACCOUNT VỪA TẠO VÀO ROLE
-                        roleInfor.users.push(user);
-                        await roleInfor.save();
-                        res.redirect("/user/admin");
+                    if(status) {
+                        return res.redirect("/user/admin/0");
+
+                    } else {
+                        let err = new Error(message);
+                        err.httpStatusCode = 500;
+                        return next(err);
                     }
                 })
 
@@ -303,12 +318,12 @@ class ControllerUser {
         }
     }
 
-    // ADMIN SỬA THÔNG TIN TÀI KHOẢN
-    editAccount = async (req, res, next) => {
-        let roles = await ModelRole.find({}).populate('users');
-        let { id, user_name, email,  role} = req.body;
+    // UPDATE ACCOUNT
+    async update (req, res, next) {
+        let { user, user_name, email,  role} = req.body;
         let { infor } = req.session;
         let { errors } = validationResult(req);
+        let { roles } = req;
 
         if(errors.length) {
             res.render("pages/admin/user/page-admin-edit-user", {
@@ -318,36 +333,26 @@ class ControllerUser {
                 csurfToken: req.csrfToken(),
                 inputsErrors: errors,
                 roles,
-                formField: { id, user_name, email, role },
+                formField: { user, user_name, email, role },
                 footer: false
             })
 
         } else {
             try {
-                // LẤY THÔNG TIN USẺ VÀ CẬP NHẬT
-                let user = await ModelUser.findOne({_id: {$eq: id}}).populate('role');
-                user.name = user_name;
-                user.email = email;
 
-                if(user.role._id.toString() !== role) {
-                    // TRƯỜNG HỢP ACCOUNT ĐÃ CÓ ROLE VÀ MUỐN CHUYỂN SANG ROLE KHÁC
-                    user.role.users = user.role.users.filter((elm) => elm._id.toString() !== user._id.toString());
+                let { user, role } = req;
+                await ServiceUser.update({model: user, name: user_name, email}, role, (information) => {
+                    let { status, message, error } = information;
 
-                    await user.role.save();
+                    if(status) {
+                        res.redirect("/user/admin/0");
 
-                    let roleInfor = roles.find((elm) => elm._id.toString() === role);
-                    if(!roleInfor) {
-                        roleInfor = roles.find((elm) => elm.name === 'Client');
+                    } else {
+                        let err = Error(message);
+                        err.httpStatusCode = 500;
+                        return next(err);
                     }
-
-                    roleInfor.users.push(user);
-                    await roleInfor.save();
-
-                    user.role = roleInfor;
-                }
-
-                await user.save();
-                res.redirect("/user/admin");
+                })
 
             } catch (err) {
                 let error = Error(err.message);
@@ -358,19 +363,22 @@ class ControllerUser {
 
     }
 
-    // ADMIN XOÁ TÀI KHOẢN
-    deleteAccount = async (req, res, next) => {
+    // DELETE ACCOUNT
+    async delete(req, res, next) {
         try {
-            let { user } = req.body;
-            let userInfor = await ModelUser.findById(user).populate('role');
-            let roleInfor = userInfor.role;
+            let { user } = req;
+            await ServiceUser.delete({model: user}, (information) => {
+                let { status, message, error } = information;
 
-            // TÌM XOÁ LIÊN KẾT TRONG ROLE TRƯỚC KHI XOÁ USER ACCOUNT
-            roleInfor.users = roleInfor.users.filter((elm) => elm._id.toString() !== user);
-            await roleInfor.save();
-            await userInfor.deleteOne();
-            
-            res.redirect("/user/admin");
+                if(status) {
+                    res.redirect("/user/admin/0");
+
+                } else {
+                    let err = new Error(message);
+                    err.httpStatusCode = 500;
+                    return next(err);
+                }
+            })
 
 
         } catch (err) {

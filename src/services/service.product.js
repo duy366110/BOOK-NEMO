@@ -7,6 +7,7 @@ class ServiceProduct {
 
     constructor() { }
 
+    // GET PRODUCTS
     async getProducts(limit, skip, cb) {
         try {
             let products = await ModelProduct.find({}).limit(limit).skip(skip).sort({createDate: 'desc'}).lean();
@@ -21,9 +22,9 @@ class ServiceProduct {
             // PHƯƠNG THỨC LỖI
             cb({status: false, message: 'Method failed', error});
         }
-
     }
 
+    // GET PRODUCT BY ID
     async getById(id, cb) {
         try {
             let product = await ModelProduct.findById(id).lean();
@@ -37,6 +38,7 @@ class ServiceProduct {
         }
     }
 
+    // CREATE PRODUCT
     async create(product = {}, cb) {
         try {
             let productInfor = await ModelProduct.create({
@@ -60,6 +62,7 @@ class ServiceProduct {
         }
     }
 
+    // UPDATE PRODUCT
     async update(product = {}, cb) {
         try {
 
@@ -67,6 +70,7 @@ class ServiceProduct {
             product.model.price = product.price;
             product.model.quantity = product.quantity;
             product.model.description = product.description;
+            product.model.updateDate = new Date().toISOString();
 
             if(product.image) {
                 let imagePath = product.model.image.split("/");
@@ -88,6 +92,7 @@ class ServiceProduct {
         }
     }
 
+    // DELETE PRODUCT
     async delete(product = {}, cb) {
         try {
             if(product.model.image) {

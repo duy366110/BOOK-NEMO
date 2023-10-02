@@ -5,6 +5,7 @@ class ServiceRole {
 
     constructor() { }
 
+    // GET LIST ROLES
     async getRoles(limit, skip, cb) {
         try {
             let roles = await ModelRole.find({}).limit(limit).skip(skip).sort({createDate: 'desc'}).lean();
@@ -16,6 +17,7 @@ class ServiceRole {
         }
     }
 
+    // GET ROLE BY ID
     async getById(id, cb) {
         try {
             let role = await ModelRole.findById(id).lean();
@@ -27,6 +29,7 @@ class ServiceRole {
         }
     }
 
+    // CREATE ROLE
     async create(role = {}, cb) {
         try {
 
@@ -44,9 +47,11 @@ class ServiceRole {
         }
     }
 
+    // UPDATE ROLE
     async update(role = {}, cb) {
         try {
             role.model.name = role.name;
+            role.model.updateDate = new Date().toISOString();
             await role.model.save();
             cb({status: true, message: 'Update role successfully'});
 
@@ -56,6 +61,7 @@ class ServiceRole {
         }
     }
 
+    // DELETE ROLE
     async delete(role = {}, cb) {
         try {
             await role.model.deleteOne();

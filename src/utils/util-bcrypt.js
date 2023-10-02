@@ -6,10 +6,7 @@ class Bcrypt {
     constructor() { }
 
     hash = (password, callback) => {
-        bcryptjs.hash(password, this.salt, (err, hash) => {
-            if(err) callback({status: false, hash: null});
-            callback({status: true, hash});
-        })
+        return bcryptjs.hashSync(password, this.salt);
     }
 
     compare = (password, hashPassword, callback) => {
