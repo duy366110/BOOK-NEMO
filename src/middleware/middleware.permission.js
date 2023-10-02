@@ -11,7 +11,7 @@ class MiddlewarePermission {
             next();
 
         } else {
-            res.redirect("/user/signin");
+            res.redirect("/access/signin");
         }
     }
 
@@ -24,7 +24,7 @@ class MiddlewarePermission {
             next();
 
         } else {
-            res.redirect("/user/signin");
+            res.redirect("/access/signin");
         }
     }
 

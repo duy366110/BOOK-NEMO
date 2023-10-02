@@ -32,6 +32,25 @@ class MiddlewareUser {
             return next(error);
         }
     }
+
+    async findUserBySession(req, res, next) {
+        try {
+            let { infor } = req.session;
+            if(infor) {
+                let user = await ModelUser.findById(infor.id).populate(['cart.product']).exec();
+                req.user = user;
+                next();
+
+            } else {
+                res.redirect('/access/signin');
+            }
+
+        } catch (err) {
+            let error = new Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+    }
 }
 
 module.exports = new MiddlewareUser();
