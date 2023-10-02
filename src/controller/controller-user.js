@@ -1,8 +1,6 @@
-const ModelUser = require("../model/model-user");
-const ModelRole = require("../model/model-roles");
-const utilbcrypt = require("../utils/util-bcrypt");
+"use strict"
 const { validationResult } = require('express-validator');
-
+const ModelRole = require("../model/model-roles");
 const utilpagination = require("../utils/util-pagination");
 const ServiceUser = require("../services/service.user");
 const environment = require("../../environment");
@@ -51,45 +49,6 @@ class ControllerUser {
         }
     }
 
-    // RENDER TRANG NGƯỜI DÙNG ĐĂNG NHẬP
-    renderUserSignin (req, res, next) {
-        let { infor } = req.session;
-
-        res.render("pages/auth/page-auth-signin", {
-            title: 'Đăng ký',
-            path: "Dang-nhap",
-            infor: infor? infor : null,
-            csurfToken: req.csrfToken(),
-            inputsErrors: [],
-            formField: {
-                email: '',
-                password: ''
-            },
-            footer: false
-        })
-    }
-
-    // RENDER TRANG ĐỂ NGƯỜI DÙNG TỰ ĐĂNG KÝ
-    renderUserSignup (req, res, next) {
-        let { infor } = req.session;
-
-        res.render("pages/auth/page-auth-signup", {
-            title: 'Đăng nhập',
-            path: "Dang-ky",
-            infor: infor? infor : null,
-            csurfToken: req.csrfToken(),
-            formError: req.flash('form-error'),
-            inputsErrors: [],
-            formField: {
-                user_name: '',
-                email: '',
-                password: '',
-                password_confirm: ''
-            },
-            footer: false
-        })
-    }
-
     // RENDER PAGE CREATE ACCOUNT.
     async renderNewAccount (req, res, next) {
         try {
@@ -125,10 +84,9 @@ class ControllerUser {
     async renderEditAccount (req, res, next) {
         try {
             let { infor } = req.session;
-            let { user } = req.query;
+            let { user } = req;
 
-            let roles = await ModelRole.find({}).select('name');
-            let userInfor = await ModelUser.findOne({_id: {$eq: user}}).populate('role').exec();
+            let roles = await ModelRole.find({}).select('name').lean();
 
             res.render("pages/admin/user/page-admin-edit-user", {
                 title: 'Chỉnh sửa thông tin tài khoản',
@@ -138,10 +96,10 @@ class ControllerUser {
                 inputsErrors: [],
                 roles,
                 formField: {
-                    id: userInfor._id,
-                    user_name: userInfor.name,
-                    email: userInfor.email,
-                    role: userInfor?.role? userInfor.role._id : null,
+                    id: user._id,
+                    user_name: user.name,
+                    email: user.email,
+                    role: user?.role? user.role._id : null,
                 },
                 footer: false
             })
@@ -150,126 +108,6 @@ class ControllerUser {
             let error = Error(err.message);
             error.httpStatusCode = 500;
             return next(error);
-        }
-    }
-
-    // NGƯỜI DÙNG ĐĂNG XUẤT
-    userSignout (req, res, next) {
-        req.session.destroy((err) => {
-            if(err) {
-                let error = Error('Logout failed');
-                error.httpStatusCode = 500;
-                return next(error);
-
-            } else {
-                res.cookie('user', null, {expires: new Date(0)});
-                res.redirect('/');
-
-            }
-        })
-    }
-
-    // NGƯỜI DÙNG ĐĂNG NHẬP
-    async userSignin (req, res, next) {
-        let { email , password} = req.body;
-        let { infor } = req.session;
-        let { errors } = validationResult(req);
-
-        if(errors.length) {
-            res.render("pages/auth/page-auth-signin", {
-                title: 'Đăng ký',
-                path: "Dang-nhap",
-                infor: infor? infor : null,
-                csurfToken: req.csrfToken(),
-                inputsErrors: errors,
-                formField: { email, password },
-                footer: false
-            })
-
-        } else {
-            try {
-                let user = await ModelUser.findOne({email: {$eq: email}}).populate('role');
-
-                if(user) {
-                    utilbcrypt.compare(password, user.password, (status) => {
-
-                        if(status) {
-                            req.session.infor = {
-                                id: user._id,
-                                name: user.name,
-                                email: user.email,
-                                role: user.role.name
-                            }
-                            res.redirect("/");
-                        }
-                    })
-
-                } else {
-                    req.flash('form-error', "Tài khoản chưa đăng ký");
-                    res.redirect("/user/signup");
-                }
-                
-            } catch (err) {
-                let error = new Error(err.message);
-                error.httpStatusCode = 500;
-                return next(error);
-            }
-        }
-    }
-
-    // NGƯỜI DÙNG ĐĂNG KÝ
-    async userSignup (req, res, next) {
-        let { user_name, email, password, password_confirm} = req.body;
-        let { infor } = req.session;
-        let {errors} = validationResult(req);
-
-        if(errors.length) {
-            res.render("pages/auth/page-auth-signup", {
-                title: 'Đăng nhập',
-                path: "Dang-ky",
-                infor: infor? infor : null,
-                csurfToken: req.csrfToken(),
-                formError: req.flash('form-error'),
-                inputsErrors: errors,
-                formField: { user_name, email, password, password_confirm },
-                footer: false
-            })
-
-        } else {
-            let clientRole = await ModelRole.findOne({name: 'Client'});
-
-            try {
-                utilbcrypt.hash(password, async (infor) => {
-                    try {
-                        let user = await ModelUser.create({name: user_name, email, password: infor.hash, role: clientRole});
-
-                        if(user) {
-                            clientRole.users.push(user);
-                            await clientRole.save();
-
-                            req.session.infor = {
-                                id: user._id,
-                                name: user.name,
-                                email: user.email,
-                                role: user.role.name
-                            }
-                            res.redirect("/");
-                        }
-
-                    } catch (err) {
-                        let error = new Error(err.message);
-                        error.httpStatusCode = 500;
-                        return next(error);
-
-                    }
-                })
-
-            } catch (err) {
-                let error = new Error(err.message);
-                error.httpStatusCode = 500;
-                return next(error);
-
-            }
         }
     }
 

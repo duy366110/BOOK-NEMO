@@ -31,6 +31,19 @@ class MiddlewareRole {
             return next(error);
         }
     }
+
+    async findRoleClien(req, res, next) {
+        try {
+            let roleClient = await ModelRole.findOne({name: {$eq: 'Client'}}).exec();
+            req.roleClient = roleClient;
+            next();
+
+        } catch (err) {
+            let error = new Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+    }
 }
 
 module.exports = new MiddlewareRole();

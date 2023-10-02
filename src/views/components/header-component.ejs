@@ -28,8 +28,8 @@
 
                 <ul class="col-lg-3 d-none d-lg-flex justify-content-end">
                     <% if(!infor) { %>
-                        <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
-                        <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
+                        <li><a href="/access/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
+                        <li><a href="/access/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
                     <% } else { %>
                         <li>
                             <p class="user-infor">
@@ -37,7 +37,7 @@
                                 <%= infor.email %>
                             </p>
                         </li>
-                        <li><a href="/user/signout">Đăng xuất</a></li>
+                        <li><a href="/access/signout">Đăng xuất</a></li>
                     <% } %>
                 </ul>
                 
@@ -79,10 +79,10 @@
                 <% } %>
 
                 <% if(!infor) { %>
-                    <li><a href="/user/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
-                    <li><a href="/user/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
+                    <li><a href="/access/signin" class="<%= path == 'Dang-nhap'? 'active' : '' %>">Đăng nhập</a></li>
+                    <li><a href="/access/signup" class="<%= path == 'Dang-ky'? 'active' : '' %>">Đăng ký</a></li>
                 <% } else { %>
-                    <li><a href="/user/signout">Đăng xuất</a></li>
+                    <li><a href="/access/signout">Đăng xuất</a></li>
                 <% } %>
             </ul>
         </div>

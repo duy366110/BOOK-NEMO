@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const RouterCommon = require("./router-common");
+const RouterAccess = require("./router-access");
 const RouterCart = require("../router/router-cart");
 const RouterUser = require("./router-user");
 const RouterOrder = require("./router-order");
@@ -9,6 +10,7 @@ const RouterTransaction = require("./router-transaction");
 const ControllerException = require("../controller/controller-exception");
 
 router.use('/', RouterCommon);
+router.use("/access", RouterAccess);
 router.use("/cart", RouterCart);
 router.use('/user', RouterUser);
 router.use("/order", RouterOrder);
