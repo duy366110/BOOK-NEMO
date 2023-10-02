@@ -1,6 +1,8 @@
+"use strict"
 const ModelUser = require("../model/model-user");
 const ModelProduct = require("../model/model-product");
 const { validationResult } = require("express-validator");
+const ServiceCart = require("../services/service.cart");
 
 class ControllerCart {
 
@@ -47,61 +49,29 @@ class ControllerCart {
         }
     }
 
-    // KHÁCH HÀNG THÊM SẢN PHẨM VÀO GIỎ HÀNG
-    addCart = async (req, res, next) => {
+    // USER ADD PRODUCT TO CART
+    async addCart(req, res, next) {
         try {
-            let { product} = req.body;
-            let { infor } = req.session;
             let { errors } = validationResult(req);
 
             if(errors.length) {
                 throw Error('Product token empty');
 
             } else {
-                let userInfor = await ModelUser.findOne({email: {$eq: infor.email}});
+                let { user, product } = req;
 
-                // TRƯỜNG HỢP NGƯỜI DÙNG TÀI KHOẢN CÓ TỒN TẠI
-                if(userInfor) {
-                    let productInfor = await ModelProduct.findById(product);
+                await ServiceCart.addProductToCart({model: user}, product, (information) => {
+                    let { status, message, error} = information;
 
-                    // TÀI KHOẢN ĐÃ CÓ CART VÀ SẢN PHẨM
-                    if(userInfor.cart.length) {
-                        let index = userInfor.cart.findIndex((cart) => cart.product.toString() === product);
-
-                        if(index != -1) {
-                            // SẢN PHẨM ĐÃ CÓ TRONG CART TĂNG SỐ LƯỢNG LÊN 1 - CHO MỖI LẦN MUA THÊM
-                            userInfor.cart[index].quantity = userInfor.cart[index].quantity + 1;
-
-                        } else {
-                            // THÊM SẢN PHẨM KHI SẢN PHẨM CHƯA CÓ TRONG CART
-                            productInfor.product_ref = productInfor.product_ref + 1;
-                            userInfor.cart.push({
-                                product: productInfor,
-                                quantity: 1
-                            })
-                        }
+                    if(status) {
+                        return res.redirect("/cart");
 
                     } else {
-                        // TRƯỜNG HỢP TÀI CHƯA CÓ CART VÀ SẢN PHẨM
-                        productInfor.product_ref = productInfor.product_ref + 1;
-                        userInfor.cart.push({
-                            product: productInfor,
-                            quantity: 1
-                        })
+                        let err = new Error(message);
+                        err.httpStatusCode = 500;
+                        return next(err);
                     }
-
-                    // LƯU CART NGƯỜI DÙNG
-                    await userInfor.save();
-
-                    // XÁC NHẬN SẢN PHẨM CÓ TRONG BAO NHIÊU GIỎ HÀNG VÀ HOÁ ĐƠN
-                    await productInfor.save();
-
-                    res.redirect('/cart');
-
-                } else {
-                    // TÀI KHOẢN NGƯỜI DÙNG KHÔNG TỒN TẠI
-                    res.redirect('/cart');
-                }
+                })
             }
 
         } catch (err) {
@@ -111,35 +81,28 @@ class ControllerCart {
         }
     }
 
-    // KHÁCH HÀNG XOÁ SẢN PHẨM TRONG CART
-    deleteProductInCart = async (req, res, next) => {
+    // USER REMOVE PRODUCT IN CART
+    async removeProductInCart (req, res, next) {
         try {
-            let { product } = req.body;
-            let { infor } = req.session;
             let { errors } = validationResult(req);
 
             if(errors.length) {
                 throw Error('Product token empty');
 
             } else {
-                let userInfor = await ModelUser
-                                    .findOne({email: {$eq: infor.email}})
-                                    .populate("cart.product")
-                                    .exec();
-                
-                let productInfor = userInfor.cart.find((cart) => cart.product._id.toString() === product);
-                userInfor.cart = userInfor.cart.filter((cart) => cart.product._id.toString() !== product);
+                let { user, product } = req;
+                await ServiceCart.removeProductInCart({model: user}, product, (information) => {
+                    let { status, message, error } = information;
 
-                // XOÁ HIỆN DIỆN CỦA SẢN PHẨM TRONG CÁC GIỎ HÀNG
-                if(productInfor) {
-                    if(productInfor.product.product_ref > 0) {
-                        productInfor.product.product_ref = productInfor.product.product_ref - 1;
+                    if(status) {
+                        return res.redirect("/cart");
+
+                    } else {
+                        let err = new Error(message);
+                        err.httpStatusCode = 500;
+                        return next(err);
                     }
-                    await productInfor.product.save();
-                }
-
-                await userInfor.save();
-                res.redirect("/cart");
+                })
             }
 
         } catch (err) {
@@ -149,25 +112,23 @@ class ControllerCart {
         }
     }
 
-    // KHÁCH HÀNG HUỶ CART
-    cartCancel = async (req, res, next) => {
+    // USER CANCEL CART
+    async cancelCart(req, res, next) {
         try {
-            let { infor } = req.session;
-            let { user } = req.body;
+            let { user } = req;
 
-            let userInfor = await ModelUser.findById(user).populate(['cart.product']).exec();
-            let productsInfor = userInfor.cart;
+            await ServiceCart.cancelCart({model: user}, (information) => {
+                let { status, message, error } = information;
 
-            for(let cart of productsInfor) {
-                if(cart.product.product_ref > 0) {
-                    cart.product.product_ref = cart.product.product_ref - 1;
-                    await cart.product.save();
+                if(status) {
+                    return res.redirect('/cart');
+
+                } else {
+                    let err = new Error(message);
+                    err.httpStatusCode = 500;
+                    return next(err);
                 }
-            }
-
-            userInfor.cart = [];
-            await userInfor.save();
-            res.redirect("/cart");
+            })
 
         } catch (err) {
             let error = Error(err.message);
