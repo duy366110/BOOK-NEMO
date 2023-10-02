@@ -5,15 +5,12 @@ class Bcrypt {
 
     constructor() { }
 
-    hash = (password, callback) => {
+    hash(password, callback) {
         return bcryptjs.hashSync(password, this.salt);
     }
 
-    compare = (password, hashPassword, callback) => {
-        bcryptjs.compare(password, hashPassword, (err) => {
-            if(err) callback(false);
-            callback(true);
-        })
+    compare(password, hashPassword) {
+        return bcryptjs.compareSync(password, hashPassword);
     }
 
     generes = (callback) => {

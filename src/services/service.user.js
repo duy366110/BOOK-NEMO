@@ -24,6 +24,17 @@ class ServiceUser {
         }
     }
 
+    // GET USER BY EMAIL
+    async getUserByEmail(email, cb) {
+        try {
+            let user = await ModelUser.findOne({email: {$eq: email}}).populate(['role']).lean();
+            cb({status: true, message: 'Get user by email successfully', user});
+
+        } catch (error) {
+            cb({status: false, message: 'Method fa8led', error});
+        }
+    }
+
     // CREATE USER ACCOUNT.
     async create(user = {}, role = {}, cb) {
         try {
@@ -39,7 +50,7 @@ class ServiceUser {
                 role.users.push(userInfor);
                 await role.save();
 
-                cb({status: true, message: 'Create user account successfully'});
+                cb({status: true, message: 'Create user account successfully', user: userInfor});
 
             } else {
                 cb({status: false, message: 'Create user account unsuccessfully'});
