@@ -1,8 +1,4 @@
-const ModelTransaction = require("../model/model-transaction");
-const ModelOrder = require("../model/model-order");
-const ModelUser = require("../model/model-user");
-// const paypal = require('paypal-rest-sdk');
-
+"use strict"
 const ServiceTransaction = require("../services/service.transaction");
 class ControllerTransaction {
 

@@ -10,7 +10,20 @@ class ServiceTransaction {
             let transactions = await ModelTransaction
             .find({user: {$eq: user.model._id}})
             .sort({createDate: 'desc'})
-            .populate(['user', 'collections.product'])
+            .populate([
+                'user',
+                {
+                    path: 'user',
+                    model: 'users'
+                },
+                {
+                    path: 'collections',
+                    populate: {
+                        path: 'product',
+                        model: 'products'
+                    }
+                }
+            ])
             .lean();
 
             if(transactions.length) {
@@ -35,18 +48,18 @@ class ServiceTransaction {
             let transaction  = await ModelTransaction.create({
                 user: user.model,
                 payment_id,
-                collections: user.model.order
+                collections: user.model.order.collections,
             })
 
             if(transaction) {
-                await user.model.order.deletOne();
+                await user.model.order.deleteOne();
                 user.model.order = null;
                 user.model.transactions.push(transaction);
                 await user.model.save();
                 cb({status: true, message: 'Create transaction successfully'});
 
             } else {
-
+                cb({status: false, message: 'Create transaction unsuccessfully'});
             }
 
         } catch (error) {
