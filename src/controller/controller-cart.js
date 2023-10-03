@@ -11,36 +11,40 @@ class ControllerCart {
     renderPageCart = async (req, res, next) => {
         try {
             let { infor } = req.session;
+            let { message } = req.flash();
 
-            let userInfor = await ModelUser
-            .findOne({email: {$eq: infor.email}})
-            .select(['name', 'email', 'cart'])
-            .populate('cart.product')
-            .exec();
+            await ServiceCart.getCartOfUser({id: infor.id}, (information) => {
+                let { status, message: messageInfor, user , error } = information;
 
-            if(userInfor) {
-                // TÍNH TỔNG HOÁ ĐƠN TRƯỚC KHI TRẢ VỀ KHÁCH HÀNG
-                let total = Number(userInfor.cart.reduce((acc, cart) => {
-                    acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
-                    return acc;
-                }, 0)).toFixed(3);
+                if(status) {
+                    // CACULATOR TOTAL CART
+                    let total = Number(user.cart.reduce((acc, cart) => {
+                        return acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
+                    }, 0)).toFixed(3);
 
-                userInfor.cart = userInfor.cart.map((cart) => {
-                    cart.product.price = Number(cart.product.price).toFixed(3);
-                    return cart
-                })
+                    user.cart = user.cart.map((cart) => {
+                        cart.product.price = Number(cart.product.price).toFixed(3);
+                        return cart
+                    })
 
-                res.render("pages/shop/page-cart", {
-                    title: 'Giỏ hàng',
-                    path: 'Gio-hang',
-                    infor: infor? infor : null,
-                    csurfToken: req.csrfToken(),
-                    formError: req.flash('error'),
-                    user: userInfor,
-                    total,
-                    footer: true
-                })
-            }
+                    res.render("pages/shop/page-cart", {
+                        title: 'Giỏ hàng',
+                        path: 'Gio-hang',
+                        infor: infor? infor : null,
+                        csurfToken: req.csrfToken(),
+                        formError: req.flash('error'),
+                        message: (message && message.length)? message[0] : '',
+                        user,
+                        total,
+                        footer: true
+                    })
+
+                } else {
+                    let err = new Error(messageInfor);
+                    err.httpStatusCode = 500;
+                    return next(err);
+                }
+            })
 
         } catch (err) {
             let error = Error(err.message);
@@ -63,14 +67,11 @@ class ControllerCart {
                 await ServiceCart.addProductToCart({model: user}, product, (information) => {
                     let { status, message, error} = information;
 
-                    if(status) {
-                        return res.redirect("/cart");
-
-                    } else {
-                        let err = new Error(message);
-                        err.httpStatusCode = 500;
-                        return next(err);
+                    if(!status) {
+                       req.flash('message', 'Order cart unsuccessfully');
                     }
+
+                    return res.redirect("/cart");
                 })
             }
 
@@ -94,14 +95,10 @@ class ControllerCart {
                 await ServiceCart.removeProductInCart({model: user}, product, (information) => {
                     let { status, message, error } = information;
 
-                    if(status) {
-                        return res.redirect("/cart");
-
-                    } else {
-                        let err = new Error(message);
-                        err.httpStatusCode = 500;
-                        return next(err);
+                    if(!status) {
+                        req.flash('message', 'Remove product in cart unsuccessfully');
                     }
+                    return res.redirect("/cart");
                 })
             }
 
@@ -120,14 +117,10 @@ class ControllerCart {
             await ServiceCart.cancelCart({model: user}, (information) => {
                 let { status, message, error } = information;
 
-                if(status) {
-                    return res.redirect('/cart');
-
-                } else {
-                    let err = new Error(message);
-                    err.httpStatusCode = 500;
-                    return next(err);
+                if(!status) {
+                    req.flash('message', 'Cancel cart unsuccessfully');
                 }
+                return res.redirect('/cart');
             })
 
         } catch (err) {
