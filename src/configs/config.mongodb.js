@@ -1,9 +1,9 @@
 const MONGODB_CONFIG = {
     DEV: {
-        URI: process.env.DEV_URI,
+        URI: process.env.MONGODB_DEV_URL,
     },
     PRO: {
-        URI: process.env.PRO_URI,
+        URI: process.env.MONGODB_PRO_URL,
     }
 }
 
