@@ -37,7 +37,7 @@ class MiddlewareUser {
         try {
             let { infor } = req.session;
             if(infor) {
-                let user = await ModelUser.findById(infor.id).populate(['cart.product']).exec();
+                let user = await ModelUser.findById(infor.id).populate(['cart.product','order']).exec();
                 req.user = user;
                 next();
 

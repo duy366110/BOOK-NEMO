@@ -10,7 +10,7 @@
 
         <div class="component-wrapper">
             <div class="container">
-                <% if(bill && bill.order.length ) { %>
+                <% if(order && order.collections.length ) { %>
                     <div class="table-container">
                         <table>
                             <thead>
@@ -24,37 +24,37 @@
                             </thead>
                             <tbody>
     
-                                <% bill.order.forEach((item, index) => { %>
+                                <% order.collections.forEach((orderElm, index) => { %>
                                     <tr>
                                         <td><%= index %></td>
-                                        <td><%= item.product.title %></td>
+                                        <td><%= orderElm.product.title %></td>
                                         <td>
-                                            <img class="table-product-thumbnail" src="<%= item.product.image %>" alt="Thumbnail" />
+                                            <img class="table-product-thumbnail" src="<%= orderElm.product.image %>" alt="Thumbnail" />
                                         </td>
-                                        <td><%= item.product.price %> đ</td>
-                                        <td><%= item.quantity %></td>
+                                        <td><%= orderElm.product.price %> đ</td>
+                                        <td><%= orderElm.quantity %></td>
                                     </tr>
                                 <% }) %>
     
                                 <tr>
                                     <td>Tên khách hàng</td>
-                                    <td colspan="3"><%= bill.user.name %></td>
+                                    <td colspan="3"><%= order.user.name %></td>
                                     <td rowspan="3">
                                         <div class="d-flex flex-column">
                                             <!-- HUỶ ĐƠN HÀNG -->
                                             <form action="/order/cancel" method="post">
-                                                <input type="hidden" name="order" value="<%= bill._id %>" />
+                                                <input type="hidden" name="order" value="<%= order._id %>" />
                                                 <input type="hidden" name="_csrf" value="<%= csurfToken %>" />
                                                 <button type="submit" class="btn btn-danger w-100">Huỷ đơn hàng</button>
                                             </form>
 
                                             <!-- XUẤT ĐƠN HÀNG -->
-                                            <a href="/order/invoice/<%=  bill.user._id %>" class="btn w-100">Xuất đơn hàng</a>
+                                            <a href="/order/invoice/<%=  order.user._id %>" class="btn w-100">Xuất đơn hàng</a>
 
                                             <!-- FLOW ĐI PAYMENT -->
                                             <!-- <a href="/order/payment" class="btn w-100">Thanh toán</a> -->
                                             <form action="/order/payment" method="post">
-                                                <input type="hidden" name="user" value="<%= bill.user._id %>">
+                                                <input type="hidden" name="user" value="<%= order.user._id %>">
                                                 <input type="hidden" name="_csrf" value="<%= csurfToken %>" />
                                                 <button class="btn w-100">Thanh toán</button>
                                             </form>
@@ -63,7 +63,7 @@
                                 </tr>
                                 <tr>
                                     <td>Địa chỉ E-mail</td>
-                                    <td colspan="4"><%= bill.email %></td>
+                                    <td colspan="4"><%= order.user.email %></td>
                                 </tr>
                                 <tr>
                                     <td>Tổng hoá đơn</td>
