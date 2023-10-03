@@ -32,9 +32,11 @@ class ControllerCart {
                 product.ref++;
             }
 
-            product.quantity--;
-            await product.save();
+            if(product.quantity) {
+                product.quantity--;
+            }
 
+            await product.save();
             await user.model.save();
             cb({status: true, message: 'Add product to cart successfully'});
 
@@ -50,7 +52,9 @@ class ControllerCart {
             for(let cartInfor of user.model.cart) {
                 if(cartInfor.product._id.toString() === product._id.toString()) {
                     product.quantity += cartInfor.quantity;
-                    product.ref--;
+                    if(product.ref) {
+                        product.ref--;
+                    }
                     await product.save();
                     break;
                 }
@@ -72,7 +76,10 @@ class ControllerCart {
 
             user.model.cart = user.model.cart.forEach( async(cartInfor) => {
                 cartInfor.product.quantity += cartInfor.quantity;
-                cartInfor.product.ref--;
+                if(cartInfor.product.ref) {
+                    cartInfor.product.ref--;
+                }
+                
                 await cartInfor.product.save();
             })
 

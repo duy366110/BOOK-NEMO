@@ -10,7 +10,7 @@
 
         <div class="component-wrapper">
             <div class="container">
-                <% if(transactions) { %>
+                <% if(transactions.length > 0) { %>
 
                     <% transactions.forEach((transaction) => { %> 
                         <div class="table-container mb-5">
@@ -25,13 +25,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <% transaction.order.forEach((order, index) => { %> 
+                                    <% transaction.collections.forEach((elm, index) => { %> 
                                     <tr>
                                         <td><%= index %></td>
-                                        <td><%= order.product.title %></td>
+                                        <td><%= elm.product.title %></td>
                                         
-                                        <td><%= order.product.price %> đ</td>
-                                        <td><%= order.quantity %></td>                                
+                                        <td><%= elm.product.price %> đ</td>
+                                        <td><%= elm.quantity %></td>                                
                                     </tr>
                                     <% }) %>
 
@@ -39,7 +39,7 @@
                                         <td class="t-highlights">Mã giao dịch</td>
                                         <td><%= transaction.payment_id %></td>
                                         <td class="t-highlights">Thời gian</td>
-                                        <td><%= transaction.paymentDate %></td>
+                                        <td><%= transaction.createDate %></td>
                                     </tr>
                                     <tr>
                                         <td class="t-highlights">Họ và tên</td>
