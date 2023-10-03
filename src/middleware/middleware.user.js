@@ -40,11 +40,21 @@ class MiddlewareUser {
                 let user = await ModelUser
                             .findById(infor.id)
                             .populate([
-                                'cart.product',
+                                {
+                                    path: 'cart',
+                                    populate: {
+                                        path: 'product',
+                                        model: 'products'
+                                    }
+                                },
                                 {
                                     path: 'order',
                                     populate: {
-                                        path: 'collections.product'
+                                        path: 'collections',
+                                        populate: {
+                                            path: 'product',
+                                            model: 'products'
+                                        }
                                     }
                                 }
                             ])

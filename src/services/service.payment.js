@@ -53,7 +53,7 @@ class ServicePayment {
                     for(let link of payment.links ) {
                         if(link.rel === 'approval_url') {
                             cb({status: true, message: 'User payment order product successfully', link: link.href});
-                            return;
+                            break
                         }
                     }
                 }

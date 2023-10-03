@@ -43,7 +43,6 @@ class MiddlewareProduct {
             next();
 
         } catch (err) {
-            console.log(err);
             let error = new Error(err.message);
             error.httpStatusCode = 500;
             return next(error);
