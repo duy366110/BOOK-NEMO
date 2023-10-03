@@ -1,3 +1,4 @@
+"use strict"
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -11,11 +12,11 @@ const ModelTransaction = new Schema({
         type: String,
         default: ''
     },
-    paymentDate: {
+    createDate: {
         type: Date,
-        default: new Date().toISOString()
+        default: Date.now
     },
-    order: [
+    collections: [
         {
             product: {
                 type: Schema.Types.ObjectId,
