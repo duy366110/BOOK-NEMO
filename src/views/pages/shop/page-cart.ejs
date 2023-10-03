@@ -55,7 +55,7 @@
                                         </form>
 
                                         <!-- FLOW ĐI ORDER -->
-                                        <form action="/order/add" method="post">
+                                        <form action="/order" method="post">
                                             <input type="hidden" name="user" value="<%= user._id %>"/>
                                             <input type="hidden" name="_csrf" value="<%= csurfToken %>">
                                             <button type="submit" class="btn w-100">Đặt hàng</button>

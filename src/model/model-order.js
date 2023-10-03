@@ -7,11 +7,15 @@ const ModelOrder = new Schema({
         required: true,
         ref: 'users'
     },
-    email: {
-        type: String,
-        default: ''
+    createDate: {
+        type: Date,
+        default: Date.now
     },
-    order: [
+    updateDate: {
+        type: Date,
+        default: Date.now
+    },
+    collections: [
         {
             product: {
                 type: Schema.Types.ObjectId,

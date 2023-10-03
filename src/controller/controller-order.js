@@ -1,3 +1,4 @@
+"use strict"
 const mongodb = require("mongodb");
 const ModelOrder = require("../model/model-order");
 const ModelUser = require("../model/model-user");
@@ -7,6 +8,8 @@ const fs = require('fs');
 const ObjectId = mongodb.ObjectId;
 const paypal = require("paypal-rest-sdk");
 
+const ServiceOrder = require("../services/service.order");;
+
 
 const CONFIG_PAYPAL = require("../configs/config.paypal");
 
@@ -14,46 +17,49 @@ class ControllerOrder {
 
     constructor() { }
 
-    // RENDER THÔNG TIN ĐƠN HÀNG CỦA KHÁCH HÀNG
+    // RENDER PAGE ORDER OF USER
     renderPageOrder = async(req, res, next) => {
         try {
-            let { infor }= req.session;
+            let { infor } = req.session;
 
-            try {
-                let total = 0;
-                let orderInfor = await ModelOrder
-                .findOne({email: {$eq: infor.email}})
-                .populate('user')
-                .populate('order.product')
-                .exec();
+            if(infor && infor.id) {
+                await ServiceOrder.getOrderById({id: infor.id}, (information) => {
+                    let total = 0;
+                    let { status, message, order, error } = information;
 
-                if(orderInfor) {
-                    total = Number(orderInfor.order.reduce((acc, order) => {
-                        acc += parseFloat(order.quantity) * parseFloat(order.product.price);
-                        return acc;
-                    }, 0)).toFixed(3);
+                    if(status) {
+                        if(order) {
+                            total = Number(order.collections.reduce((acc, orderElm) => {
+                                acc += parseFloat(orderElm.quantity) * parseFloat(orderElm.product.price);
+                                return acc;
+                            }, 0)).toFixed(3);
 
-                    orderInfor.order.map((order) => {
-                        order.product.price = Number(order.product.price).toFixed(3);
-                        return order;
-                    })
-                }
-                
-                res.render("pages/shop/page-order", {
-                    title: 'Đơn hàng',
-                    path: 'Don-hang',
-                    infor: infor? infor : null,
-                    csurfToken: req.csrfToken(),
-                    formError: req.flash('error'),
-                    bill: orderInfor? orderInfor : null,
-                    total: total,
-                    footer: true
+                            order.collections.map((orderElm) => {
+                                orderElm.product.price = Number(orderElm.product.price).toFixed(3);
+                                return orderElm;
+                            })
+                        }
+
+                        res.render("pages/shop/page-order", {
+                            title: 'Đơn hàng',
+                            path: 'Don-hang',
+                            infor: infor? infor : null,
+                            csurfToken: req.csrfToken(),
+                            formError: req.flash('error'),
+                            order: order? order : null,
+                            total: total,
+                            footer: true
+                        })
+
+                    } else {
+                        let err = new Error(message);
+                        err.httStatusCode = 500;
+                        return next(err);
+                    }
                 })
 
-            } catch (err) {
-                let error = Error(err.message);
-                error.httpStatusCode = 500;
-                return next(error);
+            } else {
+                return res.redirect("/access/signin");
             }
 
         } catch (err) {
@@ -147,38 +153,23 @@ class ControllerOrder {
         }
     }
 
-    // KHÁCH HÀNG THÊM GIỎ HÀNG VÀO HOÁ ĐƠN
-    addOrder = async (req, res, next) => {
+    // USER ORDER
+    async order(req, res, next) {
         try {
-            let { user }= req.body;
+            let { user } = req;
 
             if(user) {
-                let userInfor = await ModelUser.findById(user).populate(['cart.product', 'order']).exec();
-                let orderInfor = userInfor.order;
-
-                if(orderInfor) {
-                    // THÊM CART VÀO ORDER HIỆN CÓ
-                    orderInfor.order.push(...userInfor.cart);
-                    await orderInfor.save();
-                    userInfor.cart = [];
+            await ServiceOrder.order({model: user}, (information) => {
+                let { status, message, error } = information;
+                if(status) {
+                    return res.redirect("/order");
 
                 } else {
-                    // THỰC HIỆN TẠO ORDER
-                    let statusCreateOrder = await ModelOrder.create({
-                        user: userInfor,
-                        email: userInfor.email,
-                        order: userInfor.cart
-                    });
-
-                    if(statusCreateOrder) {
-                        userInfor.cart = [];
-                        // TẠO LIÊN KẾT GIỮA ORDER VÀ TÀI KHOẢN
-                        userInfor.order = statusCreateOrder;
-                    }
+                    return res.redirect("/cart");
                 }
-
-                await userInfor.save();
-                res.redirect("/order");
+            })
+            } else {
+                return res.redirect("/access/signin");
             }
 
         } catch (err) {

@@ -1,15 +1,20 @@
+"use strict"
 const router = require('express').Router();
 const MiddlewarePermission = require("../middleware/middleware.permission");
+const MiddlewareUser = require("../middleware/middleware.user");
 const ControllerOrder = require("../controller/controller-order");
 
-// RENDER TRANG ĐƠN HÀNG CỦA KHÁCH HÀNG
+// RENDER PAGE ORDER OF USER
 router.get('/', MiddlewarePermission.userExists, ControllerOrder.renderPageOrder);
 
 // KHÁCH HÀNG RENDER HOÁ ĐƠN
 router.get("/invoice/:user", MiddlewarePermission.userExists, ControllerOrder.renderInvoice);
 
-// KHÁCH HÀNG THÊM GIỎ HÀNG VÀO THANH TOÁN
-router.post('/add', MiddlewarePermission.userExists, ControllerOrder.addOrder);
+// USER ORDER
+router.post('/',
+MiddlewarePermission.userExists,
+MiddlewareUser.findUserBySession,
+ControllerOrder.order);
 
 // KHÁCH HÀNG HUỶ ĐƠN HÀNG
 router.post('/cancel', MiddlewarePermission.userExists, ControllerOrder.orderCancel);
