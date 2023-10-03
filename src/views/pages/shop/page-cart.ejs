@@ -7,6 +7,7 @@
     <main>
         <%- include("../../components/header-component") %>
         <%- include("../../components/breadcrumb-component") %>
+        <% if(message && message.length) {%><h2 class="page-mesage"><%= message %></h2> <% } %>
         <div class="component-wrapper">
             <div class="container">
                 <% if(user && user.cart.length ) { %>

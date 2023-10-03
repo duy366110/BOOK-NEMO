@@ -5,6 +5,31 @@ class ControllerCart {
 
     constructor() { }
 
+    // GET USER CART
+    async getCartOfUser(user = {}, cb) {
+        try {
+            let userInfor = await ModelUser
+            .findById(user.id)
+            .select(['name', 'email', 'cart'])
+            .populate([
+                {
+                    path: 'cart',
+                    populate: {
+                        path: 'product',
+                        model: 'products'
+                    }
+                }
+            ])
+            .lean();
+
+            cb({status: true, message: 'Get user cart successfully', user: userInfor});
+
+        } catch (error) {
+            // METHOD FAILED
+            cb({status: false, message: 'Method failed', error});
+        }
+    }
+
     // ADD PRODUCT TO CART
     async addProductToCart(user = {}, product = {}, cb) {
         try {
