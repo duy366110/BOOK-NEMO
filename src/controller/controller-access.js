@@ -10,20 +10,16 @@ class ControllerAccess {
     // RENDER PAGE USER SIGNUP ACCOUNT
     renderUserSignup (req, res, next) {
         let { infor } = req.session;
+        let { message } = req.flash();
 
         res.render("pages/auth/page-auth-signup", {
             title: 'Đăng nhập',
             path: "Dang-ky",
             infor: infor? infor : null,
             csurfToken: req.csrfToken(),
-            formError: req.flash('form-error'),
+            message: (message && message.length)? message[0] : '',
             inputsErrors: [],
-            formField: {
-                user_name: '',
-                email: '',
-                password: '',
-                password_confirm: ''
-            },
+            formField: { user_name: '', email: '', password: '', password_confirm: '' },
             footer: false
         })
     }
@@ -31,18 +27,16 @@ class ControllerAccess {
     // RENDER PAGE SIGNIN ACCOUNT.
     renderUserSignin (req, res, next) {
         let { infor } = req.session;
+        let { message } = req.flash();
 
         res.render("pages/auth/page-auth-signin", {
             title: 'Đăng ký',
             path: "Dang-nhap",
             infor: infor? infor : null,
             csurfToken: req.csrfToken(),
+            message: (message && message.length)? message[0] : '',
             inputsErrors: [],
-            formField: {
-                email: '',
-                password: ''
-            },
-            message: '',
+            formField: {email: '', password: ''},
             footer: false
         })
     }
@@ -59,7 +53,7 @@ class ControllerAccess {
                 path: "Dang-ky",
                 infor: infor? infor : null,
                 csurfToken: req.csrfToken(),
-                formError: req.flash('form-error'),
+                message: '',
                 inputsErrors: errors,
                 formField: { user_name, email, password, password_confirm },
                 footer: false
@@ -109,6 +103,7 @@ class ControllerAccess {
                 path: "Dang-nhap",
                 infor: infor? infor : null,
                 csurfToken: req.csrfToken(),
+                message: '',
                 inputsErrors: errors,
                 formField: { email, password },
                 message: '',
@@ -139,9 +134,9 @@ class ControllerAccess {
                                     path: "Dang-nhap",
                                     infor: infor? infor : null,
                                     csurfToken: req.csrfToken(),
+                                    message: 'E-mail hoặc mật khẩu không hợp lệ',
                                     inputsErrors: [],
                                     formField: { email, password },
-                                    message: 'Email or password incorrect',
                                     footer: false
                                 })
                             }
@@ -149,8 +144,8 @@ class ControllerAccess {
                         })
 
                     } else {
-                        req.flash('form-error', "Tài khoản chưa đăng ký");
-                        res.redirect("/user/signup");
+                        req.flash('message', "Tài khoản chưa đăng ký");
+                        res.redirect("/access/signup");
                     }
                 })
                 
@@ -166,7 +161,7 @@ class ControllerAccess {
     async signout(req, res, next) {
         req.session.destroy((err) => {
             if(err) {
-                let error = Error('Logout failed');
+                let error = Error('Đăng xuất không thành công');
                 error.httpStatusCode = 500;
                 return next(error);
 

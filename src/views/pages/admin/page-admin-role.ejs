@@ -18,9 +18,7 @@
                     <a class="btn" href="/role/new">Thêm phân quyền</a>
                 </div>
 
-                <% if(pageMessage) {%>
-                    <h2 class="page-mesage"><%= pageMessage %></h2>
-                <% } %>
+                <% if(message && message.length) {%><h2 class="page-mesage"><%= message %></h2> <% } %>
 
                 <div class="table-container">
                     <% if(roles && roles?.length) { %>

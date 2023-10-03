@@ -9,9 +9,8 @@
             <div class="container">
                 <form class="form-container" action="/access/signin" method="post" novalidate>
                     <h2 class="form-title">Đăng nhập</h2>
-                    <% if(message) { %>
-                        <h3 class="form-message"><%= message %></h3>
-                    <% } %>
+                    <% if(message.length) { %><h3 class="form-message"><%= message %></h3><% } %>
+                    
                     <div class="form-group">
                         <label class="form-label" for="email">E-mail</label>
                         <input

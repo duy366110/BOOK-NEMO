@@ -6,7 +6,12 @@
 
 /* PAGE MESSAGE */
 .page-mesage {
+    color: #f9911b;
+    background-color: #0361a917;
+    font-size: 17px;
     margin-bottom: 15px;
+    padding: 10px;
+    text-align: center;
 }
 
 /* BLANK MESSAGE */

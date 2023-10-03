@@ -16,8 +16,9 @@ class ControllerUser {
             let { infor } = req.session;
             let { page } = req.params;
             let { paginations } = req;
+            let { message } = req.flash();
 
-            // KIỂM TRA SỐ LƯỢNG TRANG CÓ LỚN HƠN 1
+            // CHECK AMOUNT ITEMS IN PAGE
             if(paginations.length) {
                 page = utilpagination.methodPagination(page, paginations);
             }
@@ -26,7 +27,7 @@ class ControllerUser {
             let skip = (environment.pagination.user.quantityItemOfPage * page);
 
             await ServiceUser.getUsers(limit, skip, (information) => {
-                let { status, message, users, error } = information;
+                let { status, message: messageInfor, users, error } = information;
 
                 if(status) {
                     res.render('pages/admin/page-admin-user', {
@@ -35,6 +36,7 @@ class ControllerUser {
                         title: 'Quản trị người dùng',
                         path: 'Quan-tri',
                         infor,
+                        message: (message && message.length)? message[0] : '',
                         users,
                         paginations,
                         csurfToken: req.csrfToken(),
@@ -53,7 +55,8 @@ class ControllerUser {
     async renderNewAccount (req, res, next) {
         try {
             let { infor } = req.session;
-            let roles = await ModelRole.find({}).select('name');
+            let { message } = req.flash();
+            let roles = await ModelRole.find({}).select('name').lean();
 
             res.render("pages/admin/user/page-admin-new-user", {
                 title: 'Tạo tài khoản',
@@ -69,6 +72,7 @@ class ControllerUser {
                     password_confirm: '',
                     role: ''
                 },
+                message: (message && message.length)? message[0] : '',
                 footer: false
             })
 
@@ -84,6 +88,7 @@ class ControllerUser {
     async renderEditAccount (req, res, next) {
         try {
             let { infor } = req.session;
+            let { message } = req.flash();
             let { user } = req;
 
             let roles = await ModelRole.find({}).select('name').lean();
@@ -99,8 +104,9 @@ class ControllerUser {
                     id: user._id,
                     user_name: user.name,
                     email: user.email,
-                    role: user?.role? user.role._id : null,
+                    role: user.role? user.role._id : null,
                 },
+                message: (message && message.length)? message[0] : '',
                 footer: false
             })
 
@@ -127,6 +133,7 @@ class ControllerUser {
                 inputsErrors: errors,
                 roles,
                 formField: { user_name, email, password, password_confirm, role },
+                message: '',
                 footer: false
             })
 
@@ -141,9 +148,8 @@ class ControllerUser {
                         return res.redirect("/user/admin/0");
 
                     } else {
-                        let err = new Error(message);
-                        err.httpStatusCode = 500;
-                        return next(err);
+                        req.flash('message', 'Tạo mới tài khoản không thành công');
+                        return res.redirect("/user/admin/0");
                     }
                 })
 
@@ -172,6 +178,7 @@ class ControllerUser {
                 inputsErrors: errors,
                 roles,
                 formField: { user, user_name, email, role },
+                message: '',
                 footer: false
             })
 
@@ -183,12 +190,11 @@ class ControllerUser {
                     let { status, message, error } = information;
 
                     if(status) {
-                        res.redirect("/user/admin/0");
+                        return res.redirect("/user/admin/0");
 
                     } else {
-                        let err = Error(message);
-                        err.httpStatusCode = 500;
-                        return next(err);
+                        req.flash('message', 'Cập nhật tài khoản không thành công');
+                        return res.redirect("/user/admin/0");
                     }
                 })
 
@@ -212,9 +218,8 @@ class ControllerUser {
                     res.redirect("/user/admin/0");
 
                 } else {
-                    let err = new Error(message);
-                    err.httpStatusCode = 500;
-                    return next(err);
+                    req.flash('message', 'Xoá tài khoản không thành công');
+                    return res.redirect("/user/admin/0");
                 }
             })
 
