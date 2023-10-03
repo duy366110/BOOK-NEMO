@@ -11,6 +11,7 @@ class MiddlewarePermission {
             next();
 
         } else {
+            req.flash('message', 'Vui longd đăng nhập!');
             res.redirect("/access/signin");
         }
     }
@@ -24,6 +25,7 @@ class MiddlewarePermission {
             next();
 
         } else {
+            req.flash('message', 'Vui longd đăng nhập!');
             res.redirect("/access/signin");
         }
     }

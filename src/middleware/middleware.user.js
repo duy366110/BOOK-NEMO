@@ -64,6 +64,7 @@ class MiddlewareUser {
                 next();
 
             } else {
+                req.flash('message', 'Vui longd đăng nhập!');
                 res.redirect('/access/signin');
             }
 
