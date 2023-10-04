@@ -1,3 +1,6 @@
+"use strict"
+require('dotenv').config();
+
 const CLOUDINARY_CONFIG = {
     DEV: {
         DIRECTORY: process.env.DEV_CLOUDINARY_DIRECTORY,
