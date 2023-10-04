@@ -1,13 +1,11 @@
 "use strict"
-const ModelUser = require("../model/model-user");
-const ModelProduct = require("../model/model-product");
 const { validationResult } = require("express-validator");
 const ServiceCart = require("../services/service.cart");
 
 class ControllerCart {
 
     constructor() { }
-    // KHÁCH HÀNG TRUY CẬP VÀO TRANG GIỎ HÀNG
+    // RENDER USER CART PAGE
     renderPageCart = async (req, res, next) => {
         try {
             let { infor } = req.session;
