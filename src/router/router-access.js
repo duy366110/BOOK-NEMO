@@ -44,7 +44,9 @@ router.post('/signup',
         if(value !== req.body.password) throw new Error('Password confirm not match password')
         return true;
     })
-], MiddlewareRole.findRoleClien, ControllerAccess.signup);
+],
+MiddlewareRole.findRoleClien,
+ControllerAccess.signup);
 
 // SIGNIN
 router.post("/signin",

@@ -8,17 +8,18 @@ const MiddlewareRole = require("../middleware/middleware.role");
 const MiddlewareUser = require("../middleware/middleware.user");
 const ControllerUser = require("../controller/controller-user");
 
-// RENDER TRANG QUẢN TRỊ TÀI KHOẢN
+//RENDER PAGE USERS
 router.get("/admin/:page", MiddlewarePermission.permission, MiddlewareAmount.getAmountUser, ControllerUser.renderPageAdminUser);
 
-// RENDER TRANG THÊM MỚI TÀI KHOẢN
+//RENDER PAGE NEW USER
 router.get('/new', MiddlewarePermission.permission, ControllerUser.renderNewAccount);
 
-// RENDER TRANG CẬP NHẬT THÔNG TIN TÀI KHOẢN
+//RENDER PAGE UPDATE USER
 router.get('/edit', MiddlewarePermission.permission, MiddlewareUser.findUserByQueryParams, ControllerUser.renderEditAccount);
 
-// ADMIN TẠO MỚI THÔNG TIN ACCOUNT
-router.post("/new", MiddlewarePermission.permission,
+//NEW USER
+router.post("/new",
+MiddlewarePermission.permission,
 [
     body('user_name').notEmpty().withMessage('User name not be empty'),
     body('email').custom(async (value, {req}) => {
@@ -57,8 +58,9 @@ MiddlewareRole.findRoles,
 ControllerUser.create);
 
 
-// ADMIN SỮA THÔNG TIN TÀI KHOẢN
-router.post('/edit', MiddlewarePermission.permission,
+//UPDATE USER
+router.post('/edit',
+MiddlewarePermission.permission,
 [
     body('user_name').notEmpty().withMessage('User name not be empty'),
     body('email').custom(async (value, {req}) => {
@@ -80,7 +82,7 @@ MiddlewareUser.findUserById,
 ControllerUser.update);
 
 
-// ADMIN XOÁ THÔNG TIN ACCOUNT
+//DELETE USER
 router.post('/delete', MiddlewarePermission.permission,
 [
     body('user').notEmpty().withMessage('User ID not empty'),

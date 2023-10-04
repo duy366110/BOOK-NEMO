@@ -8,7 +8,7 @@ class ServiceProduct {
     constructor() { }
 
     // GET PRODUCTS
-    async getProducts(limit, skip, cb) {
+    async getProducts(limit = 40, skip = 0, cb) {
         try {
             let products = await ModelProduct.find({}).limit(limit).skip(skip).sort({createDate: 'desc'}).lean();
             products = products.map((product) => {

@@ -6,13 +6,14 @@ const MiddlewareUser = require("../middleware/middleware.user");
 const ControllerCart = require("../controller/controller-cart");
 
 // RENDER USER CART
-router.get("/", MiddlewarePermission.userExists, ControllerCart.renderPageCart);
+router.get("/",
+MiddlewarePermission.userExists,
+ControllerCart.renderPageCart);
 
 // USER ADD PRODUCT TO CART
 router.post('/add', MiddlewarePermission.userExists,
 [
     body('product').notEmpty().withMessage('Product token not empty'),
-
 ],
 MiddlewareUser.findUserBySession,
 MiddlewareProduct.findProductById,
@@ -28,6 +29,9 @@ MiddlewareProduct.findProductById,
 ControllerCart.removeProductInCart);
 
 // USER CANCEL CART
-router.post("/cancel", MiddlewarePermission.userExists, MiddlewareUser.findUserBySession, ControllerCart.cancelCart);
+router.post("/cancel",
+MiddlewarePermission.userExists,
+MiddlewareUser.findUserBySession,
+ControllerCart.cancelCart);
 
 module.exports = router;
