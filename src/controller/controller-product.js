@@ -8,14 +8,14 @@ class ControllerProduct {
 
     constructor() { }
 
-    // RENDER TRANG QUẢN LÝ SẢN PHẨM
+    // RENDER PAGE PRODUCT
     async renderPageAdminProduct(req, res, next) {
         try {
             let { infor } = req.session;
             let { page } = req.params;
             let { paginations } = req;   
 
-            // KIỂM TRA SỐ LƯỢNG TRANG CÓ LỚN HƠN 1
+            // CHECK AMOUNT PAGINATION PAGE
             if(paginations.length) {
                 page = utilpagination.methodPagination(page, paginations);
             }
@@ -46,7 +46,7 @@ class ControllerProduct {
         }
     }
 
-    // RENDER TRÀN CHI TIẾT SẢN PHẨM
+    // RENDER PAGE DETAIL PRODUCT
     async renderPageProductDetail(req, res, next) {
         try {
             let { infor } = req.session;
@@ -74,7 +74,7 @@ class ControllerProduct {
         }
     }
 
-    // RENDER TRANG THÊM MỚI SẢN PHẨM
+    // RENDER PAGE NEW PRODUCT
     renderPageNewProduct = (req, res, next) => {
         let { infor } = req.session;
 
@@ -95,7 +95,7 @@ class ControllerProduct {
         })
     }
 
-    // RENDER TRANG CẬP NHẬT THÔNG TIN SẢN PHẨM
+    // RENDER PAGE EDIT PRODUCT
     renderPageEditProduct = async (req, res, next) => {
         try {
             let { infor } = req.session;
@@ -124,7 +124,7 @@ class ControllerProduct {
         }
     }
 
-    // ADMIN CREATE SẢN PHẨM
+    // CREATE PRODUCT
     async createProduct(req, res, next) {
         let { title, price, quantity, description} = req.body;
         let { file } = req;
@@ -182,7 +182,7 @@ class ControllerProduct {
         }
     }
 
-    // ADIM CAP NHAT THONG TIN SAN PHAM
+    // UPDATE PRODUCT
     async update(req, res, next) {
         try {
             let { product, title, image, price, quantity, description} = req.body;
@@ -208,7 +208,7 @@ class ControllerProduct {
                 let productInfor = {
                     model: product,
                     title,
-                    image: file.path? file.path : '',
+                    image: (file && file.path)? file.path : '',
                     price: Number(price).toFixed(3),
                     quantity,
                     description
@@ -230,7 +230,7 @@ class ControllerProduct {
 
     }
 
-    // ADMIN XOÁ SẢN PHẨM
+    // REMOVE PRODUCT
     async delete (req, res, next) {
         try {
             let { product } = req;

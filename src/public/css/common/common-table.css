@@ -19,6 +19,11 @@
     gap: 10px;
 }
 
+.table tbody tr td img {
+    height: 125px;
+    width: 85px;
+}
+
 @media screen and (min-width: 320px) {
     .table {
         width: calc(100% + 250px);
