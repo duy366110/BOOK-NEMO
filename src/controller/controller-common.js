@@ -5,7 +5,7 @@ class ControllerCommon {
 
     constructor() { }
 
-    //  RENDER TRANG CHỦ
+    //  RENDER HOME PAGE
     renderPageHome = async (req, res, next) => {
         
         try {
@@ -34,14 +34,14 @@ class ControllerCommon {
         }
     }
 
-    // RENDER TRANG SẢN PHẨM
+    // RENDER PRODUCT PAGE
     renderPageProducts = async(req, res, next) => {
         try {
             let { infor } = req.session;
             let { page } = req.params;
             let { paginations } = req;   
 
-            // KIỂM TRA SỐ LƯỢNG TRANG CÓ LỚN HƠN 1
+            // CHECK AMOUNT PAGINATION
             if(paginations.length) {
                 page = utilpagination.methodPagination(page, paginations);
             }
