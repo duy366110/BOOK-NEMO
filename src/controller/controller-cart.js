@@ -38,8 +38,6 @@ class ControllerCart {
                     })
 
                 } else {
-                    console.log(error);
-                    
                     let err = new Error(messageInfor);
                     err.httpStatusCode = 500;
                     return next(err);
@@ -47,8 +45,6 @@ class ControllerCart {
             })
 
         } catch (err) {
-            console.log(err);
-
             let error = Error(err.message);
             error.httpStatusCode = 500;
             return next(error);
