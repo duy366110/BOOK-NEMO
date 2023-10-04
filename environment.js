@@ -1,3 +1,5 @@
+"use strict"
+
 const environmet = {
     pagination: {
         quantityItemOfPage: 25,
@@ -9,6 +11,12 @@ const environmet = {
         },
         product: {
             quantityItemOfPage: 25
+        }
+    },
+    page: {
+        home: {
+            limit: 40,
+            skip: 0
         }
     }
 }

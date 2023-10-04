@@ -1,9 +1,9 @@
 "use strict"
 const { validationResult } = require("express-validator");
 const utilpagination = require("../utils/util-pagination");
+const ServiceProduct = require("../services/service.product");
 const environment = require("../../environment");
 
-const ServiceProduct = require("../services/service.product");
 class ControllerProduct {
 
     constructor() { }
@@ -37,34 +37,6 @@ class ControllerProduct {
                     });
 
                  }
-            })
-
-        } catch (err) {
-            let error = Error(err.message);
-            error.httpStatusCode = 500;
-            return next(error);
-        }
-    }
-
-    // RENDER PAGE DETAIL PRODUCT
-    async renderPageProductDetail(req, res, next) {
-        try {
-            let { infor } = req.session;
-            let { product } = req.params;
-
-            await ServiceProduct.getById(product, (information) => {
-                let { status, message, product, error } = information;
-
-                if(status) {
-                    res.render('pages/shop/page-product-detail', {
-                        title: 'Chi tiết sản phẩm',
-                        path: 'Chi-tiet-san-pham',
-                        csurfToken: req.csrfToken(),
-                        infor,
-                        product,               
-                        footer: true
-                    });
-                }
             })
 
         } catch (err) {

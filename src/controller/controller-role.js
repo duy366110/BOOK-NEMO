@@ -1,6 +1,5 @@
 "use strict"
 const { validationResult } = require('express-validator');
-const ModelRole = require("../model/model-roles");
 const utilpagination =require("../utils/util-pagination");
 const ServiceRole = require("../services/service.role");
 const environment = require("../../environment");

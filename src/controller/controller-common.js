@@ -1,30 +1,34 @@
-const ModelProduct = require("../model/model-product");
+"use strict"
 const environment = require("../../environment");
 const utilpagination = require("../utils/util-pagination");
+const ServiceProduct = require("../services/service.product");
 class ControllerCommon {
 
     constructor() { }
 
     //  RENDER HOME PAGE
-    renderPageHome = async (req, res, next) => {
-        
+    async renderPageHome (req, res, next) {
         try {
             let { infor } = req.session;
-            let products = await ModelProduct.find({}).limit(35).skip(0).exec();
+            await ServiceProduct.getProducts(environment.page.limit, environment.page.skip, (information) => {
+                let { status, message, products, error } = information;
 
-            products = products.map((product) => {
-                product.price = Number(product.price).toFixed(3);
-                return product;
+                if(status) {
+                    res.render('pages/shop/page-home', {
+                        title: 'Trang chủ',
+                        path: 'Trang-chu',
+                        products,
+                        infor: infor? infor : null,
+                        csurfToken: req.csrfToken(),
+                        footer: true
+                    });
+
+                } else {
+                    let err= new Error(message);
+                    er.httpStatusCode = 500;
+                    return next(err);
+                }
             })
-
-            res.render('pages/shop/page-home', {
-                title: 'Trang chủ',
-                path: 'Trang-chu',
-                products,
-                infor: infor? infor : null,
-                csurfToken: req.csrfToken(),
-                footer: true
-            });
 
         } catch (err) {
             let error = Error(err.message);
@@ -46,30 +50,59 @@ class ControllerCommon {
                 page = utilpagination.methodPagination(page, paginations);
             }
 
-            // THỰC HIỆN LẤY SẢN THEO YÊU VỀ SỐ LƯỢNG
-            let products = await ModelProduct.find({})
-            .limit(environment.pagination.quantityItemOfPage)
-            .skip(environment.pagination.quantityItemOfPage * page)
-            .exec();
+            let limit = environment.pagination.quantityItemOfPage;
+            let skip = (environment.pagination.quantityItemOfPage * page);
 
-            // FORMAT GIÁ SẢN PHẨM
-            products = products.map((product) => {
-                product.price = Number(product.price).toFixed(3);
-                return product;
+            await ServiceProduct.getProducts(limit, skip, (information) => {
+                let { status, message, products, error } = information;
+
+                if(status) {
+                    res.render('pages/shop/page-product', {
+                        currentPage: Number(page),
+                        link: '/products',
+                        title: 'Sản phẩm',
+                        path: 'San-pham',
+                        products,
+                        infor: infor? infor : null,
+                        csurfToken: req.csrfToken(),
+                        paginations, 
+                        footer: true
+                    });
+
+                } else {
+                    let err = new Error(message);
+                    err.httpStatusCode = 500;
+                    return next(err);
+                }
             })
+            
+        } catch (err) {
+            let error = Error(err.message);
+            error.httpStatusCode = 500;
+            return next(error);
+        }
+    }
 
-            // RENDER TRANG SẢN PHẨM PHÍA NGƯỜI DÙNG
-            res.render('pages/shop/page-product', {
-                currentPage: Number(page),
-                link: '/products',
-                title: 'Sản phẩm',
-                path: 'San-pham',
-                products,
-                infor: infor? infor : null,
-                csurfToken: req.csrfToken(),
-                paginations, 
-                footer: true
-            });
+    // RENDER PAGE DETAIL PRODUCT
+    async renderPageProductDetail(req, res, next) {
+        try {
+            let { infor } = req.session;
+            let { product } = req.params;
+
+            await ServiceProduct.getById(product, (information) => {
+                let { status, message, product, error } = information;
+
+                if(status) {
+                    res.render('pages/shop/page-product-detail', {
+                        title: 'Chi tiết sản phẩm',
+                        path: 'Chi-tiet-san-pham',
+                        csurfToken: req.csrfToken(),
+                        infor,
+                        product,               
+                        footer: true
+                    });
+                }
+            })
 
         } catch (err) {
             let error = Error(err.message);
@@ -78,17 +111,24 @@ class ControllerCommon {
         }
     }
 
-    // RENDER TRANG GIỚI THIỆU
+    // RENDER INTRODUCTION PAGE
     renderPageIntroduction = async (req, res, next) => {
-        let { infor } = req.session;
+        try {
+            let { infor } = req.session;
 
-        res.render("pages/shop/page-introduction", {
-            title: 'Giới thiệu',
-            path: 'Gioi-thieu',
-            infor: infor? infor : null,
-            csurfToken: req.csrfToken(),
-            footer: true
-        });
+            res.render("pages/shop/page-introduction", {
+                title: 'Giới thiệu',
+                path: 'Gioi-thieu',
+                infor: infor? infor : null,
+                csurfToken: req.csrfToken(),
+                footer: true
+            });
+
+        } catch(error) {
+            let err = new Error(error.message);
+            err.httpStatusCode = 500;
+            return next(err);
+        }
     }
 }
 

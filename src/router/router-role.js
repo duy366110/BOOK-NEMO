@@ -9,20 +9,21 @@ const ControllerRole = require("../controller/controller-role");
 const MiddlewareRole = require('../middleware/middleware.role');
 const ObjectId = mongodb.ObjectId;
 
-// HIỂN THỊ TRANG DANH SÁCH QUYỀN TÀI KHOẢN
+//RENDER PAGE ADMIN ROLE
 router.get("/admin/:page",
 MiddlewarePermission.permission,
 MiddlewareAmount.getAmountRole,
 ControllerRole.renderPageAdminRole);
 
-// HIỂN THỊ TRANG THÊM MỚI QUYỀN TÀI KHOẢN
+//RENDER PAGE NEW ROLE
 router.get("/new", MiddlewarePermission.permission, ControllerRole.renderPageAdminNewRole);
 
-// HIỂN THỊ TRANG SỮA THÔNG TIN QUYỀN TÀI KHOẢN
+//RENDER PAGE UPDATE ROLE
 router.get("/edit/:role", ControllerRole.renderPageAdminEditRole);
 
-// THÊM MỚI PHÂN QUYỀN TÀI KHOẢN
-router.post("/new", MiddlewarePermission.permission,
+//NEW ROLE
+router.post("/new",
+MiddlewarePermission.permission,
 [
     body('role').custom(async (val, {req}) => {
         if(!val.trim()) throw Error('Quyền tài khoản không được trống');
@@ -39,8 +40,9 @@ router.post("/new", MiddlewarePermission.permission,
 
 ], ControllerRole.create);
 
-// CẬP NHẬT THÔNG TIN PHÂN QUYỀN TÀI KHOẢN
-router.post("/edit", MiddlewarePermission.permission,
+//UPDATE ROLE
+router.post("/edit",
+MiddlewarePermission.permission,
 [
     body('role').notEmpty().withMessage('Token quyền tài khoản không được trống'),
     body('name').custom( async(val, {req}) => {
@@ -61,10 +63,13 @@ router.post("/edit", MiddlewarePermission.permission,
 
         return true;
     })
-], MiddlewareRole.findRoleById, ControllerRole.update);
+],
+MiddlewareRole.findRoleById,
+ControllerRole.update);
 
-// XOÁ TÀI PHÂN QUYỀN TÀI KHOẢN
-router.post("/delete", MiddlewarePermission.permission,
+//REMOVE ROLE
+router.post("/delete",
+MiddlewarePermission.permission,
 [
     body('role').custom( async(val, {req}) => {
         if(!val.trim()) throw Error('Quyền tài khoản không được trống');
@@ -79,6 +84,8 @@ router.post("/delete", MiddlewarePermission.permission,
         return true;
     }),
 
-], MiddlewareRole.findRoleById ,ControllerRole.delete);
+],
+MiddlewareRole.findRoleById,
+ControllerRole.delete);
 
 module.exports = router;
