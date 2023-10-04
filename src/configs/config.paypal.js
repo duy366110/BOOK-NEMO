@@ -1,3 +1,6 @@
+"use strict"
+require('dotenv').config();
+
 const PAYPAL_CONFIG = {
     DEV: {
        CLIENT: process.env.DEV_PAYPAL_CLIENT,

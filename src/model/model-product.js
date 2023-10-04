@@ -1,27 +1,38 @@
+"use strict"
 const mongoose = require('mongoose');
-const mongodb = require("mongodb");
 const Schema = mongoose.Schema;
+const CONFIG_DB = require("../configs/config.mongodb");
 
 const ModelProduct = new Schema({
     title: {
         type: String,
-        default: ''
+        default: '',
+        required: true,
+        trim: true
     },
     image: {
         type: String,
-        default: ''
+        default: '',
+        trim: true
     },
     price: {
         type: mongoose.Schema.Types.Decimal128,
-        default: 0
+        default: 0,
+        required: true
     },
     description: {
         type: String,
-        default: ''
+        default: '',
+        trim: true
     },
     quantity: {
         type: Number,
-        default: 0
+        default: 0,
+        required: true
+    },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: CONFIG_DB.COLLECTIONS.CATEGORY
     },
     createDate: {
         type: Date,
@@ -37,10 +48,11 @@ const ModelProduct = new Schema({
     },
     status: {
         type: Boolean,
-        default: false
+        default: true
     }
 }, {
-    collection: 'products'
+    collection: CONFIG_DB.COLLECTIONS.PRODUCT,
+    timestamps: true
 })
 
-module.exports = mongoose.model('products', ModelProduct);
+module.exports = mongoose.model(CONFIG_DB.COLLECTIONS.PRODUCT, ModelProduct);

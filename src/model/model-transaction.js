@@ -1,6 +1,7 @@
 "use strict"
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const CONFIG_DB = require("../configs/config.mongodb");
 
 const ModelTransaction = new Schema({
     user: {
@@ -10,7 +11,9 @@ const ModelTransaction = new Schema({
     },
     payment_id: {
         type: String,
-        default: ''
+        default: '',
+        required: true,
+        trim: true
     },
     createDate: {
         type: Date,
@@ -20,7 +23,7 @@ const ModelTransaction = new Schema({
         {
             product: {
                 type: Schema.Types.ObjectId,
-                ref: 'products'
+                ref: CONFIG_DB.COLLECTIONS.PRODUCT
             },
             quantity: {
                 type: Number,
@@ -29,7 +32,8 @@ const ModelTransaction = new Schema({
         }
     ]
 }, {
-    collection: 'transactions'
+    collection: CONFIG_DB.COLLECTIONS.TRANSACTION,
+    timestamps: true
 })
 
-module.exports = mongoose.model('transactions', ModelTransaction);
+module.exports = mongoose.model(CONFIG_DB.COLLECTIONS.TRANSACTION, ModelTransaction);
