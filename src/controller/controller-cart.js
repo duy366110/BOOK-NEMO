@@ -16,14 +16,14 @@ class ControllerCart {
 
                 if(status) {
                     // CACULATOR TOTAL CART
-                    let total = Number(user.cart.reduce((acc, cart) => {
+                    let total = user.hasOwnProperty('cart')? Number(user?.cart.reduce((acc, cart) => {
                         return acc += parseFloat(cart.quantity) * parseFloat(cart.product.price);
-                    }, 0)).toFixed(3);
+                    }, 0)).toFixed(3) : 0;
 
-                    user.cart = user.cart.map((cart) => {
+                    user.cart = user.hasOwnProperty('cart')? user.cart.map((cart) => {
                         cart.product.price = Number(cart.product.price).toFixed(3);
                         return cart
-                    })
+                    }) : [];
 
                     res.render("pages/shop/page-cart", {
                         title: 'Giỏ hàng',

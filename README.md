@@ -1,4 +1,4 @@
-# BOOK NEMO
+# BOOK NEMO - README.SO
 ## structure
 
 - server
