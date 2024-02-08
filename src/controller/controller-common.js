@@ -50,8 +50,8 @@ class ControllerCommon {
                 page = utilpagination.methodPagination(page, paginations);
             }
 
-            let limit = environment.pagination.quantityItemOfPage;
-            let skip = (environment.pagination.quantityItemOfPage * page);
+            let limit = environment.pagination.product.quantityItemOfPage;
+            let skip = (environment.pagination.product.quantityItemOfPage * page);
 
             await ServiceProduct.getProducts(limit, skip, (information) => {
                 let { status, message, products, error } = information;

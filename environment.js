@@ -10,7 +10,7 @@ const environmet = {
             quantityItemOfPage: 25
         },
         product: {
-            quantityItemOfPage: 25
+            quantityItemOfPage: 15
         }
     },
     page: {
