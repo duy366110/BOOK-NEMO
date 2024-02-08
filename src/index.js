@@ -29,6 +29,8 @@ paypal.configure({
     'client_secret': CONFIG_PAYPAL.SERECT,
 });
 
+console.log(CONFIG_MONGODB.URI);
+
 const store = new sessionstore({
     uri: CONFIG_MONGODB.URI,
     collection: 'session'
